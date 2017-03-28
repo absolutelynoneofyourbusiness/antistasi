@@ -61,11 +61,13 @@ fn_SetStat = {
 			if(_varName == 'BE_data') exitWith {[_varValue] call fnc_BE_load};
 			if(_varName == 'AS_session_server') exitWith {server setVariable ["AS_session_server",_varValue,true]; AS_session_server = _varValue; publicVariable "AS_session_server";};
 			if(_varName == 'AS_session_client') exitWith {player setVariable ["AS_session_client",_varValue,true]};
+
+			if(_varName == 'AS_destroyedZones') exitWith {AS_destroyedZones = _varvalue; publicVariable "AS_destroyedZones";};
 			if(_varName == 'unlockedWeapons') exitWith {
 				unlockedWeapons = _varvalue;
 				lockedWeapons = lockedWeapons - unlockedWeapons;
 				// XLA fixed arsenal
-				if (hayXLA) then {
+				if (activeXLA) then {
 					[caja,unlockedWeapons,true] call XLA_fnc_addVirtualWeaponCargo;
 				} else {
 					[caja,unlockedWeapons,true] call BIS_fnc_addVirtualWeaponCargo;
@@ -76,7 +78,7 @@ fn_SetStat = {
 				unlockedBackpacks = _varvalue;
 				genBackpacks = genBackpacks - unlockedBackpacks;
 				// XLA fixed arsenal
-				if (hayXLA) then {
+				if (activeXLA) then {
 					[caja,unlockedBackpacks,true] call XLA_fnc_addVirtualBackpackCargo;
 				} else {
 					[caja,unlockedBackpacks,true] call BIS_fnc_addVirtualBackpackCargo;
@@ -87,7 +89,7 @@ fn_SetStat = {
 				unlockedItems = _varValue;
 				publicVariable "unlockedItems";
 				// XLA fixed arsenal
-				if (hayXLA) then {
+				if (activeXLA) then {
 					[caja,unlockedItems,true] call XLA_fnc_addVirtualItemCargo;
 				} else {
 					[caja,unlockedItems,true] call BIS_fnc_addVirtualItemCargo;
@@ -100,7 +102,7 @@ fn_SetStat = {
 			if(_varName == 'unlockedMagazines') exitWith {
 				unlockedMagazines = _varValue;
 				// XLA fixed arsenal
-				if (hayXLA) then {
+				if (activeXLA) then {
 					[caja,unlockedMagazines,true] call XLA_fnc_addVirtualMagazineCargo;
 				} else {
 					[caja,unlockedMagazines,true] call BIS_fnc_addVirtualMagazineCargo;
@@ -114,16 +116,16 @@ fn_SetStat = {
 				planesAAFcurrent = _varValue;
 				if (planesAAFcurrent < 0) then {planesAAFcurrent = 0};
 				publicVariable "planesAAFcurrent";
-				if ((planesAAFcurrent > 0) and (count planesAAF < 2)) then {planesAAF = planesAAF + planes; publicVariable "planesAAF"}
+				if ((planesAAFcurrent > 0) and (count indAirForce < 2)) then {indAirForce = indAirForce + planes; publicVariable "indAirForce"}
 			};
 			if(_varName == 'helisAAFcurrent') exitWith {
 				helisAAFcurrent = _varValue;
 				if (helisAAFcurrent < 0) then {helisAAFcurrent = 0};
 				publicVariable "helisAAFcurrent";
 				if (helisAAFcurrent > 0) then {
-					planesAAF = planesAAF - heli_armed;
-					planesAAF = planesAAF + heli_armed;
-					publicVariable "planesAAF";
+					indAirForce = indAirForce - heli_armed;
+					indAirForce = indAirForce + heli_armed;
+					publicVariable "indAirForce";
 				};
 			};
 			if(_varName == 'APCAAFcurrent') exitWith {
@@ -131,9 +133,9 @@ fn_SetStat = {
 				if (APCAAFcurrent < 0) then {APCAAFcurrent = 0};
 				publicVariable "APCAAFcurrent";
 				if (APCAAFcurrent > 0) then {
-					vehAAFAT = vehAAFAT -  vehAPC - vehIFV;
-					vehAAFAT = vehAAFAT +  vehAPC + vehIFV;
-					publicVariable "vehAAFAT";
+					enemyMotorpool = enemyMotorpool -  vehAPC - vehIFV;
+					enemyMotorpool = enemyMotorpool +  vehAPC + vehIFV;
+					publicVariable "enemyMotorpool";
 				};
 			};
 			if(_varName == 'tanksAAFcurrent') exitWith {
@@ -141,9 +143,9 @@ fn_SetStat = {
 				if (tanksAAFcurrent < 0) then {tanksAAFcurrent = 0};
 				publicVariable "tanksAAFcurrent";
 				if (tanksAAFcurrent > 0) then {
-					vehAAFAT = vehAAFAT - vehTank;
-					vehAAFAT = vehAAFAT +  vehTank;
-					publicVariable "vehAAFAT"
+					enemyMotorpool = enemyMotorpool - vehTank;
+					enemyMotorpool = enemyMotorpool +  vehTank;
+					publicVariable "enemyMotorpool"
 				};
 			};
 			if(_varName == 'fecha') exitWith {setDate _varValue; forceWeatherChange};
@@ -176,7 +178,7 @@ fn_SetStat = {
 						_coste = round (_coste + (_coste * (_i/280)));
 					};
 					server setVariable [_x,_coste,true];
-				} forEach soldadosFIA;
+				} forEach guer_soldierArray;
 			};
 			if(_varName == 'skillAAF') exitWith {
 				skillAAF = _varvalue;
@@ -186,7 +188,7 @@ fn_SetStat = {
 						_coste = round (_coste + (_coste * (_i/280)));
 					};
 					server setVariable [_x,_coste,true];
-				} forEach soldadosAAF;
+				} forEach units_enemySoldiers;
 				publicVariable "skillAAF";
 			};
 			if(_varName == 'distanciaSPWN') exitWith {distanciaSPWN = _varValue; publicVariable "distanciaSPWN"};
@@ -382,7 +384,7 @@ fn_SetStat = {
 
 					_veh = _tipoVeh createVehicle _posVeh;
 					_veh setDir _dirVeh;
-					if (_tipoVeh in (allStatMGs + allStatATs + allStatAAs + allStatMortars)) then {
+					if (_tipoVeh in (statics_allMGs + statics_allATs + statics_allAAs + statics_allMortars)) then {
 						staticsToSave pushBack _veh;
 					};
 					[_veh] spawn VEHinit;

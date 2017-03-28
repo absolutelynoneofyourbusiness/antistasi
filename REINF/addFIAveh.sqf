@@ -2,7 +2,7 @@ if (player != player getVariable ["owner",player]) exitWith {hint "You cannot bu
 
 _chequeo = false;
 {
-	if (((side _x == side_red) or (side _x == side_green)) and (_x distance player < 500) and (not(captive _x))) then {_chequeo = true};
+	if (((side _x == side_red) or (side _x == side_green)) and (_x distance player < safeDistance_recruit) and (not(captive _x))) then {_chequeo = true};
 } forEach allUnits;
 
 if (_chequeo) exitWith {Hint "You cannot buy vehicles with enemies nearby"};
@@ -17,7 +17,7 @@ _coste = [_tipoVeh] call vehiclePrice;
 
 if (!isMultiPlayer) then {_resourcesFIA = server getVariable "resourcesFIA"} else
 	{
-	if (player != stavros) then
+	if (player != Slowhand) then
 		{
 		_resourcesFIA = player getVariable "dinero";
 		}
@@ -37,7 +37,7 @@ if (!isMultiplayer) then
 	}
 else
 	{
-	if (player != stavros) then
+	if (player != Slowhand) then
 		{
 		[-1* _coste] call resourcesPlayer;
 		_veh setVariable ["duenyo",getPlayerUID player,true];
@@ -56,7 +56,7 @@ else
 		};
 	};
 [_veh] spawn VEHinit;
-if (_tipoVeh in _milstatics) then {staticsToSave pushBackUnique _veh; publicVariable "staticsToSave"; _veh addAction [localize "Str_act_moveAsset", "moveObject.sqf","static",0,false,true,"","(_this == stavros)"];};
+if (_tipoVeh in _milstatics) then {staticsToSave pushBackUnique _veh; publicVariable "staticsToSave"; _veh addAction [localize "STR_ACT_MOVEASSET", {[_this select 0,_this select 1,_this select 2,"static"] spawn AS_fnc_moveObject},nil,0,false,true,"","(_this == Slowhand)"];};
 hint "Vehicle Purchased";
 player reveal _veh;
 petros directSay "SentGenBaseUnlockVehicle";

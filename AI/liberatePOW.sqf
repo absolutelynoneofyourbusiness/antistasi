@@ -24,4 +24,4 @@ _jugador playMove "";
 //_unit playMove "SitStandUp";
 _unit setCaptive false;
 [_unit] join group _jugador;
-[_unit] spawn FIAInit;
+[_unit] spawn AS_fnc_initialiseFIAUnit;

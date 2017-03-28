@@ -42,4 +42,4 @@ if (_type == "status") then {
 	_pI pushBackUnique (format _p4);
 };
 
-[petros,_type,_pI] remoteExec ["commsMP",stavros];
+[petros,_type,_pI] remoteExec ["commsMP",Slowhand];

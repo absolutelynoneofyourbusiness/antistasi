@@ -28,7 +28,7 @@ while {true} do
 	if ((!surfaceIsWater _poscrash) and (_poscrash distance _posHQ < 4000)) exitWith {};
 	};
 
-_tipoVeh = planesAAF call BIS_fnc_selectRandom;
+_tipoVeh = indAirForce call BIS_fnc_selectRandom;
 
 _posCrashMrk = [_poscrash,random 500,random 360] call BIS_fnc_relPos;
 _posCrash = _posCrash findEmptyPosition [0,100,_tipoVeh];
@@ -154,9 +154,9 @@ if (not alive _heli) then
 	//[-3,3,_posicion] remoteExec ["AS_fnc_changeCitySupport",2];
 	[1200] remoteExec ["AS_fnc_increaseAttackTimer",2];
 	{if (_x distance _heli < 500) then {[10,_x] call playerScoreAdd}} forEach (allPlayers - hcArray);
-	[5,stavros] call playerScoreAdd;
+	[5,Slowhand] call playerScoreAdd;
 	// BE module
-	if (hayBE) then {
+	if (activeBE) then {
 		["mis"] remoteExec ["fnc_BE_XP", 2];
 	};
 	// BE module
@@ -167,7 +167,7 @@ if ((dateToNumber date > _fechalimnum) or (_vehT distance _posicion < 100)) then
 	_tsk = ["DES",[side_blue,civilian],[format [_tskDesc,_nombrebase],_tskTitle,_mrkfin],_posCrashMrk,"FAILED",5,true,true,"Destroy"] call BIS_fnc_setTask;
 	//[3,0,_posicion] remoteExec ["AS_fnc_changeCitySupport",2];
 	[-600] remoteExec ["AS_fnc_increaseAttackTimer",2];
-	[-10,stavros] call playerScoreAdd;
+	[-10,Slowhand] call playerScoreAdd;
 	};
 
 if (!isNull _humo) then

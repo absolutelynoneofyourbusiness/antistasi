@@ -37,7 +37,7 @@ if (!isNil "_weaponsItemsCargo") then
 			_weapon = [(_x select 0)] call BIS_fnc_baseWeapon;
 		_armas pushBack ([(_x select 0)] call BIS_fnc_baseWeapon);
 
-		if ((hayRHS) && (isNumber (configFile >> "CfgWeapons" >> (_x select 0) >> "rhs_disposable"))) then {
+		if ((activeAFRF) && (isNumber (configFile >> "CfgWeapons" >> (_x select 0) >> "rhs_disposable"))) then {
 			_ammo = (getArray (configFile >> "CfgWeapons" >> (_x select 0) >> "magazines")) select 0;
 			_municion pushBack _ammo;
 		}
@@ -59,7 +59,7 @@ if (!isNil "_weaponsItemsCargo") then
 					if (count _cosa > 0) then
 						{
 						_subCosa = _cosa select 0;
-						if (!isNil "_subCosa") then {_municion pushBack _subCosa; stavros sidechat format ["%1,%2",_municion,_subCosa];} else {diag_log format ["Error transfering ammo on %1",_cosa]};
+						if (!isNil "_subCosa") then {_municion pushBack _subCosa; Slowhand sidechat format ["%1,%2",_municion,_subCosa];} else {diag_log format ["Error transfering ammo on %1",_cosa]};
 						};
 					};
 				}

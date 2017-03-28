@@ -7,7 +7,7 @@ scriptName "resourcecheck";
 while {true} do
 	{
 	sleep 600;//600
-	if (isMultiplayer) then {waitUntil {sleep 10; isPlayer stavros}};
+	if (isMultiplayer) then {waitUntil {sleep 10; isPlayer Slowhand}};
 	_recAddOPFOR = 0;
 	_recAddBLUFOR = 25;//0
 	_hrAddBLUFOR = 0;//0
@@ -87,7 +87,7 @@ while {true} do
 		[["TaskSucceeded", ["", format ["%1 joined FIA",[_ciudad, false] call AS_fnc_location]]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
 		mrkAAF = mrkAAF - [_ciudad];
 		mrkFIA = mrkFIA + [_ciudad];
-		if (hayBE) then {["con_cit"] remoteExec ["fnc_BE_XP", 2]};
+		if (activeBE) then {["con_cit"] remoteExec ["fnc_BE_XP", 2]};
 		publicVariable "mrkAAF";
 		publicVariable "mrkFIA";
 		[0,5] remoteExec ["prestige",2];
@@ -153,7 +153,7 @@ while {true} do
 			};
 		};
 	} forEach recursos;
-	//if (debug) then {stavros sideChat format ["AAF ha ganado %1 €\n FIA ha ganado %2 €\n Nivel de HR aumenta en %3", _recAddOPFOR,_recAddBLUFOR,_hrAddBLUFOR]};//AAF gana de inicio 7290 euros
+	//if (debug) then {Slowhand sideChat format ["AAF ha ganado %1 €\n FIA ha ganado %2 €\n Nivel de HR aumenta en %3", _recAddOPFOR,_recAddBLUFOR,_hrAddBLUFOR]};//AAF gana de inicio 7290 euros
 	if (server getVariable "easyMode") then {
 		_hrAddBLUFOR = _hrAddBLUFOR * 2;
 		_recAddBLUFOR = _recAddBLUFOR * 1.5;
@@ -163,7 +163,7 @@ while {true} do
 	_recAddBLUFOR = (round _recAddBLUFOR);
 
 	// BE module
-	if (hayBE) then {
+	if (activeBE) then {
 		if (_hrAddBLUFOR > 0) then {
 			_hrAddBLUFOR = _hrAddBLUFOR min (["HR"] call fnc_BE_permission);
 		};
@@ -179,7 +179,7 @@ while {true} do
 	_hrAddBLUFOR = _hrAddBLUFOR + (server getVariable "hr");
 	_recAddBLUFOR = _recAddBLUFOR + (server getVariable "resourcesFIA");
 
-	if !(hayBE) then {
+	if !(activeBE) then {
 		if (_hrAddBLUFOR > 100) then {_hrAddBLUFOR = 100}; // HR capped to 100
 	};
 

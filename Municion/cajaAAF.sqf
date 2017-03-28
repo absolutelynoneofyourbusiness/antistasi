@@ -18,7 +18,7 @@ _mineList = genMines - unlockedMagazines;
 _extWList = vanillaWeapons;
 _extMList = vanillaMagazines;
 _extIList = vanillaAccessories;
-if (hayRHS) then {
+if (activeAFRF) then {
 	_extWList = rhsWeaponsAFRF;
 	_extMList = rhsMagazines;
 	_extIList = rhsAccessoriesAFRF;
@@ -188,13 +188,13 @@ call {
 			_crate addItemCargoGlobal ["ItemRadio", 5];
 		};
 
-		if (hayTFAR) then {
+		if (activeTFAR) then {
 			_crate addBackpackCargoGlobal ["tf_rt1523g_big_bwmod",1];
 		};
 	};
 };
 
-if (hayTFAR) then {
+if (activeTFAR) then {
 	if (typeOf _crate == _FIAcrate) then {
 		_crate addBackpackCargoGlobal [lrRadio,2];
 	} else {

@@ -6,7 +6,7 @@ _grupos = [];
 _base = "";
 _roads = [];
 
-_tipos = vehPatrol + ["I_Boat_Armed_01_minigun_F"];
+_tipos = vehPatrol + vehPatrolBoat;
 
 while {true} do
 	{
@@ -17,7 +17,7 @@ while {true} do
 		}
 	else
 		{
-		if (_tipoCoche == "I_Boat_Armed_01_minigun_F") then
+		if (_tipoCoche in vehPatrolBoat) then
 			{
 			_arrayBases = puertos - mrkFIA;
 			}
@@ -49,14 +49,14 @@ if (count _tipos == 0) exitWith {};
 
 _posbase = getMarkerPos _base;
 
-if (_tipoCoche in heli_unarmed) then
+if (_tipoCoche isKindOf "helicopter") then
 	{
 	_arrayDestinos = mrkAAF;
-	_distancia = 200;
+	_distancia = 300;
 	}
 else
 	{
-	if (_tipoCoche == "I_Boat_Armed_01_minigun_F") then
+	if (_tipoCoche in vehPatrolBoat) then
 		{
 		_arraydestinos = seaMarkers select {(getMarkerPos _x) distance _posbase < 2500};
 		_distancia = 100;
@@ -72,11 +72,11 @@ if (count _arraydestinos < 1) exitWith {};
 
 AAFpatrols = AAFpatrols + 1; publicVariableServer "AAFpatrols";
 
-if !(_tipoCoche in heli_unarmed) then
+if !(_tipoCoche isKindOf "helicopter") then
 	{
-	if (_tipoCoche == "I_Boat_Armed_01_minigun_F") then
+	if (_tipoCoche in vehPatrolBoat) then
 		{
-		_posbase = [_posbase,50,150,10,2,0,0] call BIS_Fnc_findSafePos;
+		_posbase = [_posbase,80,200,10,2,0,0] call BIS_Fnc_findSafePos;
 		}
 	else
 		{
@@ -94,6 +94,10 @@ if !(_tipoCoche in heli_unarmed) then
 
 _vehicle=[_posbase, 0,_tipoCoche, side_green] call bis_fnc_spawnvehicle;
 _veh = _vehicle select 0;
+if (_veh iskindof "ship") then {
+	_beach = [_veh,0,200,0,0,90,1] call BIS_Fnc_findSafePos;
+	_veh setdir ((_veh getRelDir _beach) + 180);
+};
 [_veh] spawn genVEHinit;
 [_veh,"Patrol"] spawn inmuneConvoy;
 _vehCrew = _vehicle select 1;
@@ -119,14 +123,15 @@ while {alive _veh} do
 	_destino = _arraydestinos call bis_Fnc_selectRandom;
 	if (debug) then {player globalChat format ["Patrulla AAF generada. Origen: %2 Destino %1", _destino, _base]; sleep 3;};
 	_posdestino = getMarkerPos _destino;
+	deleteWaypoint [_grupoVeh, 1];
 	_Vwp0 = _grupoVeh addWaypoint [_posdestino, 0];
-	_Vwp0 setWaypointType "MOVE";
+	if (_veh isKindOf "helicopter") then {_Vwp0 setWaypointType "LOITER";} else {_Vwp0 setWaypointType "MOVE";};
 	_Vwp0 setWaypointBehaviour "SAFE";
 	_Vwp0 setWaypointSpeed "LIMITED";
 	_veh setFuel 1;
 	while {true} do
 		{
-		sleep 20;
+		sleep 60;
 		{
 		if (_x select 2 == side_blue) then
 			{
@@ -142,17 +147,17 @@ while {alive _veh} do
 				};
 			};
 		} forEach (driver _veh nearTargets distanciaSPWN);
-		if ((_veh distance _posdestino < _distancia) or ({alive _x} count _soldados == 0) or ({fleeing _x} count _soldados == {alive _x} count _soldados) or (!canMove _veh)) exitWith {};
+		if ((_veh distance2d _posdestino < _distancia) or ({alive _x} count _soldados == 0) or ({fleeing _x} count _soldados == {alive _x} count _soldados) or (!canMove _veh)) exitWith {};
 		};
 
 	if (({alive _x} count _soldados == 0) or ({fleeing _x} count _soldados == {alive _x} count _soldados) or (!canMove _veh)) exitWith {};
-	if (_tipoCoche in heli_unarmed) then
+	if (_tipoCoche isKindOf "helicopter") then
 		{
 		_arrayDestinos = mrkAAF;
 		}
 	else
 		{
-		if (_tipoCoche == "I_Boat_Armed_01_minigun_F") then
+		if (_tipoCoche in vehPatrolBoat) then
 			{
 			_arraydestinos = seaMarkers select {(getMarkerPos _x) distance position _veh < 2500};
 			}

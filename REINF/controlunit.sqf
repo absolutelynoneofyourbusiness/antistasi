@@ -1,4 +1,4 @@
-//if (hayACE) exitWith {hint "Feature disabled with ACE Mod"};
+//if (activeACE) exitWith {hint "Feature disabled with ACE Mod"};
 private ["_units","_unit"];
 
 _units = _this select 0;
@@ -11,7 +11,7 @@ if (isPlayer _unit) exitWith {hint "You cannot control another player"};
 if (!alive _unit) exitWith {hint "You cannot control a dead unit"};
 if (_unit getVariable ["inconsciente",false]) exitWith {hint "You cannot control an unconscious unit"};
 if (captive _unit) exitWith {hint "You cannot control an Undercover unit"};
-if ((not(typeOf _unit in soldadosFIA)) and (typeOf _unit != guer_POW)) exitWith {hint "You cannot control a unit which does not belong to FIA"};
+if ((not(typeOf _unit in guer_soldierArray)) and (typeOf _unit != guer_POW)) exitWith {hint "You cannot control a unit which does not belong to FIA"};
 if ({((side _x == side_green) or (side _x == side_red)) and (not (captive _x)) and (_x distance player < 500)} count allUnits > 0) exitWith {hint "You cannot remote control with enemies nearby"};
 
 _owner = player getVariable ["owner",player];

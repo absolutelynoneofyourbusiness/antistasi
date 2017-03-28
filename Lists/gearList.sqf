@@ -548,7 +548,7 @@ vanillaAccessories = [
 "optic_Holosight_khk_F",
 "optic_Holosight_smg_blk_F"];
 
-if (hayRHS) then {
+if (activeAFRF) then {
 
 rhsWeaponsAFRF = [
 	"rhs_tr8_periscope",
@@ -984,16 +984,17 @@ _aToS = [
 "rhs_weap_m24sws_blk",
 "rhs_weap_m24sws_ghillie"];
 
-arifles = arifles - _aToS;
-srifles = srifles + _aToS;
+gear_assaultRifles = gear_assaultRifles - _aToS;
+gear_sniperRifles = gear_sniperRifles + _aToS;
 
 };
 
 aceWeapons = [];
 aceAccessories = [];
 aceItems = [];
+aceAdvMedItems = [];
 
-if (hayACE) then {
+if (activeACE) then {
 
 aceWeapons = [
 "srifle_DMR_03_spotter_F",
@@ -1046,19 +1047,43 @@ aceItems = [
 "ACE_morphine",
 "ACE_bodyBag"];
 
+aceAdvMedItems = [
+"ACE_fieldDressing",
+"ACE_bloodIV_500",
+"ACE_bloodIV",
+"ACE_epinephrine",
+"ACE_morphine",
+"ACE_bodyBag",
+"ACE_fieldDressing",
+"ACE_elasticBandage",
+"ACE_quikclot",
+"ACE_bloodIV_250",
+"ACE_packingBandage",
+"ACE_personalAidKit",
+"ACE_plasmaIV",
+"ACE_plasmaIV_500",
+"ACE_plasmaIV_250",
+"ACE_salineIV",
+"ACE_salineIV_500",
+"ACE_salineIV_250",
+"ACE_surgicalKit",
+"ACE_tourniquet",
+"ACE_adenosine"
+];
+
 };
 
 blockedWeapons = ["rhs_weap_svd","rhs_weap_rpg18","rhs_weap_strela","rhs_weap_svd_pso1","rhs_weap_pkp_pkas","rhs_weap_pkp_1p63","rhs_weap_pkp_1p29"];
 
-AS_allMagazines = [];
+gear_allMagazines = [];
 {
-	AS_allMagazines pushBackUnique configName _x;
+	gear_allMagazines pushBackUnique configName _x;
 } forEach ("(getText ( _x >> ""simulation"" ) isEqualTo ""ProxyMagazines"")" configClasses ( configFile >> "CfgMagazines" ));
 
 _aToS = ["srifle_EBR_F","srifle_GM6_F","srifle_GM6_camo_F","srifle_LRR_F","srifle_LRR_camo_F","srifle_LRR_tna_F","srifle_GM6_ghex_F"];
 
-arifles = arifles - _aToS;
-srifles = srifles + _aToS;
+gear_assaultRifles = gear_assaultRifles - _aToS;
+gear_sniperRifles = gear_sniperRifles + _aToS;
 
 AS_specialWeapons = [
 	"hgun_PDW2000_F",

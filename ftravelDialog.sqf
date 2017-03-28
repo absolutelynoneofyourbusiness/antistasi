@@ -9,7 +9,7 @@ _maxCamps = 3;
 // BE module
 _permission = true;
 _text = "Error in permission system, module ft.";
-if ((hayBE) && (_tipo == "create")) then {
+if ((activeBE) && (_tipo == "create")) then {
 	_permission = ["camp"] call fnc_BE_permission;
 	_text = "We cannot maintain any additional camps.";
 	_maxCamps = 100;

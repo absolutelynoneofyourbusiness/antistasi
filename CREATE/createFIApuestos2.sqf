@@ -12,7 +12,7 @@ _escarretera = false;
 if (isOnRoad _posicion) then {_escarretera = true};
 
 // BE module
-if (hayBE) then {
+if (activeBE) then {
 	if (BE_current_FIA_RB_Style == 1) exitWith {_advanced = true};
 };
 // BE module
@@ -59,7 +59,7 @@ else
 	_grupo setCombatMode "GREEN";
 };
 
-{[_x] spawn FIAinitBASES;} forEach units _grupo;
+{[_x] spawn AS_fnc_initialiseFIAGarrisonUnit;} forEach units _grupo;
 
 waitUntil {sleep 1; (not(spawner getVariable _marcador)) or ({alive _x} count units _grupo == 0) or (not(_marcador in puestosFIA))};
 

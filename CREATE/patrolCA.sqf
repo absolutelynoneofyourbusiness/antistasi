@@ -77,13 +77,13 @@ if ((_base == "") and ((_aeropuerto != "") or (_hayCSAT))) then
 	_threatEval = [_posDestino] call AAthreatEval;
 	if ((_aeropuerto != "") and (!_inWaves)) then
 		{
-		if ((_threatEval > 15) && !(count (planesAAF - planes) < count planesAAF)) then
+		if ((_threatEval > 15) && !(count (indAirForce - planes) < count indAirForce)) then
 			{
 			_aeropuerto = "";
 			}
 		else
 			{
-			if ((_threatEval > 10) && !(count (planesAAF - heli_armed - planes) < count planesAAF)) then {_aeropuerto = ""};
+			if ((_threatEval > 10) && !(count (indAirForce - heli_armed - planes) < count indAirForce)) then {_aeropuerto = ""};
 			};
 		};
 	};
@@ -93,13 +93,13 @@ if (_base != "") then
 	_threatEval = [_posDestino] call landThreatEval;
 	if (!_inWaves) then
 		{
-		if ((_threatEval > 15) and !((count (vehAAFAT - vehTank) < count vehAAFAT))) then
+		if ((_threatEval > 15) and !((count (enemyMotorpool - vehTank) < count enemyMotorpool))) then
 			{
 			_base = "";
 			}
 		else
 			{
-			if ((_threatEval > 5) && (count (vehAAFAT - vehIFV - vehTank) < count vehAAFAT)) then {_base = ""};
+			if ((_threatEval > 5) && (count (enemyMotorpool - vehIFV - vehTank) < count enemyMotorpool)) then {_base = ""};
 			};
 		};
 	};
@@ -136,15 +136,15 @@ if (_base != "") then
 		if (count _roads > 0) exitWith {};
 		};
 	_tipoVeh = "";
-	if (count vehAAFAT > 1) then
+	if (count enemyMotorpool > 1) then
 		{
-		//_vehAAFAT = vehAAFAT;
+		//_vehAAFAT = enemyMotorpool;
 		// experimental
-		_vehAAFAT = vehAAFAT + vehTrucks + vehPatrol;
+		_vehAAFAT = enemyMotorpool + vehTrucks + vehPatrol;
 		_vehAAFAT = _vehAAFAT - vehIFV - vehTank;
 
 		if (_threatEval > 3) then {_vehAAFAT = _vehAAFAT - [enemyMotorpoolDef]};
-		if ((_threatEval > 5) and (count (vehAAFAT - vehTank - vehIFV) < count vehAAFAT)) then {_vehAAFAT = _vehAAFAT + vehIFV + vehTank - vehTrucks};
+		if ((_threatEval > 5) and (count (enemyMotorpool - vehTank - vehIFV) < count enemyMotorpool)) then {_vehAAFAT = _vehAAFAT + vehIFV + vehTank - vehTrucks};
 		// /experimental
 		//if ((_threatEval > 5) and (count (_vehAAFAT - vehTank - vehIFV) < count _vehAAFAT)) then {_vehAAFAT = _vehAAFAT - vehAPC};
 		_tipoVeh = _vehAAFAT call BIS_fnc_selectRandom;
@@ -254,7 +254,7 @@ if (_aeropuerto != "") then
 	{
 	if (!_inWaves) then {[_aeropuerto,20] spawn AS_fnc_addTimeForIdle};
 	_posorigen = getMarkerPos _aeropuerto;
-	_planesAAF = planesAAF - planes;
+	_planesAAF = indAirForce - planes;
 	_cuenta = 1;
 	if (_esMarcador) then {_cuenta = 2};
 	for "_i" from 1 to _cuenta do
@@ -321,7 +321,7 @@ if (_aeropuerto != "") then
 				_pad = createVehicle ["Land_HelipadEmpty_F", _landpos, [], 0, "NONE"];
 				_vehiculos = _vehiculos + [_pad];
 
-				[_grupoVeh, _posorigen, _landpos, _marcador, _grupo, 25*60, "air"] call AS_fnc_QRF_dismountTroops;
+				[_grupoVeh, _posorigen, _landpos, _marcador, _grupo, 25*60, "air"] spawn AS_fnc_QRF_dismountTroops;
 
 				/*_wp0 = _grupoVeh addWaypoint [_landpos, 0];
 				_wp0 setWaypointType "TR UNLOAD";
@@ -349,7 +349,7 @@ if (_aeropuerto != "") then
 				{[_x] spawn genInit;_x assignAsCargo _veh;_x moveInCargo _veh; _soldados = _soldados + [_x]} forEach units _grupo1;
 				_grupos = _grupos + [_grupo1];
 				//[_veh,_grupo,_grupo1,_posdestino,_posorigen,_grupoVeh] spawn fastropeAAF;
-				[_grupoVeh, _pos, _posdestino, _marcador, [_grupo, _grupo1], 25*60] call AS_fnc_QRF_fastrope;
+				[_grupoVeh, _pos, _posdestino, _marcador, [_grupo, _grupo1], 25*60] spawn AS_fnc_QRF_fastrope;
 				};
 			};
 		sleep 30;
@@ -419,7 +419,7 @@ if (_hayCSAT) then
 					_pad = createVehicle ["Land_HelipadEmpty_F", _landpos, [], 0, "NONE"];
 					_vehiculos = _vehiculos + [_pad];
 
-					[_grupoheli, _posorigen, _landpos, _marcador, _grupo, 25*60, "air"] call AS_fnc_QRF_dismountTroops;
+					[_grupoheli, _posorigen, _landpos, _marcador, _grupo, 25*60, "air"] spawn AS_fnc_QRF_dismountTroops;
 
 					/*_wp0 = _grupoheli addWaypoint [_landpos, 0];
 					_wp0 setWaypointType "TR UNLOAD";

@@ -1,20 +1,18 @@
-if (!isServer) exitWith{};
+if !(isServer) exitWith {};
 
-private ["_tiempo","_marcador","_posicionMRK", "_bluUnits", "_opUnits", "_puestos", "_colinas"];
+private ["_tiempo","_marcador","_posicionMRK", "_bluUnits", "_opUnits", "_colinas"];
 
 debugperf = false;
 _tiempo = time;
 
 while {true} do {
 	sleep 1;
-	//if (time - _tiempo >= 0.5) then {sleep 0.1} else {sleep 0.5 - (time - _tiempo)};
 	if (debugperf) then {hint format ["Tiempo transcurrido: %1 para %2 marcadores", time - _tiempo, count marcadores]};
 	_tiempo = time;
 
-	_puestos = puestos - puestosAA;
 	_colinas = colinas - colinasAA;
 
-	waitUntil {!isNil "stavros"};
+	waitUntil {!isNil "Slowhand"};
 
 	_bluUnits = [];
 	_opUnits = [];
@@ -43,16 +41,15 @@ while {true} do {
 					spawner setVariable [_marcador,true,true];
 					call {
 						if (_marcador in _colinas) exitWith {[_marcador] remoteExec ["createWatchpost",HCGarrisons]};
-						if (_marcador in colinasAA) exitWith {[_marcador] remoteExec ["createAAsite",HCGarrisons]};
+						if (_marcador in colinasAA) exitWith {diag_log "colina!!!!";[_marcador] remoteExec ["createAAsite",HCGarrisons]};
 						if (_marcador in ciudades) exitWith {[_marcador] remoteExec ["createCIV",HCciviles]; [_marcador] remoteExec ["createCity",HCGarrisons]};
 						if (_marcador in power) exitWith {[_marcador] remoteExec ["createPower",HCGarrisons]};
 						if (_marcador in bases) exitWith {[_marcador] remoteExec ["createBase",HCGarrisons]};
 						if (_marcador in controles) exitWith {[_marcador] remoteExec ["createRoadblock",HCGarrisons]};
 						if (_marcador in aeropuertos) exitWith {[_marcador] remoteExec ["createAirbase",HCGarrisons]};
 						if ((_marcador in recursos) or (_marcador in fabricas)) exitWith {[_marcador] remoteExec ["createResources",HCGarrisons]};
-						if ((_marcador in _puestos) or (_marcador in puertos)) exitWith {[_marcador] remoteExec ["createOutpost",HCGarrisons]};
-						if (_marcador in puestosAA) exitWith {[_marcador] remoteExec ["createOutpostAA",HCGarrisons]};
-						//if (_marcador in artyEmplacements) exitWith {[_marcador] remoteExec ["createArtillery",HCGarrisons]};
+						if ((_marcador in puestos) or (_marcador in puertos)) exitWith {[_marcador] remoteExec ["createOutpost",HCGarrisons]};
+						if ((_marcador in artyEmplacements) AND (_marcador in forcedSpawn)) exitWith {[_marcador] remoteExec ["createArtillery",HCGarrisons]};
 					};
 				};
 			} else {

@@ -14,7 +14,7 @@ if (sunOrMoon < 1) then
 	};
 
 _tipo = typeOf _unit;
-if ((hayRHS) && !(replaceFIA)) then {
+if ((activeAFRF) && !(replaceFIA)) then {
 	switch _tipo do {
 		case opI_AAR: {[_unit, _tipo] call AS_fnc_gear_loadoutCSAT};
 		case opI_AR2: {};

@@ -144,7 +144,7 @@ fnc_RB_placeSingle = {
 	_RBgroup = createGroup side_blue;
 	_gunner = _RBgroup createUnit [guer_sol_AR, [0,0,0], [], 0, "NONE"];
 	_gunner moveInGunner _vehicle;
-	[_gunner] spawn FIAinitBASES;
+	[_gunner] spawn AS_fnc_initialiseFIAGarrisonUnit;
 
 	[[_vehicle, _gunner]] spawn AS_fnc_protectVehicle;
 

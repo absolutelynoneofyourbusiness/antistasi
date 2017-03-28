@@ -55,7 +55,7 @@ if (_Pweapon != "") then
 						{
 						_posible = _armas select _i;
 						_basePosible = [_posible] call BIS_fnc_baseWeapon;
-						if (!(_posible in baseRifles) and ((_basePosible in arifles) or (_basePosible in srifles) or (_basePosible in mguns))) then
+						if (!(_posible in baseRifles) and ((_basePosible in gear_assaultRifles) or (_basePosible in gear_sniperRifles) or (_basePosible in gear_machineGuns))) then
 							{
 							_target = _objeto;
 							_hayCaja = true;
@@ -103,7 +103,7 @@ if (_Pweapon != "") then
 		};
 	_hayCaja = false;
 	_cuenta = 4;
-	if (_Pweapon in mguns) then {_cuenta = 2};
+	if (_Pweapon in gear_machineGuns) then {_cuenta = 2};
 	_magazines = getArray (configFile / "CfgWeapons" / _Pweapon / "magazines");
 	if ({_x in _magazines} count (magazines _unit) < _cuenta) then
 		{
@@ -184,7 +184,7 @@ if ((_Sweapon == "") and (loadAbs _unit < 340)) then
 				for "_i" from 0 to (count _armas - 1) do
 					{
 					_posible = _armas select _i;
-					if ((_posible in mlaunchers) or (_posible in rlaunchers)) then
+					if ((_posible in gear_missileLaunchers) or (_posible in gear_rocketLaunchers)) then
 						{
 						_target = _objeto;
 						_hayCaja = true;

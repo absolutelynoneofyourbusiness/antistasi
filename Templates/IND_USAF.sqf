@@ -73,12 +73,14 @@ vehIFV = 			["RHS_M2A2","RHS_M2A2","RHS_M2A3_BUSKI","RHS_M2A2"]; // IFVs
 vehTank = 			["rhsusf_m1a2sep1d_usarmy","rhsusf_m1a2sep1tuskiid_usarmy","rhsusf_m1a2sep1tuskid_usarmy"]; // MBTs
 vehSupply = 		["rhsusf_M977A4_AMMO_BKIT_M2_usarmy_d","rhsusf_M977A4_BKIT_M2_usarmy_d","rhsusf_M978A4_usarmy_d","rhsusf_M977A4_REPAIR_usarmy_d","rhsusf_M1083A1P2_B_M2_d_Medical_fmtv_usarmy"]; // supply vehicles (ammo, fuel, med)
 vehAmmo = 			"rhsusf_M977A4_AMMO_BKIT_M2_usarmy_d"; // ammo truck, for special missions
+vehFuel = 			["rhsusf_M978A4_BKIT_usarmy_d","rhsusf_M978A4_usarmy_d"]; // fuel truck for missions
 vehLead = 			["rhsusf_M1117_D"]; // lead vehicle for convoys, preferably armed MRAP/car
 standardMRAP = 		["rhsusf_rg33_d","rhsusf_m1025_d"]; // default transport MRAP/car
 vehTruckBox = 		["rhsusf_M977A4_REPAIR_usarmy_d"]; // repair truck or at least a prop
+vehPatrolBoat = 	["I_Boat_Armed_01_minigun_F"];
 
 vehTruckAA = 		"rhs_gaz66_zu23_msv";
-vehFIA pushBackUnique vehTruckAA;
+guer_vehicleArray pushBackUnique vehTruckAA;
 
 var_AAF_groundForces = vehTrucks + vehPatrol + vehAPC + vehIFV + vehTank + vehLead + standardMRAP;
 var_AAF_groundForces = var_AAF_groundForces arrayIntersect var_AAF_groundForces;
@@ -126,10 +128,10 @@ statMGlow = 		"RHS_M2StaticMG_MiniTripod_WD";
 statMGtower = 		"RHS_M2StaticMG_WD";
 
 // Lists of statics to determine the defensive capabilities at locations
-allStatMGs = 		allStatMGs + [statMG];
-allStatATs = 		allStatATs + [statAT];
-allStatAAs = 		allStatAAs + [statAA];
-allStatMortars = 	allStatMortars + [statMortar];
+statics_allMGs = 		statics_allMGs + [statMG];
+statics_allATs = 		statics_allATs + [statAT];
+statics_allAAs = 		statics_allAAs + [statAA];
+statics_allMortars = 	statics_allMortars + [statMortar];
 
 // Backpacks of dismantled statics -- 0: weapon, 1: tripod/support
 statMGBackpacks = 		["RHS_M2_Gun_Bag","RHS_M2_Tripod_Bag"];
@@ -384,10 +386,10 @@ unlockedBackpacks = [
 unlockedOptics = [];
 
 // Default rifle types, required to unlock specific unit types. Unfortunatly, not all mods classify their weapons the same way, so automatic detection doesn't work reliably enough.
-mguns = mguns + ["rhs_weap_m240G","rhs_weap_m249_pip_L_para", "rhs_weap_m249_pip_S_vfg"];
-mguns = mguns arrayIntersect mguns;
-srifles = srifles + ["rhs_weap_M107_d","rhs_weap_m24sws","rhs_weap_sr25"];
-srifles = srifles arrayIntersect srifles;
+gear_machineGuns = gear_machineGuns + ["rhs_weap_m240G","rhs_weap_m249_pip_L_para", "rhs_weap_m249_pip_S_vfg"];
+gear_machineGuns = gear_machineGuns arrayIntersect gear_machineGuns;
+gear_sniperRifles = gear_sniperRifles + ["rhs_weap_M107_d","rhs_weap_m24sws","rhs_weap_sr25"];
+gear_sniperRifles = gear_sniperRifles arrayIntersect gear_sniperRifles;
 genGL = ["rhs_weap_m16a4_carryhandle_M203","rhs_weap_m4a1_carryhandle_m203S","rhs_weap_m4a1_m203s_d"];
 
 // Standard rifles for your troops to be equipped with

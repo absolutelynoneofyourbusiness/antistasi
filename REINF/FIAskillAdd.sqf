@@ -1,8 +1,8 @@
-if (player != Stavros) exitWith {hint "Only Commander Stavros has access to this function"};
+if (player != Slowhand) exitWith {hint "Only Commander Slowhand has access to this function"};
 
 // BE module
 _permission = true;
-if (hayBE) then {
+if (activeBE) then {
 	_permission = ["skill"] call fnc_BE_permission;
 };
 
@@ -25,4 +25,4 @@ server setVariable ["resourcesFIA",_resourcesFIA,true];
 _coste = server getVariable _x;
 _coste = round (_coste + (_coste * (_skillFIA/280)));
 server setVariable [_x,_coste,true];
-} forEach soldadosFIA;
+} forEach guer_soldierArray;

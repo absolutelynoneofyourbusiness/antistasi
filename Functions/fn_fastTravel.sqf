@@ -15,7 +15,7 @@ _enemiesNearGroup = false;
 {
 	_enemy = _x;
 	{
-		if (((side _enemy == side_red) or (side _enemy == side_green)) and (_enemy distance _x < 500) and !(captive _enemy)) exitWith {_enemiesNearGroup = true};
+		if (((side _enemy == side_red) or (side _enemy == side_green)) and (_enemy distance _x < safeDistance_fasttravel) and !(captive _enemy)) exitWith {_enemiesNearGroup = true};
 	} forEach units _group;
 	if (_enemiesNearGroup) exitWith {};
 } forEach allUnits;
@@ -24,7 +24,7 @@ if ((_isHC) && (_enemiesNearGroup)) exitWith {hintSilent "This group cannot fast
 
 _check = false;
 {
-	if (((side _x == side_red) or (side _x == side_green)) and (player distance _x < 500) and !(captive _x)) exitWith {_check = true};
+	if (((side _x == side_red) or (side _x == side_green)) and (player distance _x < safeDistance_fasttravel) and !(captive _x)) exitWith {_check = true};
 } foreach allUnits;
 
 if (_check) exitWith {hintSilent "You cannot fast-travel with enemies nearby."};
@@ -55,7 +55,7 @@ if (count _targetPosition > 0) then {
 	if (_marker in mrkAAF) exitWith {hintSilent "You cannot fast-travel to an enemy-controlled zone."; openMap [false, false]};
 
 	{
-		if (((side _x == side_red) or (side _x == side_green)) and (_x distance (getMarkerPos _marker) < 500) and !(captive _x)) then {_check = true};
+		if (((side _x == side_red) or (side _x == side_green)) and (_x distance (getMarkerPos _marker) < safeDistance_fasttravel) and !(captive _x)) then {_check = true};
 	} forEach allUnits;
 
 	if (_check) exitWith {Hint "You cannot fast-travel to an area under attack or with enemies in the surrounding."; openMap [false,false]};

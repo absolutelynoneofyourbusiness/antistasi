@@ -1,119 +1,92 @@
-if (!isServer and hasInterface) exitWith{};
+if (!isServer and hasInterface) exitWith {};
 
-private ["_pos","_roadscon","_veh","_roads","_conquistado","_dirVeh","_marcador","_posicion","_vehiculos","_soldados","_tam","_bunker","_grupoE","_unit","_tipogrupo","_grupo","_tiempolim","_fechalim","_fechalimnum","_base","_perro"];
+params ["_marker"];
+private ["_allVehicles","_allGroups","_allSoldiers","_markerPos","_size","_distance","_roads","_connectedRoads","_direction","_position","_bunker","_static","_group","_unit","_groupType","_tempGroup","_dog"];
 
-_marcador = _this select 0;
+_allVehicles = [];
+_allGroups = [];
+_allSoldiers = [];
 
-_posicion = getMarkerPos _marcador;
-_size = [_marcador] call sizeMarker;
+_markerPos = getMarkerPos (_marker);
+_size = [_marker] call sizeMarker;
 
-_vehiculos = [];
-_soldados = [];
+_tempGroup = createGroup side_green;
 
-_tam = 20;
-_conquistado = false;
-
-while {true} do
-	{
-	_roads = _posicion nearRoads _tam;
+_distance = 20;
+while {true} do {
+	_roads = _markerPos nearRoads _distance;
 	if (count _roads > 1) exitWith {};
-	_tam = _tam + 5;
-	};
+	_distance = _distance + 5;
+};
+_connectedRoads = roadsConnectedto (_roads select 0);
 
-_roadscon = roadsConnectedto (_roads select 0);
-
-//if (count _roadscon == 0) then {player setpos position (_roads select 0)};
-
-_dirveh = [_roads select 0, _roadscon select 0] call BIS_fnc_DirTo;
-if ((isNull (_roads select 0)) or (isNull (_roadscon select 0))) then {diag_log format ["Antistasi Roadblock error report: %1 position is bad",_marcador]};
-_pos = [getPos (_roads select 0), 7, _dirveh + 270] call BIS_Fnc_relPos;
-_bunker = "Land_BagBunker_Small_F" createVehicle _pos;
-_vehiculos = _vehiculos + [_bunker];
-_bunker setDir _dirveh;
-_pos = getPosATL _bunker;
-_veh = statMG createVehicle _posicion;
-_vehiculos = _vehiculos + [_veh];
-_veh setPosATL _pos;
-_veh setDir _dirVeh;
-
-_grupoE = createGroup side_green;
-
-_unit = ([_posicion, 0, infGunner, _grupoE] call bis_fnc_spawnvehicle) select 0;
-_unit moveInGunner _veh;
-_soldados = _soldados + [_unit];
+_direction = [_roads select 0, _connectedRoads select 0] call BIS_fnc_DirTo;
+if ((isNull (_roads select 0)) OR (isNull (_connectedRoads select 0))) then {diag_log format ["Error in createRoadblock: no suitable roads found near %1",_marker]};
+_position = [getPos (_roads select 0), 7, _direction + 270] call BIS_Fnc_relPos;
+_bunker = bld_smallBunker createVehicle _position;
+_allVehicles pushBack _bunker;
+_bunker setDir _direction;
+_position = getPosATL _bunker;
+_static = statMG createVehicle _markerPos;
+_allVehicles pushBack _static;
+_static setPosATL _position;
+_static setDir _direction;
 sleep 1;
-_pos = [getPos (_roads select 0), 7, _dirveh + 90] call BIS_Fnc_relPos;
-_bunker = "Land_BagBunker_Small_F" createVehicle _pos;
-_vehiculos = _vehiculos + [_bunker];
-_bunker setDir _dirveh + 180;
-_pos = getPosATL _bunker;
-_veh = statMG createVehicle _posicion;
-_vehiculos = _vehiculos + [_veh];
-_veh setPosATL _pos;
-_veh setDir _dirVeh;
+
+_unit = ([_markerPos, 0, infGunner, _tempGroup] call bis_fnc_spawnvehicle) select 0;
+_unit moveInGunner _static;
+
+_position = [getPos (_roads select 0), 7, _direction + 90] call BIS_Fnc_relPos;
+_bunker = bld_smallBunker createVehicle _position;
+_allVehicles pushBack _bunker;
+_bunker setDir _direction + 180;
+_position = getPosATL _bunker;
+_static = statMG createVehicle _markerPos;
+_allVehicles pushBack _static;
+_static setPosATL _position;
+_static setDir _direction;
 sleep 1;
-_unit = ([_posicion, 0, infGunner, _grupoE] call bis_fnc_spawnvehicle) select 0;
-_unit moveInGunner _veh;
-_soldados = _soldados + [_unit];
-sleep 1;
-_pos = [getPos _bunker, 6, getDir _bunker] call BIS_fnc_relPos;
-_veh = createVehicle [cFlag, _pos, [],0, "CAN_COLLIDE"];
-_vehiculos = _vehiculos + [_veh];
 
+_unit = ([_markerPos, 0, infGunner, _tempGroup] call bis_fnc_spawnvehicle) select 0;
+_unit moveInGunner _static;
 
-{[_x] spawn genVEHinit} forEach _vehiculos;
+_position = [getPos _bunker, 6, getDir _bunker] call BIS_fnc_relPos;
+_static = createVehicle [cFlag, _position, [],0, "CAN_COLLIDE"];
+_allVehicles pushBack _static;
 
-_tipoGrupo = [infAT, side_green] call AS_fnc_pickGroup;
-_grupo = [_posicion, side_green, _tipogrupo] call BIS_Fnc_spawnGroup;
-{[_x] join _grupo} forEach units _grupoE;
-_soldier = ([_posicion, 0, sol_MED, _grupo] call bis_fnc_spawnvehicle) select 0;
-_grupo selectLeader (units _grupo select 1);
-deleteGroup _grupoE;
-if (random 10 < 2.5) then
-	{
-	_perro = _grupo createUnit ["Fin_random_F",_posicion,[],0,"FORM"];
-	[_perro,_grupo] spawn guardDog;
-	};
-[leader _grupo, _marcador, "SAFE","SPAWNED","NOVEH2","NOFOLLOW"] execVM "scripts\UPSMON.sqf";
-{[_x] spawn genInitBASES; _soldados = _soldados + [_x]} forEach units _grupo;
+{[_x] spawn genVEHinit} forEach _allVehicles;
 
-waitUntil {sleep 1; !(spawner getVariable _marcador) or (count (allUnits select {((side _x == side_green) or (side _x == side_red)) and (_x distance _posicion <= _size)}) < 1)};
+_groupType = [infAT, side_green] call AS_fnc_pickGroup;
+_group = [_markerPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
+{[_x] join _group} forEach units _tempGroup;
+_soldier = ([_markerPos, 0, sol_MED, _group] call bis_fnc_spawnvehicle) select 0;
+_soldier = ([_markerPos, 0, sol_LAT, _group] call bis_fnc_spawnvehicle) select 0;
+_group selectLeader (units _group select 1);
+_group allowFleeing 0;
+deleteGroup _tempGroup;
 
-if (count (allUnits select {((side _x == side_green) or (side _x == side_red)) and (_x distance _posicion <= _size)}) < 1) then {
-	[-5,0,_posicion] remoteExec ["AS_fnc_changeCitySupport",2];
-	[["TaskSucceeded", ["", "Roadblock Cleansed"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
-	[_posicion] remoteExec ["patrolCA",HCattack];
-	_conquistado = true;
-	mrkAAF = mrkAAF - [_marcador];
-	mrkFIA = mrkFIA + [_marcador];
+if (random 10 < 2.5) then {
+	_dog = _group createUnit ["Fin_random_F",_markerPos,[],0,"FORM"];
+	[_dog,_group] spawn guardDog;
+};
+
+[leader _group, _marker, "SAFE","SPAWNED","NOVEH2","NOFOLLOW"] execVM "scripts\UPSMON.sqf";
+{[_x] spawn genInitBASES; _allSoldiers pushBack _x} forEach units _group;
+_allGroups pushBack _group;
+
+waitUntil {sleep 1; !(spawner getVariable _marker) or (count (allUnits select {((side _x == side_green) or (side _x == side_red)) and (_x distance _markerPos <= _size)}) < 1)};
+
+if (count (allUnits select {((side _x == side_green) or (side _x == side_red)) and (_x distance _markerPos <= _size)}) < 1) then {
+	[-5,0,_markerPos] remoteExec ["AS_fnc_changeCitySupport",2];
+	[["TaskSucceeded", ["", localize "STR_TSK_RB_DESTROYED"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
+	[_markerPos] remoteExec ["patrolCA",HCattack];
+	mrkAAF = mrkAAF - [_marker];
+	mrkFIA = mrkFIA + [_marker];
 	publicVariable "mrkAAF";
 	publicVariable "mrkFIA";
-	if (hayBE) then {["cl_loc"] remoteExec ["fnc_BE_XP", 2]};
+	if (activeBE) then {["cl_loc"] remoteExec ["fnc_BE_XP", 2]};
+	[_marker] spawn AS_fnc_respawnRoadblock;
 };
 
-waitUntil {sleep 1; !(spawner getVariable _marcador)};
-
-{_veh = _x;
-	if (not(_veh in staticsToSave)) then {
-		deleteVehicle _veh;
-	};
-} forEach _vehiculos;
-{
-	if (alive _x) then {deleteVehicle _x}
-} forEach _soldados;
-
-deleteGroup _grupo;
-
-if (_conquistado) then {
-	_tiempolim = 120;//120
-	_fechalim = [date select 0, date select 1, date select 2, date select 3, (date select 4) + _tiempolim];
-	_fechalimnum = dateToNumber _fechalim;
-	waitUntil {sleep 60;(dateToNumber date > _fechalimnum)};
-	_base = [marcadores,_posicion] call BIS_fnc_nearestPosition;
-	if (_base in mrkAAF) then {
-		mrkAAF = mrkAAF + [_marcador];
-		mrkFIA = mrkFIA - [_marcador];
-		publicVariable "mrkAAF";
-		publicVariable "mrkFIA";
-	};
-};
+waitUntil {sleep 1; !(spawner getVariable _marker)};
+[_allGroups, _allSoldiers, _allVehicles] spawn AS_fnc_despawnUnits;

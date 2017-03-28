@@ -29,6 +29,8 @@ opTruck = 			"rhs_kamaz5350_vdv";
 
 opMRAPu = 			"rhs_tigr_vmf";
 
+opIFV = 			["rhs_bmp2k_vmf"];
+
 opArtillery = 		"rhs_D30_vdv";
 opArtilleryAmmoHE = "rhs_mag_3of56_10";
 

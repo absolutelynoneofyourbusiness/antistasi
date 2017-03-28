@@ -14,7 +14,7 @@ call {
 		_items = ["ItemGPS", "ItemRadio", "rhsgref_acc_oko21", "rhsgref_TacVest_ERDL", "rhsgref_ssh68_un"];
 		_optics = ["rhsgref_acc_oko21"];
 	};
-	if (hayRHS) exitWith {
+	if (activeAFRF) exitWith {
 		_weapons = ["rhs_weap_ak74m_camo", "rhs_weap_rpg26"];
 		_magazines = ["rhs_30Rnd_545x39_AK", "rhs_rpg26_mag", "rhs_mag_rgd5"];
 		_items = ["ItemGPS", "ItemRadio", "rhs_acc_1p29", "rhs_6b23_digi_rifleman", "rhs_6b28_ess_bala"];
@@ -36,6 +36,6 @@ publicVariable "unlockedMagazines";
 publicVariable "unlockedItems";
 publicVariable "unlockedOptics";
 
-if (hayBE) then {[] call fnc_BE_gearUpdate; [] call fnc_BE_refresh};
+if (activeBE) then {[] call fnc_BE_gearUpdate; [] call fnc_BE_refresh};
 [unlockedWeapons, "unlockedMagazines"] call AS_fnc_MAINT_missingAmmo;
 [false] call AS_fnc_MAINT_arsenal;

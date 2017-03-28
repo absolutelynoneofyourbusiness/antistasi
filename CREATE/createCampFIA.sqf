@@ -27,7 +27,7 @@ _grupo = [_posicion, side_blue, ([guer_grp_sniper, "guer"] call AS_fnc_pickGroup
 _grupo setBehaviour "STEALTH";
 _grupo setCombatMode "GREEN";
 
-{[_x] spawn FIAinitBASES;} forEach units _grupo;
+{[_x] spawn AS_fnc_initialiseFIAGarrisonUnit;} forEach units _grupo;
 
 sleep 10;
 _fire inflame true;

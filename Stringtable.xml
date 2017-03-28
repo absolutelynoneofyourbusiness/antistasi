@@ -144,6 +144,12 @@
 			<Key ID="STR_GENIDENT_RES">
 				<Original>Resistence</Original>
 			</Key>
+			<Key ID="STR_GENIDENT_SOC">
+				<Original>SOCOM</Original>
+			</Key>
+			<Key ID="STR_GENIDENT_SF">
+				<Original>Special Forces</Original>
+			</Key>
 		</Container>
 	</Package>
 
@@ -154,6 +160,9 @@
 			</Key>
 			<Key ID="STR_INFO_SKILLADJ">
 				<Original>&lt;t color='#f59900' size='.45' align='center'&gt;Warning! You lack the proficiency to effectively operate this weapon.&lt;/t&gt;</Original>
+			</Key>
+			<Key ID="STR_INFO_INITZONES">
+				<Original>Zones initialized.</Original>
 			</Key>
 		</Container>
 	</Package>
@@ -355,10 +364,10 @@
 				<Original>Store the vehicle you are looking at in your personal garage.</Original>
 			</Key>
 			<Key ID="STR_UI_VEHMGMT_UNL_TEXT">
-				<Original>Unlock Vehicle</Original>
+				<Original>(Un)lock Vehicle</Original>
 			</Key>
 			<Key ID="STR_UI_VEHMGMT_UNL_TT">
-				<Original>Make the vehicle accessible to players not part of your group.</Original>
+				<Original>Lock or unlock the vehicle.</Original>
 			</Key>
 			<Key ID="STR_UI_VEHMGMT_FGAR_TEXT">
 				<Original>FIA Garage</Original>
@@ -981,6 +990,57 @@
 			</Key>
 			<Key ID="STR_TSKDESC_INTREINF">
 				<Original>In response to the casualties suffered by the garrison at the %2, %1 are preparing to send reinforcements from %3. They will be ready to roll out within minutes. Try to catch them on the move!</Original>
+			</Key>
+
+			<Key ID="STR_TSK_DESSuppression">
+				<Original>Destroy the enemy taskforce.</Original>
+			</Key>
+			<Key ID="STR_TSKDESC_DESSuppression">
+				<Original>We have received word that the enemy are supressing a community at their local church. If we wipe them out we will surely bring some support to our cause. Go to the location and kill the squad. </Original>
+			</Key>
+
+			<Key ID="STR_TSK_DESfuel">
+				<Original> Destroy the enemy fuel truck.</Original>
+			</Key>
+			<Key ID="STR_TSKDESC_DESfuel">
+				<Original>The enemy is buying fuel from the civilians to supply their war machine. The truck is leaving from %1 and will return there once it is full. We have a contact who will let us know when the truck is at the fuel station. Destroy the fuel truck to show the enemy and the population that we will not stand for collaboration.</Original>
+			</Key>
+
+      		<Key ID="STR_TSK_ASFOREST">
+				<Original>Forest Patrol</Original>
+			</Key>
+			<Key ID="STR_TSKDESC_ASFOREST">
+				<Original>Reports have come in that a patrol is being dispatched from the %1 to this location. There will be a CSAT SpecOps ground team in the patrol training them in Forest warfare. We know they are patrolling within approximately 150 meters of this point. Go there and assassinate them. Do this before %2:%3. </Original>
+			</Key>
+
+			<Key ID="STR_TSK_RADIO_DESTROYED">
+				<Original>Radio Tower Destroyed</Original>
+			</Key>
+			<Key ID="STR_TSK_RB_DESTROYED">
+				<Original>Roadblock cleansed.</Original>
+			</Key>
+			<Key ID="STR_TSK_WP_DESTROYED">
+				<Original>Observation Camp Cleansed.</Original>
+			</Key>
+			<Key ID="STR_TSK_AAWP_DESTROYED">
+				<Original>%1 emplacement destroyed.</Original>
+			</Key>
+		</Container>
+	</Package>
+
+	<Package name="Information">
+		<Container name="Move Assets">
+			<Key ID="STR_INFO_MOVEASSETS_1">
+				<Original>Only the Commander may move assets.</Original>
+			</Key>
+			<Key ID="STR_INFO_MOVEASSETS_2">
+				<Original>You need to be on foot and not controlling AI to move assets.</Original>
+			</Key>
+			<Key ID="STR_INFO_MOVEASSETS_3">
+				<Original>This asset is too far from the zone.</Original>
+			</Key>
+			<Key ID="STR_INFO_MOVEASSETS_4">
+				<Original>You cannot move assets farther than %1m from the zone.</Original>
 			</Key>
 		</Container>
 	</Package>

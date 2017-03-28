@@ -38,10 +38,10 @@ _viejo setVariable ["BLUFORSpawn",nil,true];
 _nuevo setCaptive false;
 _nuevo setRank (_rango);
 _nuevo setVariable ["rango",_rango,true];
-//if (!hayACEMedical) then {[_nuevo] call initRevive};
+//if (!activeACEMedical) then {[_nuevo] call initRevive};
 disableUserInput false;
 //_nuevo enableSimulation true;
-if (_viejo == stavros) then
+if (_viejo == Slowhand) then
 	{
 	[_nuevo] call stavrosInit;
 	};
@@ -52,7 +52,7 @@ removeAllItemsWithMagazines _nuevo;
 removeBackpackGlobal _nuevo;
 removeVest _nuevo;
 if ((not("ItemGPS" in unlockedItems)) and ("ItemGPS" in (assignedItems _nuevo))) then {_nuevo unlinkItem "ItemGPS"};
-if ((!hayTFAR) and ("ItemRadio" in (assignedItems player)) and (not("ItemRadio" in unlockedItems))) then {player unlinkItem "ItemRadio"};
+if ((!activeTFAR) and ("ItemRadio" in (assignedItems player)) and (not("ItemRadio" in unlockedItems))) then {player unlinkItem "ItemRadio"};
 if (!isPlayer (leader group player)) then {(group player) selectLeader player};
 player addEventHandler ["FIRED",
 	{
@@ -145,7 +145,7 @@ player addEventHandler ["HandleHeal",
 player addEventHandler ["WeaponAssembled",{
 	params ["_EHunit", "_EHobj"];
 	if (_EHunit isKindOf "StaticWeapon") then {
-		_EHobj addAction [localize "Str_act_moveAsset", "moveObject.sqf","static",0,false,true,"","(_this == stavros)"];
+		_EHobj addAction [localize "Str_act_moveAsset", {[_this select 0,_this select 1,_this select 2,"static"] spawn AS_fnc_moveObject},nil,0,false,true,"","(_this == Slowhand)"];
 		if !(_EHunit in staticsToSave) then {
 			staticsToSave pushBack _EHunit;
 			publicVariable "staticsToSave";
@@ -178,7 +178,7 @@ player addEventHandler ["Take",{
 	[] spawn AS_fnc_skillAdjustments;
 }] call BIS_fnc_addScriptedEventHandler;
 
-if (!(isMultiplayer) && (hayACEMedical)) then {
+if (!(isMultiplayer) && (activeACEMedical)) then {
 	player setVariable ["inconsciente",false,true];
 	player setVariable ["respawning",false];
 	player addEventHandler ["HandleDamage", {

@@ -1,5 +1,5 @@
 side_blue = independent;
-guer_respawn = "respawn_guerrila";
+guer_respawn = "respawn_guer";
 guer_marker_colour = "ColorGUER";
 guer_marker_type = "rhs_flag_che";
 guer_flag_texture = "rhsafrf\addons\rhs_main\data\flag_vdv_co.paa";
@@ -38,10 +38,10 @@ guer_stat_MGH = "rhsgref_ins_g_DSHKM";
 guer_stat_AT = "rhsgref_ins_g_SPG9M";
 guer_stat_AA = "rhsgref_ins_g_ZU23";
 
-allStatMGs pushBackUnique guer_stat_MGH;
-allStatATs pushBackUnique guer_stat_AT;
-allStatAAs pushBackUnique guer_stat_AA;
-allStatMortars pushBackUnique guer_stat_mortar;
+statics_allMGs pushBackUnique guer_stat_MGH;
+statics_allATs pushBackUnique guer_stat_AT;
+statics_allAAs pushBackUnique guer_stat_AA;
+statics_allMortars pushBackUnique guer_stat_mortar;
 
 guer_cfg_inf = (configfile >> "CfgGroups" >> "West" >> "Guerilla" >> "Infantry"); // unused
 

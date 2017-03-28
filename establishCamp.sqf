@@ -52,9 +52,9 @@ _pos = position _road findEmptyPosition [1,30,guer_veh_truck];
 _camion = _tipoVeh createVehicle _pos;
 [_grupo] spawn dismountFIA;
 _grupo addVehicle _camion;
-{[_x] call FIAinit} forEach units _grupo;
+{[_x] call AS_fnc_initialiseFIAUnit} forEach units _grupo;
 leader _grupo setBehaviour "SAFE";
-Stavros hcSetGroup [_grupo];
+Slowhand hcSetGroup [_grupo];
 _grupo setVariable ["isHCgroup", true, true];
 
 _crate = "Box_FIA_Support_F" createVehicle _pos;
@@ -90,7 +90,7 @@ else {
 	deleteMarker _mrk;
 };
 
-stavros hcRemoveGroup _grupo;
+Slowhand hcRemoveGroup _grupo;
 {deleteVehicle _x} forEach units _grupo;
 deleteVehicle _camion;
 deleteGroup _grupo;

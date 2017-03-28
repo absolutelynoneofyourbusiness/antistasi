@@ -1,11 +1,11 @@
 
-if (player != Stavros) exitWith {hint "Only Commander Stavros has access to this function"};
+if (player != Slowhand) exitWith {hint "Only Commander Slowhand has access to this function"};
 if (!allowPlayerRecruit) exitWith {hint "Server is very loaded. \nWait one minute or change FPS settings in order to fulfill this request"};
 if (markerAlpha guer_respawn == 0) exitWith {hint "You cant recruit a new squad while you are moving your HQ"};
 if (!([player] call hasRadio)) exitWith {hint "You need a radio in your inventory to be able to give orders to other squads"};
 _chequeo = false;
 {
-	if (((side _x == side_red) or (side _x == side_green)) and (_x distance petros < 500) and (not(captive _x))) then {_chequeo = true};
+	if (((side _x == side_red) or (side _x == side_green)) and (_x distance petros < safeDistance_recruit) and (not(captive _x))) then {_chequeo = true};
 } forEach allUnits;
 
 if (_chequeo) exitWith {Hint "You cannot Recruit Squads with enemies near your HQ"};
@@ -47,7 +47,7 @@ else
 	_costeHR = 2;
 	_coste = _coste + ([_tipogrupo] call vehiclePrice) + ([guer_veh_truck] call vehiclePrice);
 
-	if ((hayRHS) && (_tipogrupo == guer_stat_AA)) then {
+	if ((activeAFRF) && (_tipogrupo == guer_stat_AA)) then {
 		_coste = 3*(server getVariable guer_sol_R_L);
 		_costeHR = 3;
 		_coste = _coste + ([vehTruckAA] call vehiclePrice);
@@ -72,7 +72,7 @@ while {true} do
 	};
 _road = _roads select 0;
 
-if (hayRHS) then {
+if (activeAFRF) then {
 	if (_esinf) then {
 		_pos = [(getMarkerPos guer_respawn), 30, random 360] call BIS_Fnc_relPos;
 		_grupo = [_pos, side_blue, ([_tipogrupo, "guer"] call AS_fnc_pickGroup)] call BIS_Fnc_spawnGroup;
@@ -210,9 +210,9 @@ else
 
 };
 
-{[_x] call FIAinit} forEach units _grupo;
+{[_x] call AS_fnc_initialiseFIAUnit} forEach units _grupo;
 leader _grupo setBehaviour "SAFE";
-Stavros hcSetGroup [_grupo];
+Slowhand hcSetGroup [_grupo];
 _grupo setVariable ["isHCgroup", true, true];
 petros directSay "SentGenReinforcementsArrived";
 hint format ["Group %1 at your command.\n\nGroups are managed from the High Command bar (Default: CTRL+SPACE)\n\nIf the group gets stuck, use the AI Control feature to make them start moving. Mounted Static teams tend to get stuck (solving this is WiP)\n\nTo assign a vehicle for this group, look at some vehicle, and use Vehicle Squad Mngmt option in Y menu", groupID _grupo];

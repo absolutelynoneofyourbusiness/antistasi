@@ -1,17 +1,17 @@
-if (player != stavros) exitWith {hint "Only Player Commander is allowed to move assets"};
-if (vehicle player != player) exitWith {hint "You cannot move assets while in a vehicle"};
+if (player != Slowhand) exitWith {hint localize "STR_INFO_MOVEASSETS_1"};
+if (vehicle player != player) exitWith {hint localize "STR_INFO_MOVEASSETS_2"};
 
-_cosa = _this select 0;
-_jugador = _this select 1;
-_id = _this select 2;
+params ["_object", "_player", "_id", ["_category", ""]];
+private ["_position","_distance","_attachPoint","_bbr","_p1","_p2","_maxHeight","_checkAttachments"];
 
-_location = position petros;
+_position = position petros;
 _distance = 30;
 _attachPoint = [0,2,1];
-if (count _this > 3) then {
-	_location = getMarkerPos ([mrkFIA, _jugador] call BIS_fnc_nearestPosition);
+
+if !(_category == "") then {
+	_position = getMarkerPos ([mrkFIA, _player] call BIS_fnc_nearestPosition);
 	_distance = 50;
-	_bbr = boundingBoxReal _cosa;
+	_bbr = boundingBoxReal _object;
 	_p1 = _bbr select 0;
 	_p2 = _bbr select 1;
 	_maxHeight = abs ((_p2 select 2) - (_p1 select 2));
@@ -23,13 +23,13 @@ if (count _this > 3) then {
 	};
 };
 
-if (position _cosa distance _location > _distance) exitWith {hint "Asset is too far from the flag."};
+if (position _object distance _position > _distance) exitWith {hint localize "STR_INFO_MOVEASSETS_3"};
 
-_cosa removeAction _id;
-_cosa attachTo [player,_attachPoint];
+_object removeAction _id;
+_object attachTo [player, _attachPoint];
 player setVariable ["ObjAttached", true, true];
 
-player addAction [localize "Str_act_dropAsset", {
+player addAction [localize "STR_ACT_DROPASSET", {
 	params ["_obj", "_caller", "_actionID"];
 	_obj removeAction _actionID;
 	_obj setVariable ["ObjAttached", nil, true];
@@ -40,18 +40,18 @@ _checkAttachments = {
 	private _return = false;
 	{
 		if !(isNull _x) exitWith {_return = true};
-	} forEach attachedObjects _jugador;
-	_return;
+	} forEach attachedObjects _player;
+	_return
 };
 
-waitUntil {sleep 1; (vehicle player != player) or (player distance _location > _distance) or (!alive player) or (!isPlayer player) or !(call _checkAttachments)};
+waitUntil {sleep 1; (vehicle player != player) OR (player distance _position > _distance) OR !(alive player) OR !(isPlayer player) OR !(call _checkAttachments)};
 
 {detach _x} forEach attachedObjects player;
 
-_cosa addAction [localize "Str_act_moveAsset", "moveObject.sqf",nil,0,false,true,"","(_this == stavros)", 5];
+_object addAction [localize "STR_ACT_MOVEASSET", "moveObject.sqf",nil,0,false,true,"","(_this == Slowhand)", 5];
 
-_cosa setPosATL [getPosATL _cosa select 0,getPosATL _cosa select 1,0];
+_object setPosATL [getPosATL _object select 0,getPosATL _object select 1,0];
 
-if (vehicle player != player) exitWith {hint "You cannot move assets while in a vehicle"};
+if (vehicle player != player) exitWith {hint localize "STR_INFO_MOVEASSETS_2"};
 
-if  (player distance _location > _distance) exitWith {hint format ["You cannot move assets farther than %1m from the flag.", _distance]};
+if  (player distance _position > _distance) exitWith {hint format [localize "STR_INFO_MOVEASSETS_4", _distance]};

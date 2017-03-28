@@ -3,12 +3,13 @@ private ["_unit","_enemigos"];
 _unit = _this select 0;
 
 _unit setSkill 0;
+_unit setSpeedMode "LIMITED";
 
 _EHkilledIdx = _unit addEventHandler ["killed", {
 	_muerto = _this select 0;
 	_killer = _this select 1;
 
-	if (hayACE) then {
+	if (activeACE) then {
 		if ((isNull _killer) || (_killer == _muerto)) then {
 			_killer = _muerto getVariable ["ace_medical_lastDamageSource", _killer];
 		};

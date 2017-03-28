@@ -36,4 +36,4 @@ else
 	if (_nato != 0) then {_texto = format ["<t size='0.6' color='#C1C0BB'>Prestige Change.<br/> <t size='0.5' color='#C1C0BB'><br/>%3: %2%1",_nato,_natoSim, A3_Str_BLUE]} else {_texto = format ["<t size='0.6' color='#C1C0BB'>Prestige Change.<br/> <t size='0.5' color='#C1C0BB'><br/>%3: %2%1",_csat,_csatSim,A3_Str_RED]};
 	};
 
-if (_texto != "") then {[petros,"income",_texto] remoteExec ["commsMP",stavros]};
+if (_texto != "") then {[petros,"income",_texto] remoteExec ["commsMP",Slowhand]};

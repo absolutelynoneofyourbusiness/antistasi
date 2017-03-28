@@ -30,12 +30,18 @@ _bases = [];
 _base = "";
 {
 	_base = _x;
-	_posbase = getMarkerPos _base;
-	if ((_targetPosition distance _posbase < 7500) and (_targetPosition distance _posbase > 1500) and (not (spawner getVariable _base))) then {_bases = _bases + [_base]}
+	_posBase = getMarkerPos _base;
+	if ((_targetPosition distance _posBase < 7500) and (_targetPosition distance _posBase > 1500) and !(spawner getVariable _base)) then {
+		if (worldName == "Tanoa") then {
+			if ([_posBase, _targetPosition] call AS_fnc_IslandCheck) then {_bases pushBack _base};
+		} else {
+			_bases pushBack _base;
+		};
+	};
 } forEach _basesAAF;
 if (count _bases > 0) then {_base = [_bases,_targetPosition] call BIS_fnc_nearestPosition;} else {_base = ""};
 
-_posbase = getMarkerPos _base;
+_posBase = getMarkerPos _base;
 
 _airportsAAF = aeropuertos - mrkFIA;
 _airports = [];
@@ -140,7 +146,7 @@ if !(server getVariable "BCactive") then {
 if (_break) exitWith {
 	_tsk = ["PR",[side_blue,civilian],[format [_tskDesc_fail,_targetName,numberToDate [2035,_fechalimnum] select 3,numberToDate [2035,_fechalimnum] select 4],_tskTitle,_targetMarker],_targetPosition,"FAILED",5,true,true,"Heal"] call BIS_fnc_setTask;
 	[5,-5,_targetMarker] remoteExec ["AS_fnc_changeCitySupport",2];
-	[-10,stavros] call playerScoreAdd;
+	[-10,Slowhand] call playerScoreAdd;
 
 	[1200,_tsk] spawn borrarTask;
 
@@ -306,15 +312,15 @@ if (_break) then {
 if (_break) then {
 	_tsk = ["PR",[side_blue,civilian],[format [_tskDesc_fail2,_targetName,numberToDate [2035,_fechalimnum] select 3,numberToDate [2035,_fechalimnum] select 4],_tskTitle,_targetMarker],_targetPosition,"FAILED",5,true,true,"Heal"] call BIS_fnc_setTask;
 	[5,-5,_targetMarker] remoteExec ["AS_fnc_changeCitySupport",2];
-	[-10,stavros] call playerScoreAdd;
+	[-10,Slowhand] call playerScoreAdd;
 }
 else {
 	_tsk = ["PR",[side_blue,civilian],[format [_tskDesc_success,_targetName,numberToDate [2035,_fechalimnum] select 3,numberToDate [2035,_fechalimnum] select 4],_tskTitle,_targetMarker],_targetPosition,"SUCCEEDED",5,true,true,"Heal"] call BIS_fnc_setTask;
 	[0,_prestige,_targetMarker] remoteExec ["AS_fnc_changeCitySupport",2];
 	{if (_x distance _targetPosition < 500) then {[10,_x] call playerScoreAdd}} forEach (allPlayers - hcArray);
-	[10,stavros] call playerScoreAdd;
+	[10,Slowhand] call playerScoreAdd;
 	// BE module
-	if (hayBE) then {
+	if (activeBE) then {
 		["mis"] remoteExec ["fnc_BE_XP", 2];
 	};
 	// BE module

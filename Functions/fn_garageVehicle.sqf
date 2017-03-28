@@ -29,7 +29,7 @@ if (_exit) exitWith {hint "You are not owner of this vehicle and you cannot gara
 // BE module
 _permission = true;
 _text = "Error in permission system, module garage.";
-if (hayBE) then {
+if (activeBE) then {
 	if (_FIA) then {
 		_permission = ["FIA_garage"] call fnc_BE_permission;
 		diag_log format ["GARAGE -- perm 1: %1", _permission];

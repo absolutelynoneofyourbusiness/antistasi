@@ -6,7 +6,7 @@ if (player getVariable ["owner",player] != player) exitWith {false};
 call {
 	if (_key == 21) exitWith {
 		if (_shift) then {
-			if (player == stavros) then {
+			if (player == Slowhand) then {
 				if (_ctrl) then {
 					CreateDialog "com_menu";
 				} else {
@@ -21,7 +21,7 @@ call {
 
 	if (_key == 72) exitWith {
 		if (_ctrl && _shift) then {
-			if (player == stavros) then {
+			if (player == Slowhand) then {
 				closedialog 0;
 				createDialog "radio_comm_commander";
 			} else {
@@ -41,7 +41,7 @@ call {
 
 	if (isMultiplayer) then {
 		if (_key == 207) exitWith {
-			if (!hayACEhearing) then {
+			if (!activeACEhearing) then {
 				if (soundVolume <= 0.5) then {
 					0.5 fadeSound 1;
 					hintSilent "You've taken out your ear plugs.";
@@ -54,7 +54,7 @@ call {
 	};
 
 	if !(isMultiplayer) then {
-		if (!hayACEhearing) exitWith {
+		if (!activeACEhearing) exitWith {
 			if (_key == 207) then {
 				0.5 fadeSound 0.1;
 				hintSilent "You've inserted your ear plugs.";

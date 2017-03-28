@@ -4,14 +4,14 @@ _killer = _this select 1;
 if (_muerto getVariable ["OPFORSpawn",false]) then {_muerto setVariable ["OPFORSpawn",nil,true]};
 [_muerto] spawn postmortem;
 
-if (hayACE) then {
+if (activeACE) then {
 	if ((isNull _killer) || (_killer == _muerto)) then {
 		_killer = _muerto getVariable ["ace_medical_lastDamageSource", _killer];
 	};
 };
 
 if ((side _killer == side_blue) || (captive _killer)) then {
-	if (hayBE) then {["kill"] remoteExec ["fnc_BE_XP", 2]};
+	if (activeBE) then {["kill"] remoteExec ["fnc_BE_XP", 2]};
 	_grupo = group _muerto;
 	if (isPlayer _killer) then {
 		[2,_killer,false] call playerScoreAdd;

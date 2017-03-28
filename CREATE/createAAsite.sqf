@@ -1,22 +1,19 @@
 if (!isServer and hasInterface) exitWith {};
-params ["_marcador"];
 
-private ["_unit","_AAVeh","_crate","_vehiculos","_grupos","_soldados","_stcs"];
+params ["_marker"];
+private ["_posMarker","_size","_cmpInfo","_posCmp","_cmp","_objs","_allGroups","_allSoldiers","_allVehicles","_statics","_SPAA","_hasSPAA","_truck","_crate","_unit","_groupCrew","_groupGunners","_markerPatrol","_UAV","_groupUAV","_groupType","_groupPatrol","_garrisonSize","_mrk"];
 
-private _grupo = createGroup side_green;
-private _grupoCSAT = createGroup side_red;
-private _av = false;
-private _gns = [];
-private _stcs = [];
-private _vehiculos = [];
-private _grupos = [];
-private _soldados = [];
-private _truck = [];
+_posMarker = getMarkerPos (_marker);
+_size = [_marker] call sizeMarker;
 
-_posicion = getMarkerPos (_marcador);
-_size = [_marcador] call sizeMarker;
+_allGroups = [];
+_allSoldiers = [];
+_allVehicles = [];
+_statics = [];
+_hasSPAA = false;
+_groupGunners = createGroup side_red;
 
-_cmpInfo = [_marcador] call AS_fnc_selectCMPData;
+_cmpInfo = [_marker] call AS_fnc_selectCMPData;
 _posCmp = _cmpInfo select 0;
 _cmp = _cmpInfo select 1;
 
@@ -24,127 +21,111 @@ _objs = [_posCmp, 0, _cmp] call BIS_fnc_ObjectsMapper;
 
 {
 	call {
-		if (typeOf _x == opSPAA) exitWith {_AAVeh = _x; _vehiculos = _vehiculos + [_x]; _av = true;};
-		if (typeOf _x == opTruck) exitWith {_truck = _x; _vehiculos pushBackUnique _truck};
-		if (typeOf _x in [statMG, statAT, statAA, statAA2, statMGlow, statMGtower]) exitWith {_stcs pushBack _x;};
-		if (typeOf _x == statMortar) exitWith {_stcs pushBack _x; [_x] execVM "scripts\UPSMON\MON_artillery_add.sqf";};
-		if (typeOf _x == opCrate) exitWith {_crate = _x; _vehiculos = _vehiculos + [_x];};
-		if (typeOf _x == opFlag) exitWith {_vehiculos = _vehiculos + [_x];};
+		if (typeOf _x == opSPAA) exitWith {_SPAA = _x; _allVehicles pushBack _x; _hasSPAA = true};
+		if (typeOf _x == opTruck) exitWith {_truck = _x; _allVehicles pushBack _truck};
+		if (typeOf _x in [statMG, statAT, statAA, statAA2, statMGlow, statMGtower]) exitWith {_statics pushBack _x};
+		if (typeOf _x == statMortar) exitWith {_statics pushBack _x; [_x] execVM "scripts\UPSMON\MON_artillery_add.sqf"};
+		if (typeOf _x == opCrate) exitWith {_crate = _x; _allVehicles pushBack _x};
+		if (typeOf _x == opFlag) exitWith {_allVehicles pushBack _x};
 	};
 } forEach _objs;
 
 _objs = _objs - [_truck];
 
-if (_av) then {
-	_unit = ([_posicion, 0, opI_CREW, _grupoCSAT] call bis_fnc_spawnvehicle) select 0;
-	_unit moveInGunner _AAVeh;
-	_unit = ([_posicion, 0, opI_CREW, _grupoCSAT] call bis_fnc_spawnvehicle) select 0;
-	_unit moveInCommander _AAVeh;
-	_AAVeh lock 2;
+if (_hasSPAA) then {
+	_groupCrew = createGroup side_red;
+	_unit = ([_posMarker, 0, opI_CREW, _groupCrew] call bis_fnc_spawnvehicle) select 0;
+	_unit moveInGunner _SPAA;
+	_unit = ([_posMarker, 0, opI_CREW, _groupCrew] call bis_fnc_spawnvehicle) select 0;
+	_unit moveInCommander _SPAA;
+	_SPAA lock 2;
+	_allGroups pushBack _groupCrew;
+	{[_x] spawn CSATinit; _allSoldiers pushBack _x} forEach units _groupCrew;
 };
 
 {
-	_vehiculos = _vehiculos + [_x];
-	_unit = ([_posicion, 0, opI_CREW, _grupoCSAT] call bis_fnc_spawnvehicle) select 0;
+	_unit = ([_posMarker, 0, opI_CREW, _groupGunners] call bis_fnc_spawnvehicle) select 0;
 	_unit moveInGunner _x;
-	_gns pushBack _unit;
 	if (str typeof _x find statAA > -1) then {
-		_unit = ([_posicion, 0, opI_CREW, _grupoCSAT] call bis_fnc_spawnvehicle) select 0;
+		_unit = ([_posMarker, 0, opI_CREW, _groupGunners] call bis_fnc_spawnvehicle) select 0;
 		_unit moveInCommander _x;
-		_gns pushBack _unit;
 	};
-} forEach _stcs;
+} forEach _statics;
 
-_mrkfin = createMarkerLocal [format ["specops%1", random 100],_posCmp];
-_mrkfin setMarkerShapeLocal "RECTANGLE";
-_mrkfin setMarkerSizeLocal [200,200];
-_mrkfin setMarkerTypeLocal "hd_warning";
-_mrkfin setMarkerColorLocal "ColorRed";
-_mrkfin setMarkerBrushLocal "DiagGrid";
+{[_x] spawn CSATinit; _allSoldiers pushBack _x} forEach units _groupGunners;
+_allGroups pushBack _groupGunners;
 
-[leader _grupoCSAT, _mrkfin, "AWARE", "SPAWNED","NOVEH", "NOFOLLOW"] execVM "scripts\UPSMON.sqf";
+_markerPatrol = createMarkerLocal [format ["specops%1", random 100],_posCmp];
+_markerPatrol setMarkerShapeLocal "RECTANGLE";
+_markerPatrol setMarkerSizeLocal [200,200];
+_markerPatrol setMarkerTypeLocal "hd_warning";
+_markerPatrol setMarkerColorLocal "ColorRed";
+_markerPatrol setMarkerBrushLocal "DiagGrid";
 
-_uav = createVehicle [opUAVsmall, _posCmp, [], 0, "FLY"];
-createVehicleCrew _uav;
+[leader _groupGunners, _markerPatrol, "AWARE", "SPAWNED","NOVEH", "NOFOLLOW"] execVM "scripts\UPSMON.sqf";
 
-_grupoUAV = group (crew _uav select 1);
-[leader _grupoUAV, _mrkfin, "SAFE", "SPAWNED","NOVEH", "NOFOLLOW"] execVM "scripts\UPSMON.sqf";
+_UAV = createVehicle [opUAVsmall, _posCmp, [], 0, "FLY"];
+_allVehicles pushBack _UAV;
+createVehicleCrew _UAV;
+_groupUAV = group (crew _UAV select 1);
+[leader _groupUAV, _markerPatrol, "SAFE", "SPAWNED","NOVEH", "NOFOLLOW"] execVM "scripts\UPSMON.sqf";
+{[_x] spawn genInitBASES; _allSoldiers pushBack _x} forEach units _groupUAV;
+_allGroups pushBack _groupUAV;
 
-{[_x] spawn genVEHinit} forEach _vehiculos;
+_spawnGroup = {
+	params ["_type"];
 
-{[_x] spawn CSATinit; _soldados = _soldados + [_x]} forEach units _grupoCSAT;
-_grupos = _grupos + [_grupoCSAT];
+	_groupType = [_type, side_green] call AS_fnc_pickGroup;
+	_groupPatrol = [_posMarker, side_green, _groupType] call BIS_Fnc_spawnGroup;
+	sleep 1;
+	[leader _groupPatrol, _marker, "SAFE","SPAWNED","NOFOLLOW","NOVEH2"] execVM "scripts\UPSMON.sqf";
+	{[_x] spawn genInitBASES; _allSoldiers pushBack _x} forEach units _groupPatrol;
+	_allGroups pushBack _groupPatrol;
+};
 
-_tipoGrupo = [infTeamATAA, side_green] call AS_fnc_pickGroup;
-_grupo = [_posicion, side_green, _tipogrupo] call BIS_Fnc_spawnGroup;
-sleep 1;
-[leader _grupo, _marcador, "SAFE","SPAWNED","NOFOLLOW","NOVEH2"] execVM "scripts\UPSMON.sqf";
-_grupos = _grupos + [_grupo];
-{[_x] spawn genInitBASES; _soldados = _soldados + [_x]} forEach units _grupo;
+{
+	[_x] call _spawnGroup;
+} forEach [infTeamATAA, infAA, infTeam];
 
-_tipoGrupo = [infAA, side_green] call AS_fnc_pickGroup;
-_grupo = [_posicion, side_green, _tipogrupo] call BIS_Fnc_spawnGroup;
-sleep 1;
-[leader _grupo, _marcador, "SAFE","SPAWNED","NOFOLLOW","NOVEH2"] execVM "scripts\UPSMON.sqf";
-_grupos = _grupos + [_grupo];
-{[_x] spawn genInitBASES; _soldados = _soldados + [_x]} forEach units _grupo;
+{[_x] spawn genVEHinit} forEach _allVehicles;
 
-_tipoGrupo = [infTeam, side_green] call AS_fnc_pickGroup;
-_grupo = [_posicion, side_green, _tipogrupo] call BIS_Fnc_spawnGroup;
-sleep 1;
-[leader _grupo, _marcador, "SAFE","SPAWNED","NOFOLLOW","NOVEH2"] execVM "scripts\UPSMON.sqf";
-_grupos = _grupos + [_grupo];
-{[_x] spawn genInitBASES; _soldados = _soldados + [_x]} forEach units _grupo;
+_garrisonSize = count _allSoldiers;
 
-_maxSol = count _soldados;
+if (_hasSPAA) then {
+	waitUntil {sleep 1; !(spawner getVariable _marker) OR ((({alive _x} count _allSoldiers < (_garrisonSize / 3)) OR ({fleeing _x} count _allSoldiers == {alive _x} count _allSoldiers)) AND !(alive _SPAA) AND ({alive _x} count units _groupGunners == 0))};
 
-
-if (_av) then {
-	waitUntil {sleep 1; (not (spawner getVariable _marcador)) or ((({alive _x} count _soldados < (_maxSol / 3)) || ({fleeing _x} count _soldados == {alive _x} count _soldados)) && (not alive _AAVeh) && ({alive _x} count _gns == 0))};
-
-
-	if ((({alive _x} count _soldados < (_maxSol / 3)) or ({fleeing _x} count _soldados == {alive _x} count _soldados)) && (not alive _AAVeh) && ({alive _x} count _gns == 0)) then {
-		[-5,0,_posicion] remoteExec ["AS_fnc_changeCitySupport",2];
+	if ((({alive _x} count _allSoldiers < (_garrisonSize / 3)) OR ({fleeing _x} count _allSoldiers == {alive _x} count _allSoldiers)) AND !(alive _SPAA) AND ({alive _x} count units _groupGunners == 0)) then {
+		[-5,0,_posMarker] remoteExec ["AS_fnc_changeCitySupport",2];
 		[0,-20] remoteExec ["prestige",2];
-		[["TaskSucceeded", ["", "Outpost Cleansed"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
-		_mrk = format ["Dum%1",_marcador];
+		[["TaskSucceeded", ["", format [localize "STR_TSK_AAWP_DESTROYED", A3_Str_RED]]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
+		_mrk = format ["Dum%1",_marker];
 		deleteMarker _mrk;
-		mrkAAF = mrkAAF - [_marcador];
-		mrkFIA = mrkFIA + [_marcador];
+		mrkAAF = mrkAAF - [_marker];
+		mrkFIA = mrkFIA + [_marker];
 		publicVariable "mrkAAF";
 		publicVariable "mrkFIA";
-		[_posicion] remoteExec ["patrolCA",HCattack];
-		if (hayBE) then {["cl_loc"] remoteExec ["fnc_BE_XP", 2]};
+		[_posMarker] remoteExec ["patrolCA",HCattack];
+		if (activeBE) then {["cl_loc"] remoteExec ["fnc_BE_XP", 2]};
 	};
-}
-else {
-	waitUntil {sleep 1; !(spawner getVariable _marcador) or (
-		(3*count (allUnits select {
-			((side _x == side_green) or (side _x == side_red)) and (_x distance _posicion <= _size)
-			}) == 0) && ({alive _x} count _gns == 0))};
+} else {
+	waitUntil {sleep 1; !(spawner getVariable _marker) OR ((3*count (allUnits select {((side _x == side_green) OR (side _x == side_red)) AND (_x distance _posMarker <= _size)}) == 0) AND ({alive _x} count units _groupGunners == 0))};
 
-	if (({alive _x} count _soldados < (_maxSol / 3)) or ({fleeing _x} count _soldados == {alive _x} count _soldados)) then {
-		[-5,0,_posicion] remoteExec ["AS_fnc_changeCitySupport",2];
+	if (({alive _x} count _allSoldiers < (_garrisonSize / 3)) OR ({fleeing _x} count _allSoldiers == {alive _x} count _allSoldiers)) then {
+		[-5,0,_posMarker] remoteExec ["AS_fnc_changeCitySupport",2];
 		[0,-10] remoteExec ["prestige",2];
-		[["TaskSucceeded", ["", "Outpost Cleansed"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
-		_mrk = format ["Dum%1",_marcador];
+		[["TaskSucceeded", ["", format [localize "STR_TSK_AAWP_DESTROYED", A3_Str_RED]]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
+		_mrk = format ["Dum%1",_marker];
 		deleteMarker _mrk;
-		mrkAAF = mrkAAF - [_marcador];
-		mrkFIA = mrkFIA + [_marcador];
+		mrkAAF = mrkAAF - [_marker];
+		mrkFIA = mrkFIA + [_marker];
 		publicVariable "mrkAAF";
 		publicVariable "mrkFIA";
-		[_posicion] remoteExec ["patrolCA",HCattack];
-		if (hayBE) then {["cl_loc"] remoteExec ["fnc_BE_XP", 2]};
+		[_posMarker] remoteExec ["patrolCA",HCattack];
+		if (activeBE) then {["cl_loc"] remoteExec ["fnc_BE_XP", 2]};
 	};
 };
 
-waitUntil {sleep 1; !(spawner getVariable _marcador)};
+waitUntil {sleep 1; !(spawner getVariable _marker)};
 
-{if (alive _x) then {deleteVehicle _x}} forEach _soldados;
-{deleteGroup _x} forEach _grupos;
-{deleteVehicle _x} forEach units _grupoUAV;
-deleteVehicle _uav;
-deleteGroup _grupoUAV;
-{if (!([distanciaSPWN-100,1,_x,"BLUFORSpawn"] call distanceUnits)) then {deleteVehicle _x}} forEach _vehiculos;
-
+[_allGroups, _allSoldiers, _allVehicles] spawn AS_fnc_despawnUnits;
 {deleteVehicle _x} forEach _objs;

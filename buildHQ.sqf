@@ -10,6 +10,7 @@ petros forceSpeed 0;
 guer_respawn setMarkerPos getPos petros;
 "FIA_HQ" setMarkerPos getPos petros;
 posHQ = getMarkerPos guer_respawn; publicVariable "posHQ";
+server setVariable ["posHQ", getMarkerPos guer_respawn, true];
 
 if (isMultiplayer) then
 	{

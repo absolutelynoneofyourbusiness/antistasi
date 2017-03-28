@@ -12,7 +12,7 @@ publicVariable "mrkAAF";
 publicVariable "mrkFIA";
 
 // BE module
-if (hayBE) then {
+if (activeBE) then {
 	["territory", -1] remoteExec ["fnc_BE_update", 2];
 };
 // BE module

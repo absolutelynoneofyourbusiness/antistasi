@@ -41,11 +41,11 @@ if (_medico != _unit) then
 		_medico stop true;
 		_unit stop true;
 		_medico action ["HealSoldier",_unit];
-		if (hayACEMedical) then {
+		if (activeACEMedical) then {
 			_medico playMove "AinvPknlMstpSnonWnonDnon_medic_1";
 		};
 		sleep 10;
-		if (hayACEMedical) then {
+		if (activeACEMedical) then {
 			[_unit, _unit] call ace_medical_fnc_treatmentAdvanced_fullHeal;
 		};
 		_medico stop false;
@@ -67,11 +67,11 @@ else
 	_unit setVariable ["ayudado",true];
 	_medico setVariable ["ayudando",true];
 	_medico action ["HealSoldierSelf",_medico];
-	if (hayACEMedical) then {
+	if (activeACEMedical) then {
 		_medico playMove "AinvPknlMstpSnonWnonDnon_medic_1";
 	};
 	sleep 10;
-	if (hayACEMedical) then {
+	if (activeACEMedical) then {
 		[_unit, _unit] call ace_medical_fnc_treatmentAdvanced_fullHeal;
 	};
 	_unit setVariable ["ayudado",nil];

@@ -12,3 +12,11 @@ sleep 5;
 {
 	_x allowDamage true;
 } forEach _vehicles;
+
+{
+	if !(alive _x) then {
+		_x hideObjectGlobal true;
+		deleteVehicle _x;
+		diag_log format ["Error in protectVehicle: a %1 died and was removed.", typeOf _x];
+	};
+};

@@ -7,7 +7,7 @@ _chequeo = false;
 
 if (_chequeo) exitWith {Hint "You cannot buy vehicles with enemies nearby"};
 
-_coste = server getVariable "B_G_Boat_Transport_01_F";
+_coste = server getVariable guer_veh_dinghy;
 
 if (server getVariable "resourcesFIA" < _coste) exitWith {hint format ["You need %1 € to buy a boat",_coste]};
 
@@ -30,7 +30,7 @@ while {true} do
 	_ang = _ang + 31;
 	};
 
-_veh = "B_G_Boat_Transport_01_F" createVehicle _pos;
+_veh = guer_veh_dinghy createVehicle _pos;
 
 [_veh] spawn VEHinit;
 player reveal _veh;

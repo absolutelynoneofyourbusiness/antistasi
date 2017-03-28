@@ -1,11 +1,11 @@
     class ace_interaction_enableTeamManagement {
         title = "Enable Team Management";
-            ACE_setting = 1;
-            values[] = {0,1};
-            texts[] = {"Off","On"};
-            default = 0;
-            typeName = "BOOL";
-            force = 1;
+        ACE_setting = 1;
+        values[] = {0,1};
+        texts[] = {"Off","On"};
+        default = 0;
+        typeName = "BOOL";
+        force = 1;
     };
 
     class ace_missileguidance_enabled {
@@ -22,17 +22,17 @@
         title = "Hide AI groups on map?";
         ACE_setting = 1;
         values[] = {0,1};
-         texts[] = {"Off","On"};
+        texts[] = {"Off","On"};
         default = 1;
         typeName = "BOOL";
-         force = 1;
+        force = 1;
     };
 
     class ace_map_BFT_ShowPlayerNames {
         title = "Show player names map?";
-         ACE_setting = 1;
-         values[] = {0,1};
-         texts[] = {"Off","On"};
+        ACE_setting = 1;
+        values[] = {0,1};
+        texts[] = {"Off","On"};
         default = 1;
         typeName = "BOOL";
         force = 1;

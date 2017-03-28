@@ -31,7 +31,7 @@ if (_tipo != "delete") then {
 	// BE module
 	_permission = true;
 	_text = "Error in permission system, module rb/wp.";
-	if (hayBE) then {
+	if (activeBE) then {
 		if (_escarretera) then {
 			_permission = ["RB"] call fnc_BE_permission;
 			_text = "We cannot maintain any additional roadblocks.";

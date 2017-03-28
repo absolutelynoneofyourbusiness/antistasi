@@ -10,12 +10,6 @@ lamptypes = ["Lamps_Base_F", "PowerLines_base_F","Land_LampDecor_F","Land_LampHa
 arrayids = ["Anthis","Costa","Dimitirou","Elias","Gekas","Kouris","Leventis","Markos","Nikas","Nicolo","Panas","Rosi","Samaras","Thanos","Vega"];
 if (isMultiplayer) then {arrayids = arrayids + ["protagonista"]};
 
-// FIA infantry classes
-soldadosFIA = [guer_sol_RFL,guer_sol_R_L,guer_sol_UN,guer_sol_AR,guer_sol_MED,guer_sol_ENG,guer_sol_EXP,guer_sol_GL,guer_sol_TL,guer_sol_AM,guer_sol_MRK,guer_sol_LAT,guer_sol_SL,guer_sol_OFF,guer_sol_SN];
-
-// vehicles for sale
-vehFIA = vehFIA + [guer_veh_quad,guer_veh_technical,guer_stat_MGH,guer_veh_offroad,guer_veh_truck,"B_G_Boat_Transport_01_F",guer_stat_mortar,guer_stat_AT,guer_stat_AA,guer_veh_engineer];
-
 // civilian clothing, used by low-level FIA troops and to determine undercover status
 civUniforms = ["U_C_Poloshirt_blue","U_C_Poloshirt_burgundy","U_C_Poloshirt_stripped","U_C_Poloshirt_tricolour","U_C_Poloshirt_salmon","U_C_Poloshirt_redwhite","U_C_Commoner1_1","U_C_Commoner1_2","U_C_Commoner1_3","U_Rangemaster","U_NikosBody","U_C_Poor_1","U_C_Poor_2","U_C_WorkerCoveralls","U_C_Poor_shorts_1","U_C_Commoner_shorts","U_C_ShirtSurfer_shorts","U_C_TeeSurfer_shorts_1","U_C_TeeSurfer_shorts_2","Item_U_OrestesBody"];
 
@@ -25,10 +19,5 @@ injuredSounds = [
 	"a3\sounds_f\characters\human-sfx\Person2\P2_moan_19_words.wss"];
 
 ladridos = ["Music\dog_bark01.wss", "Music\dog_bark02.wss", "Music\dog_bark03.wss", "Music\dog_bark04.wss", "Music\dog_bark05.wss","Music\dog_maul01.wss","Music\dog_yelp01.wss","Music\dog_yelp02.wss","Music\dog_yelp03.wss"];
-
-// Default radio for BLUFOR, list of all radios
-AS_radio_tfar_B = "tf_anprc152";
-AS_radios_tfar = ["tf_anprc152"];
-AS_radio_tfar_G = "tf_anprc148jem";
 
 AS_lootCrateTypes = ["Box_IND_Ammo_F","Box_IND_Wps_F","Box_AAF_Equip_F","Box_IND_AmmoOrd_F","Box_IND_WpsSpecial_F","Box_IND_Support_F","Box_AAF_Uniforms_F"];

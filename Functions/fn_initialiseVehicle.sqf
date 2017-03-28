@@ -11,8 +11,11 @@ _allVehicles pushBackUnique _vehicle;
 _allGroups pushBackUnique _vehicleGroup;
 _allSoldiers = _allSoldiers + _vehicleCrew;
 
+_vehicle allowDamage false;
+
 private _return = [_allVehicles, _allGroups, _allSoldiers];
 if (_details) then {
 	_return pushBack [_vehicle, _vehicleGroup, _vehicleCrew];
 };
+
 _return

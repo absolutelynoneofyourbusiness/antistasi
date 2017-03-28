@@ -56,6 +56,11 @@ class CfgFunctions {
 			class punishPlayer {};
 			class deployMinefield {};
 			class getMarkerInfo {};
+			class setupGearDB {};
+			class detectRHS {};
+			class detectACE {};
+			class moveObject {};
+			class respawnPetros {};
 		};
 		class server {
 			file = "Functions";
@@ -106,6 +111,15 @@ class CfgFunctions {
 			class reinforcementTimer {};
 			class adjustGroupSize {};
 			class protectCamoNet {};
+			class IslandCheck {};
+			class despawnUnits {};
+			class initialiseFIAUnit {};
+			class initialiseFIAGarrisonUnit {};
+			class detectTFAR {};
+			class spawnBunker {};
+			class respawnRoadblock {};
+			class createPatrolMarker {};
+			class groundTransport {};
 		};
 		class QRF {
 			file = "Functions";

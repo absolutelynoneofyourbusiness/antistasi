@@ -55,12 +55,12 @@ _fnc_adjust = {
 		player setUnitRecoilCoefficient 1.0;
 	};
 
-	if (([primaryWeapon player] call BIS_fnc_baseWeapon) in mguns) exitWith {
+	if (([primaryWeapon player] call BIS_fnc_baseWeapon) in gear_machineGuns) exitWith {
 		player setCustomAimCoef (_aim select 1);
 		player setUnitRecoilCoefficient (_recoil select 1);
 		if ((_aim select 1) > (_aim select 0)) then {[localize "STR_info_skillAdj"] call _fnc_text};
 	};
-	if (([primaryWeapon player] call BIS_fnc_baseWeapon) in srifles) exitWith {
+	if (([primaryWeapon player] call BIS_fnc_baseWeapon) in gear_sniperRifles) exitWith {
 		player setCustomAimCoef (_aim select 2);
 		player setUnitRecoilCoefficient (_recoil select 2);
 		if ((_aim select 2) > (_aim select 0)) then {[localize "STR_info_skillAdj"] call _fnc_text};

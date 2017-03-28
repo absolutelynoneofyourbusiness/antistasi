@@ -1,4 +1,4 @@
-if (hayRHS) then {
+if (activeAFRF) then {
     private _mag = currentMagazine petros;
     petros removeMagazines _mag;
     petros removeWeaponGlobal (primaryWeapon petros);

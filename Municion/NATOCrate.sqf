@@ -161,13 +161,13 @@ else {
 	_crate addItemCargoGlobal [bluVest select 1, 2];
 };
 
-if (hayRHS) then {
+if (activeAFRF) then {
 	_crate addItemCargoGlobal ["Laserdesignator",1];
 	_crate addItemCargoGlobal ["Laserbatteries",1];
 };
 
 _int = round (_NATOSupp/10);
-if (hayTFAR) then {
+if (activeTFAR) then {
 	if (lrRadio in unlockedBackpacks) then {
 		_crate addBackpackCargoGlobal [lrRadio, 2];
 	}
@@ -176,7 +176,7 @@ if (hayTFAR) then {
 	};
 };
 
-if (hayACE) then {
+if (activeACE) then {
 	_crate addMagazineCargoGlobal ["ACE_HuntIR_M203", 3];
 	_crate addItemCargoGlobal ["ACE_HuntIR_monitor", 1];
 

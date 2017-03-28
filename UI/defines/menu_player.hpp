@@ -42,7 +42,7 @@
 
 // VEH MGMT
 #define ACT_VEH_PGAR "closeDialog 0; [false] call AS_fnc_garageVehicle;"
-#define ACT_VEH_UNLOCK "closeDialog 0; if !(isMultiplayer) then {hint 'It's unlocked already.'} else {if (player != stavros) then {[false] call AS_fnc_unlockVehicle} else {[true] call AS_fnc_unlockVehicle};};"
+#define ACT_VEH_UNLOCK "closeDialog 0; if (player != Slowhand) then {[false] spawn AS_fnc_unlockVehicle} else {[true] spawn AS_fnc_unlockVehicle};"
 #define ACT_VEH_FGAR "closeDialog 0; [true] call AS_fnc_garageVehicle;"
 #define ACT_VEH_SELL "[] call AS_fnc_sellVehicle"
 

@@ -73,7 +73,7 @@ call {
 		[ACT_BTNS_R6, [ADMIN_TGLFT, ADMIN_TGLARS, ADMIN_GEARRESET, ADMIN_TGLTM], ADMIN_TEXTS_R, ADMIN_TTS_R] call _fnc_setup;
 
 		if (server getVariable ['enableWpnProf',false]) then {_display displayCtrl (ACT_BTNS_L6 select 2) ctrlSetTextColor MENU_TEXT_COLOR_TRUE_ARRAY} else {_display displayCtrl (ACT_BTNS_L6 select 2) ctrlSetTextColor MENU_TEXT_COLOR_FALSE_ARRAY};
-		if (hayBE) then {_display displayCtrl (ACT_BTNS_L6 select 3) ctrlSetTextColor MENU_TEXT_COLOR_TRUE_ARRAY} else {_display displayCtrl (ACT_BTNS_L6 select 3) ctrlSetTextColor MENU_TEXT_COLOR_FALSE_ARRAY};
+		if (activeBE) then {_display displayCtrl (ACT_BTNS_L6 select 3) ctrlSetTextColor MENU_TEXT_COLOR_TRUE_ARRAY} else {_display displayCtrl (ACT_BTNS_L6 select 3) ctrlSetTextColor MENU_TEXT_COLOR_FALSE_ARRAY};
 		if (server getVariable ['enableFTold',false]) then {_display displayCtrl (ACT_BTNS_R6 select 0) ctrlSetTextColor MENU_TEXT_COLOR_TRUE_ARRAY} else {_display displayCtrl (ACT_BTNS_R6 select 0) ctrlSetTextColor MENU_TEXT_COLOR_FALSE_ARRAY};
 		if (server getVariable ['enableMemAcc',false]) then {_display displayCtrl (ACT_BTNS_R6 select 1) ctrlSetTextColor MENU_TEXT_COLOR_TRUE_ARRAY} else {_display displayCtrl (ACT_BTNS_R6 select 1) ctrlSetTextColor MENU_TEXT_COLOR_FALSE_ARRAY};
 		if (server getVariable ['testMode',false]) then {_display displayCtrl (ACT_BTNS_R6 select 3) ctrlSetTextColor MENU_TEXT_COLOR_TRUE_ARRAY} else {_display displayCtrl (ACT_BTNS_R6 select 3) ctrlSetTextColor MENU_TEXT_COLOR_FALSE_ARRAY};
@@ -93,7 +93,7 @@ call {
 	if (_menu isEqualTo "veh_mgmt") exitWith {
 		_index = NAV_BTNS find (ctrlIDC _idc);
 		_display displayCtrl (LINES select _index) ctrlShow true;
-		if (player == stavros) then {
+		if (player == Slowhand) then {
 			[ACT_BTNS_M4, [ACT_VEH_PGAR, ACT_VEH_UNLOCK, ACT_VEH_FGAR, ACT_VEH_SELL], VEH_TEXTS, VEH_TOOLTIPS] call _fnc_setup;
 		} else {
 			[ACT_BTNS_M4, [ACT_VEH_PGAR, ACT_VEH_UNLOCK], VEH_TEXTS, VEH_TOOLTIPS] call _fnc_setup;

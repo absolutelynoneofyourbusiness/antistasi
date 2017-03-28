@@ -60,8 +60,8 @@ _scoreNeededAirBase = [0, 5] select (count (unlockedWeapons arrayIntersect genAA
 					_size = [_nearbyThreat] call sizeMarker;
 					_statics = staticsToSave select {_x distance (getMarkerPos _nearbyThreat) < _size};
 					if (count _statics > 0) then {
-						if !(_base == "") then {_scoreNeededLand = _scoreNeededLand + ({typeOf _x in allStatMortars} count _statics) + (2*({typeOf _x in allStatATs} count _statics))};
-						if !(_airport == "") then {_scoreNeededAir = _scoreNeededAir + ({typeOf _x in allStatMGs} count _statics) + (5*({typeOf _x in allStatAAs} count _statics))}
+						if !(_base == "") then {_scoreNeededLand = _scoreNeededLand + ({typeOf _x in statics_allMortars} count _statics) + (2*({typeOf _x in statics_allATs} count _statics))};
+						if !(_airport == "") then {_scoreNeededAir = _scoreNeededAir + ({typeOf _x in statics_allMGs} count _statics) + (5*({typeOf _x in statics_allAAs} count _statics))}
 					};
 				};
 			} forEach _possibleTargets;
@@ -102,7 +102,7 @@ _scoreNeededAirBase = [0, 5] select (count (unlockedWeapons arrayIntersect genAA
 					};
 				};
 			};
-			//stavros globalChat format ["Marcador: %1. ScoreNeededLand: %2. ScoreLand: %3. ScoreNeededAir: %4. ScoreAir: %5",_objective,_scoreNeededLand,_scoreLand,_scoreNeededAir,_scoreAir]; sleep 5;
+			//Slowhand globalChat format ["Marcador: %1. ScoreNeededLand: %2. ScoreLand: %3. ScoreNeededAir: %4. ScoreAir: %5",_objective,_scoreNeededLand,_scoreLand,_scoreNeededAir,_scoreAir]; sleep 5;
 
 			if ((!(_base == "") or !(_airport == "")) and !(_easyTarget)) then {
 				_priority = 1;

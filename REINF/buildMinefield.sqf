@@ -75,10 +75,10 @@ _pos = position _road findEmptyPosition [1,30,guer_veh_truck];
 _camion = guer_veh_truck createVehicle _pos;
 
 _grupo addVehicle _camion;
-{[_x] spawn FIAinit; [_x] orderGetIn true} forEach units _grupo;
+{[_x] spawn AS_fnc_initialiseFIAUnit; [_x] orderGetIn true} forEach units _grupo;
 [_camion] spawn VEHinit;
 leader _grupo setBehaviour "SAFE";
-Stavros hcSetGroup [_grupo];
+Slowhand hcSetGroup [_grupo];
 _grupo setVariable ["isHCgroup", true, true];
 _camion allowCrewInImmobile true;
 
@@ -98,7 +98,7 @@ if ((_camion distance _posicionTel < 50) and ({alive _x} count units _grupo > 0)
 		group player selectLeader player;
 		hint "";
 		};
-	stavros hcRemoveGroup _grupo;
+	Slowhand hcRemoveGroup _grupo;
 	[[petros,"hint","Engineer Team deploying mines."],"commsMP"] call BIS_fnc_MP;
 	[leader _grupo, _mrk, "SAFE","SPAWNED", "SHOWMARKER"] execVM "scripts\UPSMON.sqf";
 	sleep 30*_cantidad;
@@ -122,7 +122,7 @@ if ((_camion distance _posicionTel < 50) and ({alive _x} count units _grupo > 0)
 		{
 		_tsk = ["Mines",[side_blue,civilian],[format ["An Engineer Team has been deployed at your command with High Command Option. Once they reach the position, they will start to deploy %1 mines in the area. Cover them in the meantime.",_cantidad],"Minefield Deploy",_mrk],_posicionTel,"FAILED",5,true,true,"Map"] call BIS_fnc_setTask;
 		sleep 15;
-		stavros hcRemoveGroup _grupo;
+		Slowhand hcRemoveGroup _grupo;
 		//[_tsk,true] call BIS_fnc_deleteTask;
 		[0,_tsk] spawn borrarTask;
 		{deleteVehicle _x} forEach units _grupo;
@@ -135,7 +135,7 @@ else
 	{
 	_tsk = ["Mines",[side_blue,civilian],[format ["An Engineer Team has been deployed at your command with High Command Option. Once they reach the position, they will start to deploy %1 mines in the area. Cover them in the meantime.",_cantidad],"Minefield Deploy",_mrk],_posicionTel,"FAILED",5,true,true,"Map"] call BIS_fnc_setTask;
 	sleep 15;
-	stavros hcRemoveGroup _grupo;
+	Slowhand hcRemoveGroup _grupo;
 	//[_tsk,true] call BIS_fnc_deleteTask;
 	[0,_tsk] spawn borrarTask;
 	{deleteVehicle _x} forEach units _grupo;

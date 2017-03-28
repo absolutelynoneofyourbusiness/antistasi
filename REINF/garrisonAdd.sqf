@@ -22,7 +22,7 @@ _marcador = [marcadores,posicionGarr] call BIS_fnc_nearestPosition;
 _posicion = getMarkerPos _marcador;
 _chequeo = false;
 {
-	if (((side _x == side_red) or (side _x == side_green)) and (_x distance _posicion < 500) and (not(captive _x))) then {_chequeo = true};
+	if (((side _x == side_red) or (side _x == side_green)) and (_x distance _posicion < safeDistance_garrison) and (not(captive _x))) then {_chequeo = true};
 } forEach allUnits;
 
 if (_chequeo) exitWith {Hint "You cannot Recruit Garrison Units with enemies near the zone"};

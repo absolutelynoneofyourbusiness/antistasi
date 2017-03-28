@@ -32,11 +32,11 @@ sleep 1;
 
 _helicopter disableAI "TARGET";
 _helicopter disableAI "AUTOTARGET";
-Stavros hcSetGroup [_heliGroup];
+Slowhand hcSetGroup [_heliGroup];
 _heliGroup setVariable ["isHCgroup", true, true];
 
 waitUntil {sleep 2; (_helicopter distance2d _dropPosition < 100) || !(canMove _helicopter)};
-stavros hcRemoveGroup _heliGroup;
+Slowhand hcRemoveGroup _heliGroup;
 _wpIn = _heliGroup addWaypoint [_dropPosition, 10];
 _heliGroup setCurrentWaypoint _wpIn;
 

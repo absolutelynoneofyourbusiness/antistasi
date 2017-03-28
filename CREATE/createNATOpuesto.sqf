@@ -23,7 +23,7 @@ _dirveh = [_road select 0, _roadcon select 0] call BIS_fnc_DirTo;
 
 _objs = [];
 
-if (hayUSAF) then {
+if (activeUSAF) then {
 	_objs = [getpos (_road select 0), _dirveh, call (compile (preprocessFileLineNumbers "Compositions\cmpUSAF_RB.sqf"))] call BIS_fnc_ObjectsMapper;
 }
 else {
@@ -52,7 +52,7 @@ if (_NATOSupp < 50) then {
 	_AA1 enableSimulation false;
     _AA1 hideObjectGlobal true;
 
-	if !(hayUSAF) then {
+	if !(activeUSAF) then {
    		_AA2 enableSimulation false;
     	_AA2 hideObjectGlobal true;
 	};
@@ -61,7 +61,7 @@ else {
 	_unit = ([_posicion, 0, bluCrew, _grupo] call bis_fnc_spawnvehicle) select 0;
 	_unit moveInGunner _AA1;
 
-	if !(hayUSAF) then {
+	if !(activeUSAF) then {
 		_unit = ([_posicion, 0, bluCrew, _grupo] call bis_fnc_spawnvehicle) select 0;
 		_unit moveInGunner _AA2;
 	};

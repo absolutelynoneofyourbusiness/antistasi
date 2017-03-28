@@ -67,7 +67,7 @@ while {(spawner getVariable _marcador) and (_cuenta < _num)} do
 if !(_esAAF) then
 	{
 	{_grp = _x;
-	{[_x] spawn FIAinitBASES; _soldados = _soldados + [_x]} forEach units _grp;} forEach _grupos;
+	{[_x] spawn AS_fnc_initialiseFIAGarrisonUnit; _soldados = _soldados + [_x]} forEach units _grp;} forEach _grupos;
 	};
 
 waitUntil {sleep 1;(not (spawner getVariable _marcador)) or ({alive _x} count _soldados == 0) or ({fleeing _x} count _soldados == {alive _x} count _soldados)};

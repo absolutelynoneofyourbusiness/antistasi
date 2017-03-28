@@ -1,4 +1,4 @@
-version=52;
+version=53;
 class EditorData
 {
 	moveGridStep=1;
@@ -20,10 +20,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={3594.3108,41.103924,10260.054};
-		dir[]={0.66639006,-0.70135111,0.25304884};
-		up[]={0.65567112,0.71281451,0.2489785};
-		aside[]={0.35499841,-8.1490725e-009,-0.93486857};
+		pos[]={3616.5139,31.907839,10266.799};
+		dir[]={0.18587691,-0.80337799,0.56572056};
+		up[]={0.25077483,0.59546191,0.76324046};
+		aside[]={0.95003647,9.2491973e-008,-0.31215009};
 	};
 };
 binarizationWanted=0;
@@ -49,49 +49,49 @@ class AddonsMetaData
 			className="A3_Ui_F";
 			name="Arma 3 - User Interface";
 			author="Bohemia Interactive";
-			url="http://www.arma3.com";
+			url="https://www.arma3.com";
 		};
 		class Item1
 		{
 			className="A3_Weapons_F";
 			name="Arma 3 Alpha - Weapons and Accessories";
 			author="Bohemia Interactive";
-			url="http://www.arma3.com";
+			url="https://www.arma3.com";
 		};
 		class Item2
 		{
 			className="A3_Structures_F_Mil";
 			name="Arma 3 - Military Buildings and Structures";
 			author="Bohemia Interactive";
-			url="http://www.arma3.com";
+			url="https://www.arma3.com";
 		};
 		class Item3
 		{
 			className="A3_Structures_F";
 			name="Arma 3 - Buildings and Structures";
 			author="Bohemia Interactive";
-			url="http://www.arma3.com";
+			url="https://www.arma3.com";
 		};
 		class Item4
-		{
-			className="A3_Modules_F";
-			name="Arma 3 Alpha - Scripted Modules";
-			author="Bohemia Interactive";
-			url="http://www.arma3.com";
-		};
-		class Item5
 		{
 			className="A3_Characters_F";
 			name="Arma 3 Alpha - Characters and Clothing";
 			author="Bohemia Interactive";
-			url="http://www.arma3.com";
+			url="https://www.arma3.com";
+		};
+		class Item5
+		{
+			className="A3_Modules_F";
+			name="Arma 3 Alpha - Scripted Modules";
+			author="Bohemia Interactive";
+			url="https://www.arma3.com";
 		};
 		class Item6
 		{
 			className="A3_Modules_F_Curator";
 			name="Arma 3 Zeus Update - Scripted Modules";
 			author="Bohemia Interactive";
-			url="http://www.arma3.com";
+			url="https://www.arma3.com";
 		};
 	};
 };
@@ -1430,12 +1430,12 @@ class Mission
 			class Attributes
 			{
 				skill=0.2;
-				init="this allowDamage false; " \n "this addAction [localize ""str_act_hqOptions"",{nul=[] execVM ""Dialogs\dialogHQ.sqf"";},nil,0,false,true,"""",""(isPlayer _this) and (player == Stavros) and (_this == _this getVariable ['owner',objNull]) and (petros == leader group petros)""]; " \n "this addAction [localize ""str_act_recruitUnit"", {nul=[] execVM ""Dialogs\unit_recruit.sqf"";},nil,0,false,true,"""",""(isPlayer _this) and (_this == _this getVariable ['owner',objNull])""]; " \n "this addAction [localize ""str_act_buyVehicle"", {nul = createDialog ""vehicle_option""},nil,0,false,true,"""",""(isPlayer _this) and (_this == _this getVariable ['owner',objNull])""]; " \n "if (isMultiplayer) then {this addAction [localize ""str_act_persGarage"", {nul = [true] spawn garage},nil,0,false,true,"""",""(isPlayer _this) and (_this == _this getVariable ['owner',objNull])""]}; " \n "this addAction [localize ""str_act_moveAsset"", ""moveObject.sqf"",nil,0,false,true,"""",""(_this == stavros)"", 5];";
+				init="this allowDamage false;  " \n "this addAction [localize ""STR_ACT_HQOPTIONS"",{nul=[] execVM ""Dialogs\dialogHQ.sqf"";},nil,0,false,true,"""",""(isPlayer _this) and (player == Slowhand) and (_this == _this getVariable ['owner',objNull]) and (petros == leader group petros)""];  " \n "this addAction [localize ""STR_ACT_RECRUITUNIT"", {nul=[] execVM ""Dialogs\unit_recruit.sqf"";},nil,0,false,true,"""",""(isPlayer _this) and (_this == _this getVariable ['owner',objNull])""];  " \n "this addAction [localize ""STR_ACT_BUYVEHICLE"", {nul = createDialog ""vehicle_option""},nil,0,false,true,"""",""(isPlayer _this) and (_this == _this getVariable ['owner',objNull])""];  " \n "if (isMultiplayer) then {this addAction [localize ""STR_ACT_PERSGARAGE"", {nul = [true] spawn garage},nil,0,false,true,"""",""(isPlayer _this) and (_this == _this getVariable ['owner',objNull])""]};  " \n "this addAction [localize ""STR_ACT_MOVEASSET"", {[_this select 0,_this select 1,_this select 2] spawn AS_fnc_moveObject},nil,0,false,true,"""",""(_this == Slowhand)"", 5];";
 				name="bandera";
 			};
 			id=96;
 			type="Flag_FIA_F";
-			atlOffset=0.017998695;
+			atlOffset=0.017999649;
 		};
 		class Item97
 		{
@@ -1450,12 +1450,12 @@ class Mission
 			class Attributes
 			{
 				skill=0.2;
-				init="this allowDamage false; " \n "this addAction [localize ""str_act_gameOptions"", {hint format [""Arma 3 - Antistasi\n\nVersion: %1"",antistasiVersion]; nul=CreateDialog ""game_options_commander"";},nil,0,false,true,"""",""(isPlayer _this) and (_this == stavros) and (_this == _this getVariable ['owner',objNull])""]; " \n "this addAction [localize ""str_act_gameOptions"", {hint format [""Arma 3 - Antistasi\n\nVersion: %1"",antistasiVersion]; nul=CreateDialog ""game_options_player"";},nil,0,false,true,"""",""(isPlayer _this) and !(_this == stavros) and (_this == _this getVariable ['owner',objNull])""]; " \n "this addAction [localize ""str_act_mapInfo"", {[] spawn AS_fnc_getMarkerInfo;},nil,0,false,true,"""",""(isPlayer _this) and (_this == _this getVariable ['owner',objNull])""]; " \n "this addAction [localize ""str_act_tfar"", {nul=CreateDialog ""tfar_menu"";},nil,0,false,true,"""",""(isClass (configFile >> """"CfgPatches"""" >> """"task_force_radio""""))"", 5]; " \n "this addAction [localize ""str_act_moveAsset"", ""moveObject.sqf"",nil,0,false,true,"""",""(_this == stavros)"", 5];";
+				init="this allowDamage false;  " \n "this addAction [localize ""STR_ACT_GAMEOPTIONS"", {hint format [""Arma 3 - Antistasi\n\nVersion: %1"",antistasiVersion]; nul=CreateDialog ""game_options_commander"";},nil,0,false,true,"""",""(isPlayer _this) and (_this == Slowhand) and (_this == _this getVariable ['owner',objNull])""];  " \n "this addAction [localize ""STR_ACT_GAMEOPTIONS"", {hint format [""Arma 3 - Antistasi\n\nVersion: %1"",antistasiVersion]; nul=CreateDialog ""game_options_player"";},nil,0,false,true,"""",""(isPlayer _this) and !(_this == Slowhand) and (_this == _this getVariable ['owner',objNull])""];  " \n "this addAction [localize ""STR_ACT_MAPINFO"", {[] spawn AS_fnc_getMarkerInfo;},nil,0,false,true,"""",""(isPlayer _this) and (_this == _this getVariable ['owner',objNull])""];  " \n "this addAction [localize ""STR_ACT_TFAR"", {nul=CreateDialog ""tfar_menu"";},nil,0,false,true,"""",""(isClass (configFile >> """"CfgPatches"""" >> """"task_force_radio""""))"", 5];  " \n "this addAction [localize ""STR_ACT_MOVEASSET"", {[_this select 0,_this select 1,_this select 2] spawn AS_fnc_moveObject},nil,0,false,true,"""",""(_this == Slowhand)"", 5];";
 				name="mapa";
 			};
 			id=97;
 			type="MapBoard_altis_F";
-			atlOffset=-0.0050010681;
+			atlOffset=-0.0050001144;
 		};
 		class Item98
 		{
@@ -1490,7 +1490,7 @@ class Mission
 			class Attributes
 			{
 				skill=0.60000002;
-				init="this allowDamage false; " \n "this addAction [localize ""str_act_healRepair"", ""healandrepair.sqf"",nil,0,false,true,"""",""(isPlayer _this) and (_this == _this getVariable ['owner',objNull])""]; " \n "this addAction [localize ""str_act_moveAsset"", ""moveObject.sqf"",nil,0,false,true,"""",""(_this == stavros)"",5];";
+				init="this allowDamage false;  " \n "this addAction [localize ""STR_ACT_HEALREPAIR"", ""healandrepair.sqf"",nil,0,false,true,"""",""(isPlayer _this) and (_this == _this getVariable ['owner',objNull])""];  " \n "this addAction [localize ""STR_ACT_MOVEASSET"", {[_this select 0,_this select 1,_this select 2] spawn AS_fnc_moveObject},nil,0,false,true,"""",""(_this == Slowhand)"",5];";
 				name="cajaveh";
 			};
 			id=99;

@@ -68,7 +68,7 @@ if (_marcador in aeropuertos) then
 	[20,10] remoteExec ["prestige",2];
 	planesAAFmax = planesAAFmax - 1;
     helisAAFmax = helisAAFmax - 2;
-   	if (hayBE) then {["con_bas"] remoteExec ["fnc_BE_XP", 2]};
+   	if (activeBE) then {["con_bas"] remoteExec ["fnc_BE_XP", 2]};
     };
 if (_marcador in bases) then
 	{
@@ -82,33 +82,33 @@ if (_marcador in bases) then
 		{
 		{if (_x distance _pos < 1000) then {side_blue revealMine _x}} forEach _minasAAF;
 		};
-	if (hayBE) then {["con_bas"] remoteExec ["fnc_BE_XP", 2]};
+	if (activeBE) then {["con_bas"] remoteExec ["fnc_BE_XP", 2]};
 	};
 
 if (_marcador in power) then
 	{
 	[["TaskSucceeded", ["", "Powerplant Taken"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
 	[0,5] remoteExec ["prestige",2];
-	if (hayBE) then {["con_ter"] remoteExec ["fnc_BE_XP", 2]};
+	if (activeBE) then {["con_ter"] remoteExec ["fnc_BE_XP", 2]};
 	[_marcador] call AS_fnc_powerReorg;
 	};
 if (_marcador in puestos) then
 	{
 	[["TaskSucceeded", ["", "Outpost Taken"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
-	if (hayBE) then {["con_ter"] remoteExec ["fnc_BE_XP", 2]};
+	if (activeBE) then {["con_ter"] remoteExec ["fnc_BE_XP", 2]};
 	};
 if (_marcador in puertos) then
 	{
 	[["TaskSucceeded", ["", "Seaport Taken"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
 	[10,10] remoteExec ["prestige",2];
-	if (hayBE) then {["con_ter"] remoteExec ["fnc_BE_XP", 2]};
+	if (activeBE) then {["con_ter"] remoteExec ["fnc_BE_XP", 2]};
 	[[_bandera,"seaport"],"AS_fnc_addActionMP"] call BIS_fnc_MP;
 	};
 if ((_marcador in fabricas) or (_marcador in recursos)) then
 	{
 	if (_marcador in fabricas) then {[["TaskSucceeded", ["", "Factory Taken"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;};
 	if (_marcador in recursos) then {[["TaskSucceeded", ["", "Resource Taken"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;};
-	if (hayBE) then {["con_ter"] remoteExec ["fnc_BE_XP", 2]};
+	if (activeBE) then {["con_ter"] remoteExec ["fnc_BE_XP", 2]};
 	[0,10] remoteExec ["prestige",2];
 	_powerpl = [power, _posicion] call BIS_fnc_nearestPosition;
 	if (_powerpl in mrkAAF) then

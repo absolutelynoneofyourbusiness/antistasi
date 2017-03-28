@@ -20,8 +20,8 @@ if (_salir) exitWith {hint "You cannot dismiss NATO groups"};
 _pos = getMarkerPos guer_respawn;
 
 {
-stavros sideChat format ["Petros, I'm sending %1 back to base", _x];
-stavros hcRemoveGroup _x;
+Slowhand sideChat format ["Petros, I'm sending %1 back to base", _x];
+Slowhand hcRemoveGroup _x;
 _wp = _x addWaypoint [_pos, 0];
 _wp setWaypointType "MOVE";
 sleep 3} forEach _groups;
@@ -39,7 +39,7 @@ sleep 100;
 				_veh = assignedVehicle _x;
 				if !((typeOf _veh) in _vs) then {
 					_vs pushBack (typeOf _veh);
-					if ((typeOf _veh) in vehFIA) then {
+					if ((typeOf _veh) in guer_vehicleArray) then {
 						_resourcesFIA = _resourcesFIA + ([(typeOf _veh)] call vehiclePrice);
 						if (count attachedObjects _veh > 0) then {
 							_subVeh = (attachedObjects _veh) select 0;

@@ -71,14 +71,16 @@ vehIFV = 			["I_APC_tracked_03_cannon_F"]; // IFVs
 vehTank = 			["I_MBT_03_cannon_F"]; // MBTs
 vehSupply = 		["I_Truck_02_fuel_F","I_Truck_02_medical_F","I_Truck_02_ammo_F"]; // supply vehicles (ammo, fuel, med)
 vehAmmo = 			"I_Truck_02_ammo_F"; // ammo truck, for special missions
+vehFuel = 			["I_Truck_02_fuel_F"]; // fuel truck for missions
 vehLead = 			["I_MRAP_03_hmg_F","I_MRAP_03_gmg_F"]; // lead vehicle for convoys, preferably armed MRAP/car
 standardMRAP = 		["I_MRAP_03_F"]; // default transport MRAP/car
 vehTruckBox = 		["I_Truck_02_box_F"]; // repair truck or at least a prop
+vehPatrolBoat = 	["I_Boat_Armed_01_minigun_F"];
 
 /*
 Not in use with AAF
 vehTruckAA = 		"";
-vehFIA pushBackUnique vehTruckAA;
+guer_vehicleArray pushBackUnique vehTruckAA;
 */
 
 var_AAF_groundForces = vehTrucks + vehPatrol + vehAPC + vehIFV + vehTank + vehLead + standardMRAP;
@@ -121,10 +123,10 @@ statMGlow = 		"I_HMG_01_F";
 statMGtower = 		"I_HMG_01_high_F";
 
 // Lists of statics to determine the defensive capabilities at locations
-allStatMGs = 		allStatMGs + [statMG];
-allStatATs = 		allStatATs + [statAT];
-allStatAAs = 		allStatAAs + [statAA];
-allStatMortars = 	allStatMortars + [statMortar];
+statics_allMGs = 		statics_allMGs + [statMG];
+statics_allATs = 		statics_allATs + [statAT];
+statics_allAAs = 		statics_allAAs + [statAA];
+statics_allMortars = 	statics_allMortars + [statMortar];
 
 // Backpacks of dismantled statics -- 0: weapon, 1: tripod/support
 statMGBackpacks = 		["I_HMG_01_high_weapon_F","I_HMG_01_support_high_F"];
@@ -459,10 +461,10 @@ unlockedBackpacks = [
 unlockedOptics = [];
 
 // Default rifle types, required to unlock specific unit types. Unfortunatly, not all mods classify their weapons the same way, so automatic detection doesn't work reliably enough.
-mguns = mguns + ["LMG_Mk200_F","LMG_Zafir_F","arifle_MX_SW_F"];
-mguns = mguns arrayIntersect mguns;
-srifles = srifles + ["srifle_DMR_01_F","srifle_EBR_F","srifle_GM6_F","srifle_LRR_F","arifle_MXM_F","srifle_DMR_06_olive_F"];
-srifles = srifles arrayIntersect srifles;
+gear_machineGuns = gear_machineGuns + ["LMG_Mk200_F","LMG_Zafir_F","arifle_MX_SW_F"];
+gear_machineGuns = gear_machineGuns arrayIntersect gear_machineGuns;
+gear_sniperRifles = gear_sniperRifles + ["srifle_DMR_01_F","srifle_EBR_F","srifle_GM6_F","srifle_LRR_F","arifle_MXM_F","srifle_DMR_06_olive_F"];
+gear_sniperRifles = gear_sniperRifles arrayIntersect gear_sniperRifles;
 genGL = ["arifle_Katiba_GL_F","arifle_MX_GL_F","arifle_Mk20_GL_F","arifle_TRG21_GL_F"];
 
 // Standard rifles for your troops to be equipped with

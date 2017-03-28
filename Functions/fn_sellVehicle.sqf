@@ -21,7 +21,7 @@ _cost = 0;
 
 call {
 	if (_vehType in vehNATO) exitWith {hint format ["You cannot sell %1 vehicles", A3_Str_BLUE]};
-	if (_vehType in vehFIA) exitWith {_cost = round (([_vehType] call vehiclePrice)/2)};
+	if (_vehType in guer_vehicleArray) exitWith {_cost = round (([_vehType] call vehiclePrice)/2)};
 	if (_vehType == "C_Van_01_fuel_F") exitWith {_cost = 50};
 	if (_vehType in CIV_vehicles) exitWith {_cost = 25};
 	if (_vehType in (vehTrucks + vehPatrol + vehSupply)) exitWith {_cost = 300};

@@ -66,7 +66,7 @@ if (spawner getVariable _marcador) then
 		{
 		_tsk = ["LOG",[side_blue,civilian],[format [_tskDesc,_nombredest,numberToDate [2035,_fechalimnum] select 3,numberToDate [2035,_fechalimnum] select 4],_tskTitle,_marcador],_posicion,"FAILED",5,true,true,"rearm"] call BIS_fnc_setTask;
 		[-1200] remoteExec ["AS_fnc_increaseAttackTimer",2];
-		[-10,stavros] call playerScoreAdd;
+		[-10,Slowhand] call playerScoreAdd;
 		};
 	if ((not alive _camion) or ({_x getVariable ["BLUFORSpawn",false]} count crew _camion > 0)) then
 		{
@@ -75,9 +75,9 @@ if (spawner getVariable _marcador) then
 		[0,300] remoteExec ["resourcesFIA",2];
 		[1200] remoteExec ["AS_fnc_increaseAttackTimer",2];
 		{if (_x distance _camion < 500) then {[10,_x] call playerScoreAdd}} forEach (allPlayers - hcArray);
-		[5,stavros] call playerScoreAdd;
+		[5,Slowhand] call playerScoreAdd;
 		// BE module
-		if (hayBE) then {
+		if (activeBE) then {
 			["mis"] remoteExec ["fnc_BE_XP", 2];
 		};
 		// BE module
@@ -87,7 +87,7 @@ else
 	{
 	_tsk = ["LOG",[side_blue,civilian],[format [_tskDesc,_nombredest,numberToDate [2035,_fechalimnum] select 3,numberToDate [2035,_fechalimnum] select 4],_tskTitle,_marcador],_posicion,"FAILED",5,true,true,"rearm"] call BIS_fnc_setTask;
 	[-1200] remoteExec ["AS_fnc_increaseAttackTimer",2];
-	[-10,stavros] call playerScoreAdd;
+	[-10,Slowhand] call playerScoreAdd;
 	};
 
 [1200,_tsk] spawn borrarTask;

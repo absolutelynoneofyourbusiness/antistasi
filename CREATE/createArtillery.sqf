@@ -22,15 +22,17 @@ _composition = [_mapperPos, 0, _mapperStr] call BIS_fnc_ObjectsMapper;
 
 {
 	call {
-		if (typeOf _x == opArtillery) exitWith {_howitzer = _x; [_x] spawn CSATVEHinit; [_x] spawn AS_fnc_protectVehicle};
+		if (typeOf _x == opArtillery) exitWith {_howitzer = _x};
 		if (typeOf _x == vehAmmo) exitWith {[_x] spawn genVEHinit; _truck = [_x]; [_x] spawn AS_fnc_protectVehicle};
-		if (_x isKindOf "StaticWeapon") exitWith {_statics pushBackUnique _x};
+		if (_x isKindOf "StaticWeapon") exitWith {_statics pushBack _x};
 		if (typeOf _x == "CamoNet_OPFOR_open_F") exitWith {_spawnPoints pushBackUnique (position _x)};
 		if (typeOf _x == "CamoNet_OPFOR_big_F") exitWith {[_x] spawn AS_fnc_protectCamoNet; _mainNet = _x; testNet = _x};
 	};
 } forEach _composition;
 
 _composition = _composition - _truck;
+
+diag_log _statics;
 
 if !(isNull _howitzer) then {
 	_unit = _groupArtillery createUnit [opI_CREW, _position, [], 0, "NONE"];
@@ -46,7 +48,6 @@ _allGroups pushBackUnique _groupArtillery;
 	_unit = _groupGunners createUnit [opI_AR, _position, [], 0, "NONE"];
 	_unit removeWeaponGlobal (primaryWeapon _unit);
 	_unit moveInGunner _x;
-	[_x] spawn genVEHinit
 } forEach _statics;
 
 _allGroups pushBackUnique _groupGunners;

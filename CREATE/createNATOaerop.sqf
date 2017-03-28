@@ -73,7 +73,7 @@ while {(spawner getVariable _marcador) and (_cuenta < _nVeh)} do
 	_cuenta = _cuenta + 1;
 	};
 
-{[_x] spawn cleanserVeh} forEach _vehiculos;
+{[_x] spawn vehicleRemover} forEach _vehiculos;
 
 _tipoGrupo = [bluSquad, side_blue] call AS_fnc_pickGroup;
 _grupo = [_posicion, side_blue, _tipoGrupo] call BIS_Fnc_spawnGroup;
@@ -167,7 +167,7 @@ while {(spawner getVariable _marcador) and (_cuenta < _tam)} do
 			if (_tipo == guer_sol_SL) then {_grupo selectLeader _unit};
 			};
 		};
-	[_unit,_marcador] call FIAinitBASES;
+	[_unit,_marcador] call AS_fnc_initialiseFIAGarrisonUnit;
 	_soldadosFIA = _soldadosFIA + [_unit];
 	_cuenta = _cuenta + 1;
 	sleep 0.5;

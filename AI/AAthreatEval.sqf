@@ -40,7 +40,7 @@ if (_esFIA) then {
 		_size = [_analizado] call sizeMarker;
 		_estaticas = staticsToSave select {_x distance (getMarkerPos _analizado) < _size};
 		if (count _estaticas > 0) then {
-			_threat = _threat + ({typeOf _x in allStatMGs} count _estaticas) + (5*({typeOf _x in allStatAAs} count _estaticas));
+			_threat = _threat + ({typeOf _x in statics_allMGs} count _estaticas) + (5*({typeOf _x in statics_allAAs} count _estaticas));
 		};
 	};
 	} forEach (mrkFIA - ciudades - controles - colinas - puestosFIA);

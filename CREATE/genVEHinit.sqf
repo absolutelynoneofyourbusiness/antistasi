@@ -4,15 +4,15 @@ _veh = _this select 0;
 
 if ((_veh isKindOf "FlagCarrier") or (_veh isKindOf "Building")) exitWith {};
 if (_veh isKindOf "ReammoBox_F") exitWith {[_veh] call cajaAAF};
-if ((hayACE) && !(random 3 > 2)) then {_veh setVariable ["ace_cookoff_enable", false, true]};
+if ((activeACE) && !(random 3 > 2)) then {_veh setVariable ["ace_cookoff_enable", false, true]};
 
 _tipo = typeOf _veh;
 
-if ((hayACE) && (random 8 < 7)) then {_veh setVariable ["ace_cookoff_enable", false, true]};
+if ((activeACE) && (random 8 < 7)) then {_veh setVariable ["ace_cookoff_enable", false, true]};
 
-if ((_tipo in vehTrucks) or (_tipo in vehPatrol) or (_tipo in vehSupply) or (_tipo in vehAAFAT) or (_tipo == "I_Boat_Armed_01_minigun_F")) then
+if ((_tipo in vehTrucks) or (_tipo in vehPatrol) or (_tipo in vehSupply) or (_tipo in enemyMotorpool) or (_tipo in vehPatrolBoat)) then
 	{
-	if !(_tipo in vehAAFAT) then
+	if !(_tipo in enemyMotorpool) then
 		{
 		if (_tipo == vehAmmo) then
 			{
@@ -20,7 +20,7 @@ if ((_tipo in vehTrucks) or (_tipo in vehPatrol) or (_tipo in vehSupply) or (_ti
 			};
 		_veh addEventHandler ["killed",{
 			[-1000] remoteExec ["resourcesAAF",2];
-			if (hayBE) then {["des_veh"] remoteExec ["fnc_BE_XP", 2]};
+			if (activeBE) then {["des_veh"] remoteExec ["fnc_BE_XP", 2]};
 		}];
 		if (_veh isKindOf "Car") then
 			{
@@ -35,7 +35,7 @@ if ((_tipo in vehTrucks) or (_tipo in vehPatrol) or (_tipo in vehSupply) or (_ti
 				if (side (_this select 1) == side_blue) then {
 					[_this select 0] call AS_fnc_AAFassets;
 					[-2,2,position (_this select 0)] remoteExec ["AS_fnc_changeCitySupport",2];
-					if (hayBE) then {["des_arm"] remoteExec ["fnc_BE_XP", 2]};
+					if (activeBE) then {["des_arm"] remoteExec ["fnc_BE_XP", 2]};
 				}
 			}];
 			_veh addEventHandler ["HandleDamage",{private ["_veh"]; _veh = _this select 0; if (!canFire _veh) then {[_veh] call smokeCoverAuto}}];
@@ -48,7 +48,7 @@ if ((_tipo in vehTrucks) or (_tipo in vehPatrol) or (_tipo in vehSupply) or (_ti
 					if (side (_this select 1) == side_blue) then {
 						[_this select 0] call AS_fnc_AAFassets; call AS_fnc_AAFassets;
 						[-5,5,position (_this select 0)] remoteExec ["AS_fnc_changeCitySupport",2];
-						if (hayBE) then {["des_arm"] remoteExec ["fnc_BE_XP", 2]};
+						if (activeBE) then {["des_arm"] remoteExec ["fnc_BE_XP", 2]};
 					}
 				}];
 				_veh addEventHandler ["HandleDamage",{private ["_veh"]; _veh = _this select 0; if (!canFire _veh) then {[_veh] call smokeCoverAuto}}];
@@ -58,7 +58,7 @@ if ((_tipo in vehTrucks) or (_tipo in vehPatrol) or (_tipo in vehSupply) or (_ti
 	}
 else
 	{
-	if (_tipo in planesAAF) then
+	if (_tipo in indAirForce) then
 		{
 		_veh addEventHandler ["GetIn",
 			{
@@ -77,7 +77,7 @@ else
 			{
 			_veh addEventHandler ["killed",{
 				[-4000] remoteExec ["resourcesAAF",2];
-				if (hayBE) then {["des_veh"] remoteExec ["fnc_BE_XP", 2]};
+				if (activeBE) then {["des_veh"] remoteExec ["fnc_BE_XP", 2]};
 			}];
 			}
 		else
@@ -101,7 +101,7 @@ else
 			};
 		};
 	};
-[_veh] spawn cleanserVeh;
+[_veh] spawn vehicleRemover;
 
 //_veh addEventHandler ["Killed",{[_this select 0] spawn postmortem}];
 

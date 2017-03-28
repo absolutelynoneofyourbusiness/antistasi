@@ -14,11 +14,11 @@ if (_f < _m) exitWith {
 };
 
 _weapons = lockedWeapons;
-_accessories = allAccessories;
+_accessories = gear_allAccessories;
 _standardWeapons = vanillaWeapons;
 _standardAccessories = vanillaAccessories;
 
-if (hayACE) then {
+if (activeACE) then {
 	_standardWeapons = vanillaWeapons + aceWeapons;
 	_standardAccessories = vanillaAccessories + aceAccessories;
 };
@@ -27,7 +27,7 @@ _noWeaponMods = true;
 if !(count (lockedWeapons - _standardWeapons) == 0) then {
 	_noWeaponMods = false;
 	_weapons = lockedWeapons - _standardWeapons;
-	_accessories = allAccessories - _standardAccessories;
+	_accessories = gear_allAccessories - _standardAccessories;
 };
 
 if ("rhs_group_rus_vdv_infantry_section_AT" in infAT) then {
@@ -40,7 +40,7 @@ if ("rhs_group_rus_vdv_infantry_section_AT" in infAT) then {
 _noGear = false;
 switch (_t) do {
 	case "ASRifles": {
-		_aRifles = _weapons arrayIntersect arifles;
+		_aRifles = _weapons arrayIntersect gear_assaultRifles;
 		if (count _aRifles == 0) exitWith {_noGear = true};
 		if (_m == 1000) exitWith {
 			for "_i" from 1 to 3 do {
@@ -63,7 +63,7 @@ switch (_t) do {
 	};
 
 	case "Machineguns": {
-		_mGuns = _weapons arrayIntersect mguns;
+		_mGuns = _weapons arrayIntersect gear_machineGuns;
 		if (count _mGuns == 0) exitWith {_noGear = true};
 		if (_m == 1000) exitWith {
 			for "_i" from 1 to 3 do {
@@ -88,7 +88,7 @@ switch (_t) do {
 	};
 
 	case "Sniper Rifles": {
-		_sRifles = _weapons arrayIntersect srifles;
+		_sRifles = _weapons arrayIntersect gear_sniperRifles;
 		if (count _sRifles == 0) exitWith {_noGear = true};
 		if (_m == 1000) exitWith {
 			for "_i" from 1 to 3 do {
@@ -111,7 +111,7 @@ switch (_t) do {
 	};
 
 	case "Launchers": {
-		_combined = mlaunchers + rlaunchers;
+		_combined = gear_missileLaunchers + gear_rocketLaunchers;
 		_launchers = _weapons arrayIntersect _combined;
 		if (count _launchers == 0) exitWith {_noGear = true};
 		if (_m == 1000) exitWith {
@@ -135,7 +135,7 @@ switch (_t) do {
 	};
 
 	case "Pistols": {
-		_pistols = _weapons arrayIntersect hguns;
+		_pistols = _weapons arrayIntersect gear_sidearms;
 		if (count _pistols == 0) exitWith {_noGear = true};
 		if (_m == 1000) exitWith {
 			for "_i" from 1 to 3 do {

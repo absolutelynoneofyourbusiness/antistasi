@@ -24,9 +24,9 @@ _tipoVeh = "";
 _texto = "";
 
 //experimental
-if (count (vehAAFAT - vehTank) < count vehAAFAT) then {_tipoVeh = selectRandom vehTank; _texto = "Enemy Tank"} else {_tipoVeh = selectRandom vehIFV; _texto = "Enemy IFV"};
+if (count (enemyMotorpool - vehTank) < count enemyMotorpool) then {_tipoVeh = selectRandom vehTank; _texto = "Enemy Tank"} else {_tipoVeh = selectRandom vehIFV; _texto = "Enemy IFV"};
 
-// if ("I_MBT_03_cannon_F" in vehAAFAT) then {_tipoVeh = "I_MBT_03_cannon_F"; _texto = "AAF Tank"} else {_tipoVeh = opSPAA; _texto = "CSAT Artillery"};
+// if ("I_MBT_03_cannon_F" in enemyMotorpool) then {_tipoVeh = "I_MBT_03_cannon_F"; _texto = "AAF Tank"} else {_tipoVeh = opSPAA; _texto = "CSAT Artillery"};
 
 _tsk = ["DES",[side_blue,civilian],[format [_tskDesc,_nombredest,numberToDate [2035,_fechalimnum] select 3,numberToDate [2035,_fechalimnum] select 4,_texto],_tskTitle,_marcador],_posicion,"CREATED",5,true,true,"Destroy"] call BIS_fnc_setTask;
 misiones pushBack _tsk; publicVariable "misiones";
@@ -71,9 +71,9 @@ if (spawner getVariable _marcador) then
 		if (_tipoVeh == opSPAA) then {[3,3] remoteExec ["prestige",2]; [0,10,_posicion] remoteExec ["AS_fnc_changeCitySupport",2]} else {[0,5,_posicion] remoteExec ["AS_fnc_changeCitySupport",2]};
 		[1200] remoteExec ["AS_fnc_increaseAttackTimer",2];
 		{if (_x distance _veh < 500) then {[10,_x] call playerScoreAdd}} forEach (allPlayers - hcArray);
-		[5,stavros] call playerScoreAdd;
+		[5,Slowhand] call playerScoreAdd;
 		// BE module
-		if (hayBE) then {
+		if (activeBE) then {
 			["mis"] remoteExec ["fnc_BE_XP", 2];
 		};
 		// BE module
@@ -86,7 +86,7 @@ if (dateToNumber date > _fechalimnum) then
 	[5,0,_posicion] remoteExec ["AS_fnc_changeCitySupport",2];
 	if (_tipoVeh == opSPAA) then {[0,-3] remoteExec ["prestige",2]};
 	[-600] remoteExec ["AS_fnc_increaseAttackTimer",2];
-	[-10,stavros] call playerScoreAdd;
+	[-10,Slowhand] call playerScoreAdd;
 	};
 
 [1200,_tsk] spawn borrarTask;

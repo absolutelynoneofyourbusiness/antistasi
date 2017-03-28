@@ -16,4 +16,4 @@ _unit enableAI "AUTOTARGET";
 _unit enableAI "TARGET";
 _unit enableAI "ANIM";
 [_unit] join group _jugador;
-[_unit] spawn FIAInit;
+[_unit] spawn AS_fnc_initialiseFIAUnit;

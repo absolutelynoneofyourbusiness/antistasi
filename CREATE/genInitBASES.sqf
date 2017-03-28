@@ -28,7 +28,7 @@ switch _tipo do {
 	case sol_A_AT: {_skillSet = 0;}; // assistant AT
 	case sol_AA: {_skillSet = 0;}; // AA
 	case sol_AR: {_skillSet = 3;}; // autorifle
-	case sol_AT: {_skillSet = 0; if (hayACE && replaceFIA) then {[_unit, _tipo] call AS_fnc_gear_loadoutAAF}}; // AT
+	case sol_AT: {_skillSet = 0; if (activeACE && replaceFIA) then {[_unit, _tipo] call AS_fnc_gear_loadoutAAF}}; // AT
 	/*case sol_AMMO: {}; // ammo bearer*/
 	/*case sol_GL: {}; // grenade launcher*/
 	/*case sol_GL2: {}; // grenade launcher*/

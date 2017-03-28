@@ -10,7 +10,7 @@ _hrT = server getVariable "hr";
 _resourcesFIAT = server getVariable "resourcesFIA";
 
 // BE module
-if (hayBE) then {
+if (activeBE) then {
 	if (_hr > 0) then {
 		_hr = _hr min (["HR"] call fnc_BE_permission);
 	};
@@ -42,4 +42,4 @@ else
 	if (_hr != 0) then {_texto = format ["<t size='0.6' color='#C1C0BB'>FIA Resources.<br/> <t size='0.5' color='#C1C0BB'><br/>HR: %3%1",_hr,_resourcesFIA,_hrSim]} else {_texto = format ["<t size='0.6' color='#C1C0BB'>FIA Resources.<br/> <t size='0.5' color='#C1C0BB'><br/>Money: %4%2 €",_hr,_resourcesFIA,_hrSim,_resourcesFIASim]};
 	};
 
-if (_texto != "") then {[petros,"income",_texto] remoteExec ["commsMP",stavros]};
+if (_texto != "") then {[petros,"income",_texto] remoteExec ["commsMP",Slowhand]};

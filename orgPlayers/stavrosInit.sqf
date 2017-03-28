@@ -1,7 +1,7 @@
 private ["_unit","_grupos","_oldUnit","_oldProviders","_HQ","_providerModule","_used"];
 _unit = _this select 0;
-_grupos = hcAllGroups stavros;
-_oldUnit = stavros;
+_grupos = hcAllGroups Slowhand;
+_oldUnit = Slowhand;
 
 if (!isNil "_grupos") then {
   {
@@ -12,12 +12,12 @@ if (!isNil "_grupos") then {
 _oldUnit synchronizeObjectsRemove [HC_comandante];
 //apoyo synchronizeObjectsRemove [_oldUnit];
 HC_comandante synchronizeObjectsRemove [_oldUnit];
-stavros = _unit;
-publicVariable "stavros";
+Slowhand = _unit;
+publicVariable "Slowhand";
 [group _unit, _unit] remoteExec ["selectLeader",_unit];
-stavros synchronizeObjectsAdd [HC_comandante];
-HC_comandante synchronizeObjectsAdd [stavros];
-//apoyo synchronizeObjectsAdd [stavros];
+Slowhand synchronizeObjectsAdd [HC_comandante];
+HC_comandante synchronizeObjectsAdd [Slowhand];
+//apoyo synchronizeObjectsAdd [Slowhand];
 if (!isNil "_grupos") then {
   	{_unit hcSetGroup [_x]} forEach _grupos;
 }

@@ -44,7 +44,7 @@ if ((_veh != _soldado) and (not(_veh in _artyArray))) then
 					}
 				else
 					{
-					if ((typeOf _veh in bluStatMortar) || (typeOf _veh in allStatMortars)) then
+					if ((typeOf _veh in bluStatMortar) || (typeOf _veh in statics_allMortars)) then
 						{
 						createDialog "mortar_type";
 						waitUntil {!dialog or !(isNil "tipoMuni")};
@@ -200,7 +200,7 @@ if ((not(_marcador in forcedSpawn)) and (_posicionTel distance (getMarkerPos _ma
 	};
 
 _texto = format ["Requesting fire support on Grid %1. %2 Rounds", mapGridPosition _posicionTel, round _rounds];
-[[stavros,"sideChat",_texto],"commsMP"] call BIS_fnc_MP;
+[[Slowhand,"sideChat",_texto],"commsMP"] call BIS_fnc_MP;
 
 if (_tipoArty == "BARRAGE") then
 	{
@@ -233,7 +233,7 @@ for "_i" from 0 to (count _artyArrayDef1) - 1 do {
 		//hint format ["Rondas que faltan: %1, rondas que tiene %2",_rounds,_cuenta];
 		if (_cuenta >= _rounds) then {
 			if (_tipoArty != "BARRAGE") then {
-				if ((typeOf _veh in bluStatMortar) || (typeOf _veh in allStatMortars) || (typeOf _veh in bluArty)) then {
+				if ((typeOf _veh in bluStatMortar) || (typeOf _veh in statics_allMortars) || (typeOf _veh in bluArty)) then {
 					if (replaceFIA && (typeOf _veh in bluArty)) then {
 						sleep 23;
 						for "_r" from 1 to _rounds do {
@@ -259,7 +259,7 @@ for "_i" from 0 to (count _artyArrayDef1) - 1 do {
 			_rounds = 0;
 		} else {
 			if (_tipoArty != "BARRAGE") then {
-				if ((typeOf _veh in bluStatMortar) || (typeOf _veh in allStatMortars) || (typeOf _veh in bluArty)) then {
+				if ((typeOf _veh in bluStatMortar) || (typeOf _veh in statics_allMortars) || (typeOf _veh in bluArty)) then {
 					for "_r" from 1 to _cuenta do {
 						_pieza commandArtilleryFire [_pos,_tipoMuni,1];
 						sleep 2;

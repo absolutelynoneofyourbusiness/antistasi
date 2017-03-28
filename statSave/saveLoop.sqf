@@ -40,7 +40,7 @@ if (!isDedicated) then
 	};
 
  if (!isServer) exitWith {};
- if (savingServer) exitWith {"Server data save is still in process" remoteExecCall ["hint",stavros]};
+ if (savingServer) exitWith {"Server data save is still in process" remoteExecCall ["hint",Slowhand]};
  savingServer = true;
  	["AS_session_server", server getVariable ["AS_session_server", round (random 100000)]] call fn_SaveStat;
 	["cuentaCA", cuentaCA] call fn_SaveStat;
@@ -49,7 +49,7 @@ if (!isDedicated) then
 	["antenas", antenasmuertas] call fn_SaveStat;
 	["mrkAAF", mrkAAF - controles] call fn_SaveStat;
 	["mrkFIA", mrkFIA - puestosFIA - controles] call fn_SaveStat;
-	["posHQ", getMarkerPos guer_respawn] call fn_Savestat;
+	["posHQ", server getVariable ["posHQ", getMarkerPos guer_respawn]] call fn_Savestat;
 	["prestigeNATO", server getVariable "prestigeNATO"] call fn_SaveStat;
 	["prestigeCSAT", server getVariable "prestigeCSAT"] call fn_SaveStat;
 	["APCAAFcurrent", APCAAFcurrent] call fn_SaveStat;
@@ -69,6 +69,7 @@ if (!isDedicated) then
 	["unlockedItems", unlockedItems] call fn_SaveStat;
 	["unlockedMagazines", unlockedMagazines] call fn_SaveStat;
 	["unlockedBackpacks", unlockedBackpacks] call fn_SaveStat;
+	["AS_destroyedZones", AS_destroyedZones] call fn_SaveStat;
 
 	["BE_data", ([] call fnc_BE_save)] call fn_SaveStat;
 
@@ -88,7 +89,7 @@ if (_amigo getVariable ["BLUFORSpawn",false]) then
 	{
 	if ((alive _amigo) and (!isPlayer _amigo)) then
 		{
-		if ((isPlayer leader _amigo) or (group _amigo in (hcAllGroups stavros)) and (not((group _amigo) getVariable ["esNATO",false]))) then
+		if ((isPlayer leader _amigo) or (group _amigo in (hcAllGroups Slowhand)) and (not((group _amigo) getVariable ["esNATO",false]))) then
 			{
 			if (isPlayer (leader group _amigo)) then
 				{
@@ -109,7 +110,7 @@ if (_amigo getVariable ["BLUFORSpawn",false]) then
 					{
 					if ((_veh isKindOf "StaticWeapon") or (driver _veh == _amigo)) then
 						{
-						if ((group _amigo in (hcAllGroups stavros)) or (!isMultiplayer)) then
+						if ((group _amigo in (hcAllGroups Slowhand)) or (!isMultiplayer)) then
 							{
 							_resfondo = _resfondo + ([_tipoVeh] call vehiclePrice);
 							if (count attachedObjects _veh != 0) then {{_resfondo = _resfondo + ([typeOf _x] call vehiclePrice)} forEach attachedObjects _veh};
@@ -319,5 +320,5 @@ _datos pushBack [_x,server getVariable _x];
 savingServer = false;
 
 _text = "Savegame Done.\n\nYou won't lose your stats in the event of a game update.\n\nRemember: if you want to preserve any vehicle, it must be near the HQ Flag with no AI inside.\nIf AI inside, you will save the funds you spent on it.\n\nAI will be refunded\n\nStolen and purchased Static Weapons need to be ASSEMBLED in order to get saved. Disassembled weapons may get saved in your ammobox\n\nMounted Statics (Mortar/AA/AT squads) won't get saved, but you will be able to recover the cost.\n\nSame for assigned vehicles more than 50 mts far from HQ";
-[petros,"save",_text] remoteExec ["commsMP",stavros];
+[petros,"save",_text] remoteExec ["commsMP",Slowhand];
 diag_log "Maintenance: game successfully saved.";

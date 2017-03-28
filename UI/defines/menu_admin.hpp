@@ -4,7 +4,7 @@
 [] remoteExec ['AS_fnc_resetSkills', [0,-2] select isDedicated,true]; (_this select 0) ctrlSetTextColor [1,0,0,1];} \
 else {server setVariable ['enableWpnProf',true,true]; (_this select 0) ctrlSetTextColor [0.18,0.545,0.341,1];}" \
 
-#define ADMIN_TGLAXP "if (hayBe) then {hayBe = true} else {hayBe = false};"
+#define ADMIN_TGLAXP "if (activeBE) then {activeBE = true} else {activeBE = false};"
 #define ADMIN_FORCE1ST "[] remoteExec ['AS_fnc_toggle1PSEH', [0,-2] select isDedicated]; (_this select 0) ctrlSetTextColor ([[1,0,0,1], [0.18,0.545,0.341,1]] select (isNil 'AS_1PS_EH'))"
 
 #define ADMIN_TGLFT "server setVariable ['enableFTold', [true, false] select (server getVariable ['enableFTold', false])]; \

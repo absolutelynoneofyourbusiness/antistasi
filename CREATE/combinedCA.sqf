@@ -137,11 +137,11 @@ if (_CSAT) then
 					_pad = createVehicle ["Land_HelipadEmpty_F", _landpos, [], 0, "NONE"];
 					_vehiculos = _vehiculos + [_pad];
 
-					[_grupoheli, _posorigen, _landpos, _mrkdestino, _grupo, 25*60, "air"] call AS_fnc_QRF_dismountTroops;
+					[_grupoheli, _posorigen, _landpos, _mrkdestino, _grupo, 25*60, "air"] spawn AS_fnc_QRF_dismountTroops;
 					}
 				else
 					{
-						[_grupoheli, _posorigen, _posdestino, _mrkdestino, _grupo, 25*60] call AS_fnc_QRF_fastrope;
+						[_grupoheli, _posorigen, _posdestino, _mrkdestino, _grupo, 25*60] spawn AS_fnc_QRF_fastrope;
 					};
 				};
 			};
@@ -187,9 +187,9 @@ if (_base != "") then
 		};
 
 	_tempMP = [];
-	if (hayRHS) then {
+	if (activeAFRF) then {
 		for "_j" from 1 to 4 do {
-			if (count (vehAAFAT - vehIFV) < count vehAAFAT) then {_tempMP pushBack selectRandom (vehIFV)};
+			if (count (enemyMotorpool - vehIFV) < count enemyMotorpool) then {_tempMP pushBack selectRandom (vehIFV)};
 		};
 	}
 	else {
@@ -199,9 +199,9 @@ if (_base != "") then
 	for "_i" from 1 to _nveh do
 		{
 		_tipoVeh = "";
-		if (count vehAAFAT > 1) then
+		if (count enemyMotorpool > 1) then
 			{
-			_vehAAFAT =+ vehAAFAT;
+			_vehAAFAT =+ enemyMotorpool;
 			// experimental
 			_vehAAFAT = _vehAAFAT - vehIFV;
 			_vehAAFAT = _vehAAFAT + _tempMP + vehTrucks;
@@ -211,11 +211,11 @@ if (_base != "") then
 					_b = bases + aeropuertos;
 					_c = mrkFIA arrayIntersect _b;
 					if (count _c < 1) then {
-						_vehAAFAT = vehAAFAT - vehTank - _tempMP;
+						_vehAAFAT = enemyMotorpool - vehTank - _tempMP;
 					}
 					else {
 						if (count _c < 3) then {
-							_vehAAFAT = vehAAFAT - vehTank;
+							_vehAAFAT = enemyMotorpool - vehTank;
 						}
 						else {
 							_vehAAFAT = vehTank + _tempMP;
@@ -225,7 +225,7 @@ if (_base != "") then
 			else
 				{
 				if (_threatEvalLand > 3) then {_vehAAFAT = _vehAAFAT - [enemyMotorpoolDef] - vehTrucks};
-				if ((_threatEvalLand > 5) && (count (vehAAFAT - vehIFV - vehTank) < count vehAAFAT)) then {_vehAAFAT = _vehAAFAT - vehAPC - [enemyMotorpoolDef] - vehTrucks};
+				if ((_threatEvalLand > 5) && (count (enemyMotorpool - vehIFV - vehTank) < count enemyMotorpool)) then {_vehAAFAT = _vehAAFAT - vehAPC - [enemyMotorpoolDef] - vehTrucks};
 				// /experimental
 				};
 			_tipoVeh = _vehAAFAT call BIS_fnc_selectRandom;
@@ -364,7 +364,7 @@ if (_aeropuerto != "") then
 			}
 		else
 			{
-			_planesAAF =+ planesAAF;
+			_planesAAF =+ indAirForce;
 			if ((_threatEvalAir > 7) && (count (_planesAAF - heli_unarmed) < count _planesAAF)) then {_planesAAF = _planesAAF - heli_unarmed};
 			if ((_threatEvalAir > 14) && (count (_planesAAF - planes) < count _planesAAF)) then {_planesAAF = planes};
 
@@ -422,7 +422,7 @@ if (_aeropuerto != "") then
 				_pad = createVehicle ["Land_HelipadEmpty_F", _landpos, [], 0, "NONE"];
 				_vehiculos = _vehiculos + [_pad];
 
-				[_grupoVeh, _posorigen, _landpos, _mrkdestino, _grupo, 25*60, "air"] call AS_fnc_QRF_dismountTroops;
+				[_grupoVeh, _posorigen, _landpos, _mrkdestino, _grupo, 25*60, "air"] spawn AS_fnc_QRF_dismountTroops;
 
 				/*_wp0 = _grupoVeh addWaypoint [_landpos, 0];
 				_wp0 setWaypointType "TR UNLOAD";
@@ -450,7 +450,7 @@ if (_aeropuerto != "") then
 				{[_x] spawn genInit;_x assignAsCargo _veh;_x moveInCargo _veh; _soldados = _soldados + [_x]} forEach units _grupo1;
 				_grupos = _grupos + [_grupo1];
 				//[_veh,_grupo,_grupo1,_posdestino,_posorigen,_grupoVeh] spawn fastropeAAF;
-				[_grupoVeh, _pos, _posdestino, _mrkdestino, [_grupo, _grupo1], 25*60] call AS_fnc_QRF_fastrope;
+				[_grupoVeh, _pos, _posdestino, _mrkdestino, [_grupo, _grupo1], 25*60] spawn AS_fnc_QRF_fastrope;
 				};
 			};
 		sleep 15;
@@ -470,7 +470,7 @@ diag_log format ["Attack finished. Target: %1", _mrkDestino];
 if (not(_mrkDestino in mrkAAF)) then
 	{
 	{if (isPlayer _x) then {[10,_x] call playerScoreAdd}} forEach ([500,0,_posdestino,"BLUFORSpawn"] call distanceUnits);
-	[5,stavros] call playerScoreAdd;
+	[5,Slowhand] call playerScoreAdd;
 	if (!_CSAT) then
 		{
 		_tsk = ["AtaqueAAF",[side_blue,civilian],[format ["AAF Is attacking from %1. Intercept them or we may loose a sector",_nombreorig],"AAF Attack",_markTsk],getMarkerPos _markTsk,"SUCCEEDED",10,true,true,"Defend"] call BIS_fnc_setTask;
@@ -484,7 +484,7 @@ if (not(_mrkDestino in mrkAAF)) then
 	}
 else
 	{
-	[-10,stavros] call playerScoreAdd;
+	[-10,Slowhand] call playerScoreAdd;
 	if (!_CSAT) then
 		{
 		_tsk = ["AtaqueAAF",[side_blue,civilian],[format ["AAF Is attacking from %1. Intercept them or we may loose a sector",_nombreorig],"AAF Attack",_markTsk],getMarkerPos _markTsk,"FAILED",10,true,true,"Defend"] call BIS_fnc_setTask;

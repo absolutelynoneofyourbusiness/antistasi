@@ -34,7 +34,7 @@ if (_tipo == "rem") then
 	_hr = 0;
 	if (spawner getVariable _cercano) then
 		{
-		if ({(alive _x) and (!captive _x) and ((side _x == side_green) or (side _x == side_red)) and (_x distance _posicion < 500)} count allUnits > 0) then
+		if ({(alive _x) and (!captive _x) and ((side _x == side_green) or (side _x == side_red)) and (_x distance _posicion < safeDistance_garrison)} count allUnits > 0) then
 			{
 			hint "You cannot remove garrisons while there are enemies nearby";
 			CreateDialog "garrison_menu"
@@ -47,7 +47,7 @@ if (_tipo == "rem") then
 				{
 				if (!alive _x) then
 					{
-					if (typeOf _x in soldadosFIA) then
+					if (typeOf _x in guer_soldierArray) then
 						{
 						if (typeOf _x == guer_sol_UN) then {_coste = _coste - ([guer_stat_mortar] call vehiclePrice)};
 						_hr = _hr - 1;
@@ -75,7 +75,7 @@ else
 	{
 	if (spawner getVariable _cercano) then
 		{
-		if ({(alive _x) and (!captive _x) and ((side _x == side_green) or (side _x == side_red)) and (_x distance _posicion < 500)} count allUnits > 0) exitWith {hint "You cannot add soldiers to this garrison while there are enemies nearby"; CreateDialog "garrison_menu"};
+		if ({(alive _x) and (!captive _x) and ((side _x == side_green) or (side _x == side_red)) and (_x distance _posicion < safeDistance_garrison)} count allUnits > 0) exitWith {hint "You cannot add soldiers to this garrison while there are enemies nearby"; CreateDialog "garrison_menu"};
 		};
 	posicionGarr = _posicionTel;
 	publicVariable "posicionGarr";

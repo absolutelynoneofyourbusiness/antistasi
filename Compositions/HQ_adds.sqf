@@ -2,7 +2,7 @@ params ["_t", ["_position", "none"]];
 
 private ["_item","_pos"];
 
-if ((_t == "sandbag") && ((server getVariable ["AS_HQ_sandbag", 0]) > 2)) exitWith {[petros,"BE","No more sandbags for you!"] remoteExec ["commsMP",stavros]};
+if ((_t == "sandbag") && ((server getVariable ["AS_HQ_sandbag", 0]) > 2)) exitWith {[petros,"BE","No more sandbags for you!"] remoteExec ["commsMP",Slowhand]};
 
 if (_t == "pad") exitWith {
 	if (isNil "vehiclePad") then {

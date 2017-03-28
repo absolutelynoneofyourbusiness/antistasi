@@ -71,9 +71,9 @@ _pos = position _road findEmptyPosition [1,30,guer_veh_truck];
 _camion = _tipoVeh createVehicle _pos;
 [_grupo] spawn dismountFIA;
 _grupo addVehicle _camion;
-{[_x] call FIAinit} forEach units _grupo;
+{[_x] call AS_fnc_initialiseFIAUnit} forEach units _grupo;
 leader _grupo setBehaviour "SAFE";
-Stavros hcSetGroup [_grupo];
+Slowhand hcSetGroup [_grupo];
 _grupo setVariable ["isHCgroup", true, true];
 
 waitUntil {sleep 1; ({alive _x} count units _grupo == 0) or ({(alive _x) and (_x distance _posicionTel < 10)} count units _grupo > 0) or (dateToNumber date > _fechalimnum)};
@@ -102,7 +102,7 @@ if ({(alive _x) and (_x distance _posicionTel < 10)} count units _grupo > 0) the
 		publicVariable "FIA_WP_list";
 		// BE module
 		_advanced = false;
-		if (hayBE) then {
+		if (activeBE) then {
 			if (BE_current_FIA_RB_Style == 1) then {_advanced = true};
 		};
 		if (_advanced) then {
@@ -127,7 +127,7 @@ else
 	deleteMarker _mrk;
 	};
 
-stavros hcRemoveGroup _grupo;
+Slowhand hcRemoveGroup _grupo;
 {deleteVehicle _x} forEach units _grupo;
 deleteVehicle _camion;
 deleteGroup _grupo;

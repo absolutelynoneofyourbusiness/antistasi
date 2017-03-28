@@ -25,13 +25,13 @@ _pos = position _road findEmptyPosition [1,30,guer_veh_truck];
 _camion = guer_veh_engineer createVehicle _pos;
 
 [_camion] spawn VEHinit;
-[_unit] spawn FIAinit;
+[_unit] spawn AS_fnc_initialiseFIAUnit;
 _grupo addVehicle _camion;
 _camion setVariable ["owner",_grupo,true];
 _unit assignAsDriver _camion;
 [_unit] orderGetIn true;
 //_unit setBehaviour "SAFE";
-Stavros hcSetGroup [_grupo];
+Slowhand hcSetGroup [_grupo];
 _grupo setVariable ["isHCgroup", true, true];
 
 while {alive _unit} do

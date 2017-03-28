@@ -36,7 +36,7 @@ if ((not alive _camion) or (dateToNumber date > _fechalimnum)) then
 	{
 	_tsk = ["LOG",[side_blue,civilian],[format [_tskDesc,_nombredest,numberToDate [2035,_fechalimnum] select 3,numberToDate [2035,_fechalimnum] select 4],_tskTitle,_marcador],_posicion,"FAILED",5,true,true,"Heal"] call BIS_fnc_setTask;
 	[5,-5,_posicion] remoteExec ["AS_fnc_changeCitySupport",2];
-	[-10,stavros] call playerScoreAdd;
+	[-10,Slowhand] call playerScoreAdd;
 	}
 else
 	{
@@ -93,9 +93,9 @@ else
 		[0,15,_marcador] remoteExec ["AS_fnc_changeCitySupport",2];
 		[5,0] remoteExec ["prestige",2];
 		{if (_x distance _posicion < 500) then {[10,_x] call playerScoreAdd}} forEach (allPlayers - hcArray);
-		[5,stavros] call playerScoreAdd;
+		[5,Slowhand] call playerScoreAdd;
 		// BE module
-		if (hayBE) then {
+		if (activeBE) then {
 			["mis"] remoteExec ["fnc_BE_XP", 2];
 		};
 		// BE module
@@ -103,7 +103,7 @@ else
 	else {
 		_tsk = ["LOG",[side_blue,civilian],[format [_tskDesc,_nombredest,numberToDate [2035,_fechalimnum] select 3,numberToDate [2035,_fechalimnum] select 4],_tskTitle,_marcador],_posicion,"FAILED",5,true,true,"Heal"] call BIS_fnc_setTask;
 		[5,-5,_posicion] remoteExec ["AS_fnc_changeCitySupport",2];
-		[-10,stavros] call playerScoreAdd;
+		[-10,Slowhand] call playerScoreAdd;
 	};
 };
 {if (isPlayer _x) then {[_camion,false] remoteExec ["AS_fnc_lockVehicle",_x];}} forEach ([100,0,_camion,"BLUFORSpawn"] call distanceUnits);

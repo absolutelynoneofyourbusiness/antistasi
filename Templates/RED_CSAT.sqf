@@ -29,6 +29,8 @@ opTruck = 			"O_Truck_02_transport_F";
 
 opMRAPu = 			"O_MRAP_02_F";
 
+opIFV = 			["O_APC_Tracked_02_cannon_F","O_MRAP_02_gmg_F"];
+
 opArtillery = 		"O_MBT_02_arty_F";
 opArtilleryAmmoHE = "32Rnd_155mm_Mo_shells";
 

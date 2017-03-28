@@ -59,7 +59,7 @@ else
 	hint "Soldier Recruited.\n\nRemember: if you use the group menu to switch groups you will lose control of your recruited AI";
 	};
 
-[_unit] spawn FIAinit;
+[_unit] spawn AS_fnc_initialiseFIAUnit;
 
 if (_tipounidad == "Soldier_AA") then {
 	_aal = genAALaunchers select 0;

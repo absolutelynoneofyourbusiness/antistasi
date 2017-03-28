@@ -5,7 +5,7 @@ _unit = _this select 0;
 _recursos = 0;
 _hr = 0;
 
-if (_unit == stavros) then
+if (_unit == Slowhand) then
 	{
 	{
 	if (!(_x getVariable ["esNATO",false])) then
@@ -29,9 +29,9 @@ if (_unit == stavros) then
 						}
 					else
 						{
-						if (_tipoVeh in vehFIA) then {_recursos = _recursos + ([_tipoVeh] call vehiclePrice);};
+						if (_tipoVeh in guer_vehicleArray) then {_recursos = _recursos + ([_tipoVeh] call vehiclePrice);};
 						if (_tipoVeh in (vehTrucks + vehPatrol + vehSupply)) then {_recursos = _recursos + 300};
-						if (_tipoVeh in vehAAFAT) then {
+						if (_tipoVeh in enemyMotorpool) then {
 							call {
 								if (_tipoVeh in vehAPC) exitWith {_recursos = _recursos + 1000};
 								if (_tipoVeh in vehIFV) exitWith {_recursos = _recursos + 2000};
@@ -63,7 +63,7 @@ if ((_hr > 0) or (_recursos > 0)) then {[_hr,_recursos] remoteExec ["resourcesFI
 _armas = weapons _unit;
 _municion = magazines _unit + [currentMagazine _unit];
 _items = (items _unit) + (primaryWeaponItems _unit);
-if (hayTFAR) then
+if (activeTFAR) then
 	{
 	_items pushBack hmd _unit;
 	if (backpack _unit != "tf_rt1523g_sage") then {caja addBackpackCargoGlobal [(backpack _unit) call BIS_fnc_basicBackpack,1];};

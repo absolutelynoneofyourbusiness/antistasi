@@ -8,7 +8,7 @@ _bpCargo = backpackCargo caja;
 if (count _weapCargo > 0) then {
 	for "_i" from 0 to (count _weapCargo - 1) do {
 		_z = _weapCargo select _i;
-		if (_z in AS_allWeapons) then {
+		if (_z in gear_allWeapons) then {
 			if !(_z in unlockedWeapons) then {_uWc pushBack _z};
 		};
 	};
@@ -19,7 +19,7 @@ if (count _weapCargo > 0) then {
 if (count _magCargo > 0) then {
 	for "_i" from 0 to (count _magCargo - 1) do {
 		_z = _magCargo select _i;
-		if (_z in AS_allMagazines) then {
+		if (_z in gear_allMagazines) then {
 			if !(_z in unlockedMagazines) then {_uMc pushBack _z};
 		};
 	};

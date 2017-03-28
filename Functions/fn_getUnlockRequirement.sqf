@@ -16,8 +16,9 @@ params ["_type"];
 private ["_requirement", "_factories", "_weaponReqBase", "_itemReqBase"];
 
 _factories = count (fabricas - mrkAAF);
-_weaponReqBase = [12, 9] select hayACE;
-_itemReqBase = [-58, -84] select hayACE;
+_weaponReqBase = [12, 9] select activeACE;
+_itemReqBase = [-58, -84] select activeACE;
+if (activeACE) then {_itemReqBase = [-84, -98] select activeACEMedical};
 _itemReqBase = [_itemReqBase, _itemReqBase - 10] select replaceFIA;
 
 switch (_type) do {

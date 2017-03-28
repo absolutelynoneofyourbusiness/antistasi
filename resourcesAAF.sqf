@@ -1,4 +1,4 @@
-if (!isPlayer stavros) exitWith {};
+if (!isPlayer Slowhand) exitWith {};
 
 private ["_resourcesAAF","_coste"];
 

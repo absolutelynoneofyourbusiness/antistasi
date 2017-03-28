@@ -21,7 +21,7 @@ if (!isMultiPlayer) then
 
 
     // XLA fixed arsenal
-    if (hayXLA) then {
+    if (activeXLA) then {
         [caja,unlockedItems,true,false] call XLA_fnc_addVirtualItemCargo;
         [caja,unlockedMagazines,true,false] call XLA_fnc_addVirtualMagazineCargo;
         [caja,unlockedWeapons,true,false] call XLA_fnc_addVirtualWeaponCargo;
@@ -69,14 +69,14 @@ if(isServer) then
         [] execVM "orgPlayers\mList.sqf";
         ["miembros"] call fn_LoadStat;
         {
-            if (([_x] call isMember) and (isNull stavros)) then {
-                stavros = _x;
+            if (([_x] call isMember) and (isNull Slowhand)) then {
+                Slowhand = _x;
                 _x setRank "LIEUTENANT";
                 [_x,"LIEUTENANT"] remoteExec ["ranksMP"];
             };
         } forEach playableUnits;
-        publicVariable "stavros";
-        if (isNull stavros) then
+        publicVariable "Slowhand";
+        if (isNull Slowhand) then
             {
                 [] spawn AS_fnc_autoStart;
             //[] execVM "statSave\loadAccount.sqf"; switchCom = false; publicVariable "switchCom";
@@ -89,8 +89,8 @@ if(isServer) then
         }
     else
         {
-        waitUntil {!isNil "stavros"};
-        waitUntil {isPlayer stavros};
+        waitUntil {!isNil "Slowhand"};
+        waitUntil {isPlayer Slowhand};
         };
     fpsCheck = [] execVM "fpsCheck.sqf";
     [caja] call cajaAAF;

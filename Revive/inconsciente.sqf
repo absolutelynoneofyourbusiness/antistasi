@@ -56,7 +56,7 @@ _unit setFatigue 1;
 sleep 2;
 if (_isPlayer) then
 	{
-	if (hayTFAR) then
+	if (activeTFAR) then
 		{
 		_saveVolume = player getVariable ["tf_globalVolume", 1.0];
 		player setVariable ["tf_unable_to_use_radio", true, true];
@@ -124,7 +124,7 @@ while {(time < _bleedOut) and (damage _unit > 0.25) and (alive _unit) and (_unit
 if (_isPlayer) then
 	{
 	(findDisplay 46) displayRemoveEventHandler ["KeyDown", respawnMenu];
-	if (hayTFAR) then
+	if (activeTFAR) then
 		{
 		player setVariable ["tf_unable_to_use_radio", false, true];
 		player setVariable ["tf_globalVolume", _saveVolume];

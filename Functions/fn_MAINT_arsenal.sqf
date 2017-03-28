@@ -8,7 +8,7 @@ if (_clean) then {
 		if (count unlockedWeapons > 0) then {
 			for "_i" from 0 to (count unlockedWeapons - 1) do {
 				_z = unlockedWeapons select _i;
-				if (_z in AS_allWeapons) then {
+				if (_z in gear_allWeapons) then {
 					_uW pushBackUnique _z;
 				};
 			};
@@ -18,7 +18,7 @@ if (_clean) then {
 		if (count unlockedMagazines > 0) then {
 			for "_i" from 0 to (count unlockedMagazines - 1) do {
 				_z = unlockedMagazines select _i;
-				if (_z in AS_allMagazines) then {
+				if (_z in gear_allMagazines) then {
 					_uM pushBackUnique _z;
 				};
 			};
@@ -50,7 +50,7 @@ if (_clean) then {
 		if (count unlockedRifles > 0) then {
 			for "_i" from 0 to (count unlockedRifles - 1) do {
 				_z = unlockedRifles select _i;
-				if (_z in AS_allWeapons) then {
+				if (_z in gear_allWeapons) then {
 					_uR pushBackUnique _z;
 				};
 			};
@@ -65,7 +65,7 @@ if (_clean) then {
 0 = [] call AS_fnc_MAINT_arsInv;
 
 // XLA fixed arsenal
-if (hayXLA) then {
+if (activeXLA) then {
 	_weapons = caja call XLA_fnc_getVirtualWeaponCargo;
 	_magazines = caja call XLA_fnc_getVirtualMagazineCargo;
 	_items = caja call XLA_fnc_getVirtualItemCargo;

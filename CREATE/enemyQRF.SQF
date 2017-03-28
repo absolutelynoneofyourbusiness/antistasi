@@ -294,6 +294,8 @@ else {
 	};
 };
 
+{_x allowDamage true} forEach _vehiculos;
+
 if !(_external) then {
 	waitUntil {sleep 10; (dateToNumber date > _endTime) or ({alive _x} count _soldados == 0)};
 

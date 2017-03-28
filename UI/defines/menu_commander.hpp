@@ -89,7 +89,7 @@
 // MAINT MENU
 #define MAINT_ARS "[] remoteExec ['AS_fnc_MAINT_arsenal', 2];"
 #define MAINT_PET "[true] remoteExec ['AS_fn_togglePetrosAnim', 2]; [] remoteExec ['fnc_MAINT_resetPetros', 2];"
-#define MAINT_MOV "[] remoteExec ['AS_fnc_addMoveObjAction',stavros];"
+#define MAINT_MOV "[] remoteExec ['AS_fnc_addMoveObjAction',Slowhand];"
 #define MAINT_RES "createDialog 'HQ_reset_menu';"
 
 #define MAINT_TEXTS ["STR_UI_MAINT_ARS_TEXT", "STR_UI_MAINT_PET_TEXT", "STR_UI_MAINT_MOV_TEXT", "STR_UI_MAINT_RES_TEXT"]

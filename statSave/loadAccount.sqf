@@ -8,8 +8,8 @@ if (!isDedicated) then {
 	{player removeWeaponGlobal _x} forEach weapons player;
 	removeBackpackGlobal player;
 	if ("ItemGPS" in (assignedItems player)) then {player unlinkItem "ItemGPS"};
-	if ((!hayTFAR) and ("ItemRadio" in (assignedItems player))) then {player unlinkItem "ItemRadio"};
-	player setPos getMarkerPos guer_respawn;
+	if ((!activeTFAR) and ("ItemRadio" in (assignedItems player))) then {player unlinkItem "ItemRadio"};
+	player setPos (server getVariable ["posHQ", getMarkerPos guer_respawn]);
 
 	waitUntil {!isNil "sessionIDloaded"};
 	[format ["server ID: %1; player ID: %2", (server getVariable ["AS_session_server", -2]), (player getVariable ["AS_session_client", -1])]] remoteExec ["AS_fnc_logOutput", 2];
@@ -88,9 +88,10 @@ petros allowdamage false;
 ["vehInGarage"] call fn_LoadStat;
 ["destroyedBuildings"] call fn_LoadStat;
 ["idleBases"] call fn_LoadStat;
+["AS_destroyedZones"] call fn_LoadStat;
 //===========================================================================
 
-unlockedRifles = unlockedweapons -  hguns -  mlaunchers - rlaunchers - srifles - mguns; publicVariable "unlockedRifles";
+unlockedRifles = unlockedweapons - gear_sidearms - gear_missileLaunchers - gear_rocketLaunchers - gear_sniperRifles - gear_machineGuns; publicVariable "unlockedRifles";
 
 _marcadores = mrkFIA + mrkAAF + campsFIA;
 
@@ -203,6 +204,7 @@ publicVariable "mrkFIA";
 ["posHQ"] call fn_LoadStat;
 ["estaticas"] call fn_LoadStat;//tiene que ser el último para que el sleep del borrado del contenido no haga que despawneen
 
+sleep 1;
 if (isMultiplayer) then
 	{
 	{

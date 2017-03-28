@@ -96,7 +96,7 @@ while {(spawner getVariable _marcador) and (_cuenta < _tam)} do
 			if (_tipo == guer_sol_SL) then {_grupo selectLeader _unit};
 			};
 		};
-	[_unit,_marcador] call FIAinitBASES;
+	[_unit,_marcador] call AS_fnc_initialiseFIAGarrisonUnit;
 	_soldados = _soldados + [_unit];
 	_cuenta = _cuenta + 1;
 	sleep 0.5;

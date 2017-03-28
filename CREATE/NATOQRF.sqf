@@ -188,7 +188,7 @@ else {
 	_pos3 =+ _dest;
 	_xshift3 = (_dest select 0) + 30;
 	_pos3 set [0, _xshift3];
-	[_grpVeh2, _posOrig, _pos3, _mrk, _grpDis2, 25, "assault"] call AS_fnc_QRF_dismountTroops;
+	[_grpVeh2, _posOrig, _pos3, _mrk, _grpDis2, 25, "assault"] spawn AS_fnc_QRF_dismountTroops;
 };
 
 {

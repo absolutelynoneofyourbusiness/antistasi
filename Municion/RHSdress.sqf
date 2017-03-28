@@ -26,7 +26,7 @@ if ((_tipo == guer_sol_RFL) or (_tipo == guer_sol_GL) or (_tipo == guer_sol_LAT)
 		}
 	else
 		{
-		if (hayRHS) then
+		if (activeAFRF) then
 			{
 			removeAllItemsWithMagazines _unit;
 			for "_i" from 1 to 6 do {_unit addItemToVest "rhs_30Rnd_762x39mm"; _unit addItemToVest "rhs_VOG25";};

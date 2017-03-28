@@ -60,7 +60,7 @@ class CfgIdentities
 {
     class protagonista
     {
-        name = "Stavros";
+        name = "Slowhand";
         nameSound = "Stavrou";
         face="GreekHead_A3_01";
 	glasses="None";

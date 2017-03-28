@@ -1,5 +1,5 @@
-if (!isServer) exitWith {};
-private ["_weapons","_baseWeapons","_addedWeapons","_lockedWeapon","_weaponCargo","_precio","_weapon","_baseWeapon","_priceAdd","_updated","_magazines","_addedMagazines","_magazine","_magazineCargo","_items","_addedItems","_item","_cuenta","_itemCargo","_backpacks","_baseBackpacks","_addedBackpacks","_lockedBackpack","_backpackCargo","_mochi","_backpack","_weaponsItems","_wpnItem", "_itemReq"];
+if !(isServer) exitWith {};
+private ["_weapons","_baseWeapons","_addedWeapons","_lockedWeapon","_weaponCargo","_precio","_weapon","_priceAdd","_updated","_magazines","_addedMagazines","_magazine","_magazineCargo","_items","_addedItems","_item","_cuenta","_itemCargo","_backpacks","_baseBackpacks","_addedBackpacks","_lockedBackpack","_backpackCargo","_mochi","_backpack","_weaponsItems","_wpnItem", "_itemReq","_tempList","_magList","_delList","_baseWeapon"];
 
 _updated = "";
 
@@ -8,6 +8,9 @@ _backpacks = backpackCargo caja;
 _magazines = magazineCargo caja;
 _items = itemCargo caja;
 
+// Check magazines
+_tempList = _magazines arrayIntersect _magazines;
+_delList = [];
 _addedMagazines = [];
 {
 	_mag = _x;
@@ -17,45 +20,51 @@ _addedMagazines = [];
 			unlockedMagazines pushBackUnique _mag;
 			_updated = format ["%1%2<br/>",_updated,getText (configFile >> "CfgMagazines" >> _mag >> "displayName")]
 		};
+	} else {
+		_delList pushBackUnique _mag;
 	};
-} forEach AS_allMagazines;
+} forEach _tempList;
 
+_magazines = _magazines - _delList - _addedMagazines;
+
+// Check weapons, base models
 _baseWeapons = [];
 {
-	_baseWeapon = [_x] call BIS_fnc_baseWeapon;
-	_baseWeapons pushBack _baseWeapon;
+	_baseWeapons pushBack ([_x] call BIS_fnc_baseWeapon);
 } forEach _weapons;
 
+_tempList = _baseWeapons arrayIntersect _baseWeapons;
+_delList = [];
 _addedWeapons = [];
 {
 	_lockedWeapon = _x;
+	if !(_lockedWeapon in unlockedWeapons) then {
+		if ({_x == _lockedWeapon} count _baseWeapons >= ["weapons"] call AS_fnc_getUnlockRequirement) then {
+			_blockUnlock = true;
 
-	if ({_x == _lockedWeapon} count _baseWeapons >= ["weapons"] call AS_fnc_getUnlockRequirement) then {
-		_blockUnlock = true;
-		_magazine = (getArray (configFile / "CfgWeapons" / _x / "magazines") select 0);
-		if !(isNil "_magazine") then {
-			if (_magazine in unlockedMagazines) then {
-				_blockUnlock = false;
-			} else {
-				if ({_x == _magazine} count _magazines >= ["magazines"] call AS_fnc_getUnlockRequirement) then {
-					_blockUnlock = false;
-					_addedMagazines pushBackUnique _magazine;
-					unlockedMagazines pushBackUnique _magazine;
-					_updated = format ["%1%2<br/>",_updated,getText (configFile >> "CfgMagazines" >> _magazine >> "displayName")]
+			_magList = server getVariable [format ["%1_mags", _lockedWeapon], []];
+			if (count _magList > 0) then {
+				{
+					if (_x in unlockedMagazines) exitWith {_blockUnlock = false};
+				} forEach _magList;
+
+				if !(_blockUnlock) then {
+					_addedWeapons pushBackUnique _lockedWeapon;
+					unlockedWeapons pushBackUnique _lockedWeapon;
+					_updated = format ["%1%2<br/>",_updated,getText (configFile >> "CfgWeapons" >> _lockedWeapon >> "displayName")];
 				};
 			};
-
-			if !(_blockUnlock) then {
-				_addedWeapons pushBackUnique _lockedWeapon;
-				unlockedWeapons pushBackUnique _lockedWeapon;
-				_updated = format ["%1%2<br/>",_updated,getText (configFile >> "CfgWeapons" >> _lockedWeapon >> "displayName")];
-			};
 		};
+	} else {
+		_delList pushBackUnique _lockedWeapon;
 	};
-} forEach lockedWeapons;
+} forEach _tempList;
 
-if (!("Rangefinder" in unlockedWeapons) || !(indRF in unlockedWeapons)) then {
-	if ({(_x == "Rangefinder") or (_x == indRF)} count weaponCargo caja >= ["weapons"] call AS_fnc_getUnlockRequirement) then {
+_weapons = _weapons - _delList - _addedWeapons;
+
+
+if (!("Rangefinder" in unlockedWeapons) OR !(indRF in unlockedWeapons)) then {
+	if ({(_x == "Rangefinder") OR (_x == indRF)} count weaponCargo caja >= ["weapons"] call AS_fnc_getUnlockRequirement) then {
 		_addedWeapons pushBack "Rangefinder";
 		unlockedWeapons pushBack "Rangefinder";
 		_addedWeapons pushBack indRF;
@@ -66,12 +75,12 @@ if (!("Rangefinder" in unlockedWeapons) || !(indRF in unlockedWeapons)) then {
 
 
 if (count _addedMagazines > 0) then {
-	if ((atMine in _addedMagazines) || (apMine in _addedMagazines)) then {
-		if (hayBE) then {["unl_wpn"] remoteExec ["fnc_BE_XP", 2]};
+	if ((atMine in _addedMagazines) OR (apMine in _addedMagazines)) then {
+		if (activeBE) then {["unl_wpn"] remoteExec ["fnc_BE_XP", 2]};
 	};
 	if (("AS_virtualArsenal" call BIS_fnc_getParamValue) == 1) then {
 		// XLA fixed arsenal
-		if (hayXLA) then {
+		if (activeXLA) then {
 			[caja,_addedMagazines,true,false] call XLA_fnc_addVirtualMagazineCargo;
 		} else {
 			[caja,_addedMagazines,true,false] call BIS_fnc_addVirtualMagazineCargo;
@@ -81,7 +90,6 @@ if (count _addedMagazines > 0) then {
 };
 
 _magazineCargo = [];
-
 for "_i" from 0 to (count _magazines) - 1 do {
 	_magazine = _magazines select _i;
 	if !(_magazine in unlockedMagazines) then {
@@ -91,10 +99,10 @@ for "_i" from 0 to (count _magazines) - 1 do {
 
 if (count _addedWeapons > 0) then {
 	lockedWeapons = lockedWeapons - _addedWeapons;
-	if (hayBE) then {["unl_wpn", count _addedWeapons] remoteExec ["fnc_BE_XP", 2]};
+	if (activeBE) then {["unl_wpn", count _addedWeapons] remoteExec ["fnc_BE_XP", 2]};
 	if (("AS_virtualArsenal" call BIS_fnc_getParamValue) == 1) then {
 		// XLA fixed arsenal
-		if (hayXLA) then {
+		if (activeXLA) then {
 			[caja,_addedWeapons,true,false] call XLA_fnc_addVirtualWeaponCargo;
 		} else {
 			[caja,_addedWeapons,true,false] call BIS_fnc_addVirtualWeaponCargo;
@@ -106,7 +114,6 @@ if (count _addedWeapons > 0) then {
 
 _weaponCargo = [];
 _weaponsItems = weaponsItems caja;
-
 for "_i" from 0 to (count _weapons) - 1 do {
 	_weapon = _weapons select _i;
 	_baseWeapon = _baseWeapons select _i;
@@ -143,7 +150,7 @@ if (count _addedBackpacks > 0) then {
 	genBackpacks = genBackpacks - _addedBackpacks;
 	if (("AS_virtualArsenal" call BIS_fnc_getParamValue) == 1) then {
 		// XLA fixed arsenal
-		if (hayXLA) then {
+		if (activeXLA) then {
 			[caja,_addedBackpacks,true,false] call XLA_fnc_addVirtualBackpackCargo;
 		} else {
 			[caja,_addedBackpacks,true,false] call BIS_fnc_addVirtualBackpackCargo;
@@ -154,7 +161,6 @@ if (count _addedBackpacks > 0) then {
 };
 
 _backpackCargo = [];
-
 for "_i" from 0 to (count _backpacks) - 1 do {
 	_mochi = _backpacks select _i;
 	_backpack = _baseBackpacks select _i;
@@ -163,6 +169,8 @@ for "_i" from 0 to (count _backpacks) - 1 do {
 	};
 };
 
+_tempList = _items arrayIntersect _items;
+_delList = [];
 _addedItems = [];
 {
 	_item = _x;
@@ -176,18 +184,23 @@ _addedItems = [];
 			_updated = format ["%1%2<br/>",_updated,getText (configFile >> "CfgWeapons" >> _item >> "displayName")];
 			if (_item in genOptics) then {unlockedOptics pushBackUnique _item; publicVariable "unlockedOptics"};
 			if (_item in genVests) then {
-				if (hayBE) then {["unl_wpn"] remoteExec ["fnc_BE_XP", 2]};
+				if (activeBE) then {["unl_wpn"] remoteExec ["fnc_BE_XP", 2]};
 			};
 		};
+	} else {
+		_delList pushBack _item;
 	};
-} forEach allItems + ["bipod_01_F_snd","bipod_01_F_blk","bipod_01_F_mtp","bipod_02_F_blk","bipod_02_F_tan","bipod_02_F_hex","bipod_03_F_blk","B_UavTerminal"] + bluItems - ["NVGoggles","Laserdesignator"];
+} forEach _tempList - ["NVGoggles","Laserdesignator"];
+
+_items = _items - _delList - _addedItems;
+
 
 if !("NVGoggles" in unlockedItems) then {
 	if ({(_x == "NVGoggles") or (_x == "NVGoggles_OPFOR") or (_x == "NVGoggles_INDEP") or (_x == indNVG)} count weaponCargo caja >= ["items"] call AS_fnc_getUnlockRequirement) then {
 		_addedItems = _addedItems + ["NVGoggles","NVGoggles_OPFOR","NVGoggles_INDEP",indNVG];
 		unlockedItems = unlockedItems + ["NVGoggles","NVGoggles_OPFOR","NVGoggles_INDEP",indNVG];
 		_updated = format ["%1%2<br/>",_updated,getText (configFile >> "CfgWeapons" >> "NVGoggles" >> "displayName")];
-		if (hayBE) then {["unl_wpn"] remoteExec ["fnc_BE_XP", 2]};
+		if (activeBE) then {["unl_wpn"] remoteExec ["fnc_BE_XP", 2]};
 	};
 };
 
@@ -209,14 +222,14 @@ if !("Rangefinder" in unlockedItems) then {
 	};
 };
 
-if ((hayACE) && ("ItemGPS" in unlockedItems)) then {
+if ((activeACE) && ("ItemGPS" in unlockedItems)) then {
 	unlockedItems pushBackUnique "ACE_DAGR";
 };
 
 if (count _addedItems >0) then {
 	if (("AS_virtualArsenal" call BIS_fnc_getParamValue) == 1) then {
 		// XLA fixed arsenal
-		if (hayXLA) then {
+		if (activeXLA) then {
 			[caja,_addedItems,true,false] call XLA_fnc_addVirtualItemCargo;
 		} else {
 			[caja,_addedItems,true,false] call BIS_fnc_addVirtualItemCargo;
@@ -238,7 +251,7 @@ if (("AS_virtualArsenal" call BIS_fnc_getParamValue) == 1) then {
 	if (count _weapons != count _weaponCargo) then {
 		clearWeaponCargoGlobal caja;
 		{caja addWeaponCargoGlobal [_x,1]} forEach _weaponCargo;
-		unlockedRifles = unlockedweapons -  hguns -  mlaunchers - rlaunchers - srifles - mguns; publicVariable "unlockedRifles";
+		unlockedRifles = unlockedweapons -  gear_sidearms -  gear_missileLaunchers - gear_rocketLaunchers - gear_sniperRifles - gear_machineGuns; publicVariable "unlockedRifles";
 	};
 
 	if (count _backpacks != count _backpackCargo) then {
@@ -257,7 +270,7 @@ if (("AS_virtualArsenal" call BIS_fnc_getParamValue) == 1) then {
 	};
 };
 
-unlockedRifles = unlockedweapons -  hguns -  mlaunchers - rlaunchers - srifles - mguns; publicVariable "unlockedRifles";
+unlockedRifles = unlockedweapons - gear_sidearms - gear_missileLaunchers - gear_rocketLaunchers - gear_sniperRifles - gear_machineGuns; publicVariable "unlockedRifles";
 publicVariable "unlockedWeapons";
 publicVariable "unlockedRifles";
 publicVariable "unlockedItems";

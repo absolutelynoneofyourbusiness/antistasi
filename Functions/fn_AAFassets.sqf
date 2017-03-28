@@ -1,4 +1,4 @@
-if !(isPlayer stavros) exitWith {};
+if !(isPlayer Slowhand) exitWith {};
 
 params ["_veh"];
 private _tipo = typeOf _veh;
@@ -8,8 +8,8 @@ call {
 		APCAAFcurrent = APCAAFcurrent -1;
 		if (APCAAFcurrent < 1) then {
 			APCAAFcurrent = 0;
-			vehAAFAT = vehAAFAT - vehAPC - vehIFV;
-			publicVariable "vehAAFAT";
+			enemyMotorpool = enemyMotorpool - vehAPC - vehIFV;
+			publicVariable "enemyMotorpool";
 		};
 		publicVariable "APCAAFcurrent";
 	};
@@ -17,8 +17,8 @@ call {
 		tanksAAFcurrent = tanksAAFcurrent -1;
 		if (tanksAAFcurrent < 1) then {
 			tanksAAFcurrent = 0;
-			vehAAFAT = vehAAFAT - vehTank;
-			publicVariable "vehAAFAT";
+			enemyMotorpool = enemyMotorpool - vehTank;
+			publicVariable "enemyMotorpool";
 		};
 		publicVariable "tanksAAFcurrent";
 	};
@@ -26,8 +26,8 @@ call {
 		helisAAFcurrent = helisAAFcurrent -1;
 		if (helisAAFcurrent < 1) then {
 			helisAAFcurrent = 0;
-			planesAAF = planesAAF - heli_armed;
-			publicVariable "planesAAF";
+			indAirForce = indAirForce - heli_armed;
+			publicVariable "indAirForce";
 		};
 		publicVariable "helisAAFcurrent";
 	};
@@ -35,8 +35,8 @@ call {
 		planesAAFcurrent = planesAAFcurrent -1;
 		if (planesAAFcurrent < 1) then {
 			planesAAFcurrent = 0;
-			planesAAF = planesAAF - planes;
-				publicVariable "planesAAF";
+			indAirForce = indAirForce - planes;
+				publicVariable "indAirForce";
 		};
 		publicVariable "planesAAFcurrent";
 	};

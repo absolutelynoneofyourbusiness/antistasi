@@ -90,7 +90,7 @@ while {(spawner getVariable _marcador) and (_cuenta < _numCiv)} do
 		}
 	else
 		{
-		if (debug) then {stavros globalChat "Nos hemos quedado sin FPS, dejo de spawnear civiles"};
+		if (debug) then {Slowhand globalChat "Nos hemos quedado sin FPS, dejo de spawnear civiles"};
 		};
 	_cuenta = _cuenta + 1;
 	};

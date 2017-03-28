@@ -1,6 +1,6 @@
 if (!isNil "placementDone") then
 	{
-	stavros allowDamage false;
+	Slowhand allowDamage false;
 	"Petros is Dead" hintC "Petros has been killed. You lost part of your assets and need to select a new HQ position far from the enemies.";
 	}
 else
@@ -110,7 +110,7 @@ if (visiblemap) then
 	_rnd = _rnd + 45;
 	_pos = [getPos fuego, 3, _rnd] call BIS_Fnc_relPos;
 	cajaVeh setPos _pos;
-	if (isNil "placementDone") then {if (isMultiplayer) then {{_x setPos getPos petros} forEach playableUnits} else {stavros setPos (getMarkerPos guer_respawn)}} else {stavros allowDamage true};
+	if (isNil "placementDone") then {if (isMultiplayer) then {{_x setPos getPos petros} forEach playableUnits} else {Slowhand setPos (getMarkerPos guer_respawn)}} else {Slowhand allowDamage true};
 	if (isMultiplayer) then
 		{
 		caja hideObjectGlobal false;
@@ -131,6 +131,7 @@ if (visiblemap) then
 	};
 "FIA_HQ" setMarkerPos (getMarkerPos guer_respawn);
 posHQ = getMarkerPos guer_respawn; publicVariable "posHQ";
+server setVariable ["posHQ", getMarkerPos guer_respawn, true];
 if (isNil "placementDone") then {
 	placementDone = true;
 	publicVariable "placementDone";

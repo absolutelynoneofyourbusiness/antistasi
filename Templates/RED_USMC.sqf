@@ -29,6 +29,8 @@ opTruck = 			"rhsusf_M1083A1P2_B_wd_fmtv_usarmy";
 
 opMRAPu = 			"rhsusf_rg33_d";
 
+opIFV = 			["RHS_M2A2_wd","RHS_M2A2_BUSKI_WD"];	 //Using bradleys as RHS doesn't inlclude marine IFVs
+
 opArtillery = 		"rhsusf_m109d_usarmy";
 opArtilleryAmmoHE = "32Rnd_155mm_Mo_shells";
 

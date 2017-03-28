@@ -6,7 +6,7 @@ _haymedico = false;
 _medico = objNull;
 
 _medItem = "FirstAidKit";
-if (hayACEMedical) then {_medItem = "ACE_fieldDressing"};
+if (activeACEMedical) then {_medItem = "ACE_fieldDressing"};
 //if (count _this == 1) then {_units = units group _unit} else {_units = units (_this select 1)};
 _units = units group _unit;
 {

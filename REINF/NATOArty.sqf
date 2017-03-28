@@ -49,9 +49,9 @@ for "_i" from 1 to _cuenta do
 	_vehiculos pushBack _veh;
 	sleep 2;
 	};
-_grupo setGroupOwner (owner stavros);
+_grupo setGroupOwner (owner Slowhand);
 _grupo setGroupId ["N.Arty"];
-Stavros hcSetGroup [_grupo];
+Slowhand hcSetGroup [_grupo];
 _grupo setVariable ["isHCgroup", true, true];
 //{[_x] spawn unlimitedAmmo} forEach _vehiculos;
 

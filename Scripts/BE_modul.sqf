@@ -60,7 +60,7 @@ fnc_BE_initialize = {
 };
 
 fnc_BE_gearUpdate = {
-	BE_defWeap = unlockedWeapons arrayIntersect (arifles + mguns + srifles);
+	BE_defWeap = unlockedWeapons arrayIntersect (gear_assaultRifles + gear_machineGuns + gear_sniperRifles);
 	BE_defVests = unlockedItems select {(getNumber (configfile >> "CfgWeapons" >> _x >> "ItemInfo" >> "type")) == 701};
 	BE_defHelmets = unlockedItems select {(getNumber (configfile >> "CfgWeapons" >> _x >> "ItemInfo" >> "type")) == 605};
 	BE_defOptics = unlockedOptics;
@@ -123,7 +123,7 @@ fnc_BE_pushVariables = {
 	publicVariable "BE_class_MRAP";
 	publicVariable "BE_mil_vehicles";
 
-	publicVariable "hayBE";
+	publicVariable "activeBE";
 	publicVariable "BE_currentStage";
 	publicVariable "BE_currentPrice";
 };
@@ -202,7 +202,7 @@ fnc_BE_updateProgressBar = {
 			BE_progressLock = true;
 			BE_currentXP = 0;
 		};
-		[format ["<t color='#1DA81D'>New FIA Skill Level: %1</t>", _v+1],0,0,4,0,0,4] remoteExec ["bis_fnc_dynamicText", stavros];
+		[format ["<t color='#1DA81D'>New FIA Skill Level: %1</t>", _v+1],0,0,4,0,0,4] remoteExec ["bis_fnc_dynamicText", Slowhand];
 		[] spawn {sleep 2; [] call fnc_BE_updateProgressBar};
 	};
 
@@ -253,7 +253,7 @@ fnc_BE_calcPrice = {
 
 fnc_BE_buyUpgrade = {
 	if (BE_currentStage == 3) exitWith {
-		[petros,"hint","No further training available."] remoteExec ["commsMP",stavros];
+		[petros,"hint","No further training available."] remoteExec ["commsMP",Slowhand];
 	};
 	private _price = call fnc_BE_calcPrice;
 
@@ -261,7 +261,7 @@ fnc_BE_buyUpgrade = {
 		[_price] call fnc_BE_upgrade;
 		diag_log format ["Maintenance: upgrade acquired. New stage: %1; price paid: %2", BE_currentStage, BE_currentPrice];
 	} else {
-		[petros,"hint","We don't have the resources."] remoteExec ["commsMP",stavros];
+		[petros,"hint","We don't have the resources."] remoteExec ["commsMP",Slowhand];
 	};
 };
 
@@ -532,7 +532,7 @@ fnc_BE_broadcast = {
 		_pI pushBackUnique (format ["Current FIA watchpost type: %1", ["simple", "advanced"] select (BE_current_FIA_WP_Style > 0)]);
 	};
 
-	[petros,"BE",_pI] remoteExec ["commsMP",stavros];
+	[petros,"BE",_pI] remoteExec ["commsMP",Slowhand];
 };
 
 #define BE_STR_CTER1 "At least 1 outpost/base/airport under your control"
@@ -559,7 +559,7 @@ fnc_BE_C_TER = {
 #define BE_STR_CWPN2 "At least 4 primary weapons unlocked in the arsenal"
 #define BE_STR_CWPN3 "At least 6 primary weapons unlocked in the arsenal"
 fnc_BE_C_WPN = {
-	private _base = arifles + mguns + srifles - BE_defWeap;
+	private _base = gear_assaultRifles + gear_machineGuns + gear_sniperRifles - BE_defWeap;
 	private _minVal = 6;
 	BE_STR_CWPN = BE_STR_CWPN3;
 	call {

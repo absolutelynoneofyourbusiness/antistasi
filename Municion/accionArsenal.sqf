@@ -35,7 +35,7 @@ _casco = headgear _unit;
 
 if ((!(_casco in unlockedItems)) and (_casco in genHelmets)) then {_items pushBack _casco; removeHeadgear _unit};
 
-if (hayTFAR) then {
+if (activeTFAR) then {
 	{
 	if (!(_x in unlockedItems)) then {
 		if !(toLower _x find "tf_anprc" >= 0) then {

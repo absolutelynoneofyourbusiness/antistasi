@@ -6,7 +6,7 @@ if (_pool and (not([player] call isMember))) exitWith {hint "You cannot access t
 if (player != player getVariable "owner") exitWith {hint "You cannot access the Garage while you are controlling AI"};
 _chequeo = false;
 {
-	if (((side _x == side_red) or (side _x == side_green)) and (_x distance player < 500) and (not(captive _x))) then {_chequeo = true};
+	if (((side _x == side_red) or (side _x == side_green)) and (_x distance player < safeDistance_garage) and (not(captive _x))) then {_chequeo = true};
 } forEach allUnits;
 
 if (_chequeo) exitWith {Hint "You cannot manage the Garage with enemies nearby"};
@@ -130,7 +130,7 @@ garageKeys = (findDisplay 46) displayAddEventHandler ["KeyDown",
 				garageVeh enableSimulationGlobal true;
 
 				// BE module
-				if (hayBE) then {
+				if (activeBE) then {
 					[garageVeh, "out"] call fnc_BE_checkVehicle;
 				};
 				// BE module

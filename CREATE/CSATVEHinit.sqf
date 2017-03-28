@@ -23,11 +23,11 @@ _veh addEventHandler ["killed",{
 	if (side (_this select 1) == side_blue) then {
 		[2,-2] remoteExec ["prestige",2];
 		[-5,5,position (_this select 0)] remoteExec ["AS_fnc_changeCitySupport",2];
-		if (hayBE) then {["des_veh"] remoteExec ["fnc_BE_XP", 2]};
+		if (activeBE) then {["des_veh"] remoteExec ["fnc_BE_XP", 2]};
 	}
 }];
 
-[_veh] spawn cleanserVeh;
+[_veh] spawn vehicleRemover;
 
 if ((count crew _veh) > 0) then
 	{

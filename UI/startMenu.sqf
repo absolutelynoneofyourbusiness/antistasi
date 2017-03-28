@@ -12,22 +12,22 @@ if !(enableRestart) then {
 	((findDisplay 100) displayCtrl 2502) ctrlEnable false;
 };
 
-if (hayACE) then {
+if (activeACE) then {
 	((findDisplay 100) displayCtrl 1301) ctrlSetTextColor MENU_TEXT_COLOR_TRUE;
 	((findDisplay 100) displayCtrl 1301) ctrlAddEventHandler ["MouseEnter", "['STR_UI_SM_ACE_TT'] call AS_fnc_UI_setTText;"];
 	((findDisplay 100) displayCtrl 1301) ctrlEnable true;
 };
-if (hayTFAR) then {
+if (activeTFAR) then {
 	((findDisplay 100) displayCtrl 1302) ctrlSetTextColor MENU_TEXT_COLOR_TRUE;
 	((findDisplay 100) displayCtrl 1302) ctrlAddEventHandler ["MouseEnter", "['STR_UI_SM_TFAR_TT'] call AS_fnc_UI_setTText;"];
 	((findDisplay 100) displayCtrl 1302) ctrlEnable true;
 };
-if (hayRHS) then {
+if (activeAFRF) then {
 	((findDisplay 100) displayCtrl 1303) ctrlSetTextColor MENU_TEXT_COLOR_TRUE;
 	((findDisplay 100) displayCtrl 1303) ctrlAddEventHandler ["MouseEnter", "['STR_UI_SM_AFRF_TT'] call AS_fnc_UI_setTText;"];
 	((findDisplay 100) displayCtrl 1303) ctrlEnable true;
 };
-if (hayUSAF) then {
+if (activeUSAF) then {
 	((findDisplay 100) displayCtrl 1304) ctrlSetTextColor MENU_TEXT_COLOR_TRUE;
 	((findDisplay 100) displayCtrl 1304) ctrlAddEventHandler ["MouseEnter", "['STR_UI_SM_USAF_TT'] call AS_fnc_UI_setTText;"];
 	((findDisplay 100) displayCtrl 1304) ctrlEnable true;

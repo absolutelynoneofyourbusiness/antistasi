@@ -7,7 +7,7 @@ if (_force) exitWith {
 };
 
 if (server getVariable ["AS_toggleAnim", false]) exitWith {
-	[petros,"BE", "Currently changing Petros' state, try again in a few seconds."] remoteExec ["commsMP",stavros];
+	[petros,"BE", "Currently changing Petros' state, try again in a few seconds."] remoteExec ["commsMP",Slowhand];
 };
 
 server setVariable ["AS_toggleAnim", true, true];
