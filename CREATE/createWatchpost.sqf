@@ -1,7 +1,7 @@
 if (!isServer and hasInterface) exitWith {};
 
 params ["_marker"];
-private ["_allVehicles","_allGroups","_allSoldiers","_markerPos","_size","_position","_bunker","_vehicle","_group","_unit","_groupType","_tempGroup","_patrolMarker"];
+private ["_allVehicles","_allGroups","_allSoldiers","_markerPos","_size","_position","_bunker","_vehicle","_normalPos","_group","_unit","_groupType","_tempGroup","_patrolMarker"];
 
 _allVehicles = [];
 _allGroups = [];
@@ -16,6 +16,8 @@ _vehicle = createVehicle ["Land_BagBunker_Tower_F", _markerPos, [],0, "NONE"];
 _vehicle setVectorUp (surfacenormal (getPosATL _vehicle));
 _allVehicles pushBack _vehicle;
 _vehicle setDir (markerDir _marker);
+_normalPos = surfaceNormal (position _vehicle);
+_vehicle setVectorUp _normalPos;
 
 _vehicle = createVehicle [cFlag, _markerPos, [],0, "NONE"];
 _allVehicles pushBack _vehicle;
@@ -25,7 +27,7 @@ _allVehicles pushBack _vehicle;
 [_vehicle] call cajaAAF;
 
 _position = _markerPos findEmptyPosition [5,50,enemyMotorpoolDef];
-if !(_position == []) then {
+if !(count _position == 0) then {
 	_vehicle = createVehicle [selectRandom vehTrucks, _position, [], 0, "NONE"];
 	_vehicle setDir random 360;
 	_allVehicles pushBack _vehicle;

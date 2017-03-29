@@ -69,7 +69,7 @@ if (_tipo == "status") then {
 
 if (_tipo == "save") then {
 	sleep 0.5;
-	"Saving Progress" hintC (_texto);
+	(localize "STR_HINTS_SAVE_COM_TITLE") hintC (_texto);
 	hintC_arr_EH = findDisplay 72 displayAddEventHandler ["unload", {
 		0 = _this spawn {
 			_this select 0 displayRemoveEventHandler ["unload", hintC_arr_EH];

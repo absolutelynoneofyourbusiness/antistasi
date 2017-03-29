@@ -79,7 +79,7 @@ else
 	[600] remoteExec ["AS_fnc_increaseAttackTimer",2];
 	{if (isPlayer _x) then {[10,_x] call playerScoreAdd}} forEach ([500,0,_Forest,"BLUFORSpawn"] call distanceUnits);
 	[10,Slowhand] call playerScoreAdd;
-	[-8,4] remoteExec ["prestige",2];
+	[3,-3] remoteExec ["prestige",2];
 	// BE module
 	if (activeBE) then {
 		["mis"] remoteExec ["fnc_BE_XP", 2];

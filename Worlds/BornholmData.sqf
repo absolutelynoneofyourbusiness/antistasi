@@ -1,7 +1,5 @@
 if !(worldName == "Bornholm") exitWith {};
 
-private ["_terrainObjects"];
-
 power = ["power","power_1","power_2","power_3","power_5","power_6","power_8","power_9","power_10"]; // power plants
 bases = ["base","base_1","base_2","base_3","base_4","base_5","base_6","base_7","base_9","base_10","base_11","base_12"]; // army bases
 aeropuertos = ["airport","airport_1","airport_2"]; // airports

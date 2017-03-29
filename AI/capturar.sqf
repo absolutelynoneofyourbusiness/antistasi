@@ -5,7 +5,7 @@ _jugador = _this select 1;
 
 if (!alive _unit) exitWith {};
 
-_jugador globalChat "You have one chance, join us and help us liberate Altis from tiranny!";
+_jugador globalChat format [localize "STR_DIALOG_SURRENDER_REQ", worldName];
 
 _chance = (server getVariable "prestigeNATO") - (server getVariable "prestigeCSAT");
 
@@ -20,7 +20,7 @@ diag_log format ["value: %1; threshold: %2", _rnd, _chance];
 if (_rnd < _chance) then
 	{
 	_unit enableSimulationGlobal true;
-	_unit globalChat "Okay, thank you. I was expecting for this. See you in HQ";
+	_unit globalChat (localize "STR_DIALOG_SURRENDER_ACC");
 	_unit enableAI "ANIM";
 	_unit enableAI "MOVE";
 	_unit stop false;
@@ -37,5 +37,5 @@ if (_rnd < _chance) then
 	}
 else
 	{
-	_unit globalChat "Screw you!";
+	_unit globalChat (localize "STR_DIALOG_SURRENDER_REF");
 	};

@@ -59,67 +59,67 @@ bluCfgInf = (configfile >> "CfgGroups" >> "East" >> "OPF_F" >> "Infantry");
 
 
 bluRifle = [
-	"arifle_MX_F",
-	"arifle_MX_SW_F"
+	"arifle_Katiba_C_F",
+	"arifle_Katiba_F"
 ];
 
 bluGL = [
-	"arifle_MX_GL_F"
+	"arifle_Katiba_GL_F"
 ];
 
 bluSNPR = [
-	"srifle_LRR_F",
-	"srifle_DMR_02_F",
-	"srifle_EBR_F",
-	"srifle_DMR_03_F"
+	"srifle_GM6_F ",
+	"srifle_DMR_01_DMS_F",
+	"srifle_DMR_01_F",
+	"srifle_DMR_01_F"
 ];
 
 bluLMG = [
-	"MMG_02_sand_F",
-	"arifle_MX_SW_F"
+	"LMG_Zafir_F",
+	"LMG_Mk200_F"
 ];
 
 bluSmallWpn = [
-	"SMG_01_F",
-	"hgun_ACPC2_F"
+	"SMG_02_F",
+	"hgun_Rook40_F"
 ];
 
 bluRifleAmmo = [
-	"30Rnd_65x39_Caseless_mag",
-	"30Rnd_65x39_caseless_mag_Tracer"
+	"30Rnd_65x39_caseless_green",
+	"30Rnd_65x39_caseless_green_mag_Tracer"
 ];
 
 bluSNPRAmmo = [
-	"7Rnd_408_Mag",
-	"10Rnd_338_Mag",
-	"20Rnd_762x51_Mag"
+	"5Rnd_127x108_Mag",
+	"10Rnd_762x54_Mag",
+	"10Rnd_762x54_Mag"
 ];
 
 bluLMGAmmo = [
-	"130Rnd_338_Mag",
-	"100Rnd_65x39_Caseless_mag",
-	"100Rnd_65x39_caseless_mag_Tracer"
+	"150Rnd_762x54_Box",
+	"200Rnd_65x39_cased_Box",
+	"200Rnd_65x39_cased_Box_Tracer"
 ];
 
 bluSmallAmmo = [
-	"30Rnd_45ACP_Mag_SMG_01",
-	"30Rnd_45ACP_Mag_SMG_01_tracer_green",
-	"11Rnd_45ACP_Mag"
+	"30Rnd_9x21_Mag_SMG_02",
+	"30Rnd_9x21_Mag_SMG_02_Tracer_Red",
+	"16Rnd_9x21_Mag"
 ];
 
 bluAmmo = [
-	"30Rnd_65x39_Caseless_mag",
-	"30Rnd_65x39_caseless_mag_Tracer",
-	"100Rnd_65x39_Caseless_mag",
-	"100Rnd_65x39_caseless_mag_Tracer",
+	"30Rnd_9x21_Mag_SMG_02",
+	"30Rnd_9x21_Mag_SMG_02_Tracer_Red",
+	"16Rnd_9x21_Mag",
+	"150Rnd_762x54_Box",
+	"200Rnd_65x39_cased_Box",
+	"200Rnd_65x39_cased_Box_Tracer",
+	"5Rnd_127x108_Mag",
+	"10Rnd_762x54_Mag",
+	"10Rnd_762x54_Mag",
 	"20Rnd_762x51_Mag",
-	"7Rnd_408_Mag",
-	"30Rnd_45ACP_Mag_SMG_01",
-	"30Rnd_45ACP_Mag_SMG_01_tracer_green",
-	"11Rnd_45ACP_Mag",
-	"20Rnd_762x51_Mag",
-	"10Rnd_338_Mag",
-	"130Rnd_338_Mag"
+	"30Rnd_65x39_caseless_green",
+	"30Rnd_65x39_caseless_green_mag_Tracer"
 ];
 
 blu40mm = [
@@ -132,16 +132,16 @@ bluGrenade = [
 ];
 
 bluAT = [
-	"launch_B_Titan_short_F",
+	"launch_O_Titan_short_F",
 	"launch_NLAW_F"
 ];
 
 bluAA = [
-	"launch_B_Titan_F"
+	"launch_O_Titan_F"
 ];
 
 bluVest = [
-	"V_PlateCarrierSpec_mtp"
+	"V_TacVest_brn"
 ];
 
 bluScopes = [

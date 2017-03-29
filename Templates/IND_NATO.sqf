@@ -140,20 +140,22 @@ statMGtowerBackpacks = 	["B_HMG_01_high_weapon_F","B_HMG_01_support_high_F"];
 Weapons, ammo, launchers, missiles, mines, items and optics will spawn in ammo crates, the rest will not. These lists, together with the corresponding lists in the NATO/USAF template, determine what can be unlocked. Weapons of all kinds and ammo are the exception: they can all be unlocked.
 */
 genWeapons = [
-	"arifle_TRG21_F",
-	"arifle_TRG21_GL_F",
-	"srifle_GM6_F",
+	"arifle_MX_F",
+	"arifle_MX_SW_F",
+	"arifle_MXM_F",
 	"LMG_Mk200_F",
 	"launch_NLAW_F",
-	"srifle_DMR_06_olive_F",
-	"srifle_EBR_F"
+	"SMG_01_F",
+	"srifle_EBR_F",
+	"arifle_MX_GL_F",
+	"srifle_LRR_F"
 ];
 
 genAmmo = [
 	"200Rnd_65x39_cased_Box",
-	"30Rnd_556x45_Stanag",
-	"5Rnd_127x108_Mag",
-	"5Rnd_127x108_APDS_Mag",
+	"30Rnd_65x39_caseless_mag_Tracer",
+	"30Rnd_45ACP_Mag_SMG_01",
+	"7Rnd_408_Mag",
 	"NLAW_F",
 	"1Rnd_HE_Grenade_shell",
 	"UGL_FlareWhite_F",
@@ -162,15 +164,14 @@ genAmmo = [
 	"3Rnd_HE_Grenade_shell",
 	"HandGrenade",
 	"20Rnd_762x51_Mag",
-	"9Rnd_45ACP_Mag",
-	"30Rnd_9x21_Mag",
+	"30Rnd_65x39_caseless_mag",
 	"SmokeShell",
 	"Laserbatteries"
 ];
 
 genLaunchers = [
-	"launch_I_Titan_F",
-	"launch_I_Titan_short_F"
+	"launch_B_Titan_short_F",
+	"launch_B_Titan_F"
 ];
 
 genMissiles = [
@@ -513,3 +514,19 @@ IND_marker_colour = "ColorWEST";
 
 // Type of this faction's markers
 IND_marker_type = "flag_NATO";
+
+if (worldname == "Tanoa") then {
+    unlockedItems = unlockedItems + [
+    "U_I_C_Soldier_Para_5_F",
+    "U_I_C_Soldier_Para_4_F",
+    "U_I_C_Soldier_Para_3_F",
+    "U_I_C_Soldier_Para_2_F",
+    "U_I_C_Soldier_Para_1_F",
+    "U_I_C_Soldier_Para_1_F",
+    "U_I_C_Soldier_Bandit_1_F",
+    "U_I_C_Soldier_Bandit_2_F",
+    "U_I_C_Soldier_Bandit_3_F",
+    "U_I_C_Soldier_Bandit_4_F",
+    "U_I_C_Soldier_Bandit_5_F"
+    ];
+};

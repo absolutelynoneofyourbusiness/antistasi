@@ -279,15 +279,14 @@ genHelmets = [
 // Equipment unlocked by default
 unlockedWeapons = [
 	"rhs_weap_makarov_pm",
-	"rhs_weap_pp2000",
-	"rhs_weap_pp2000_folded",
+	"rhs_weap_savz61",
 	"rhs_weap_kar98k",
 	"rhs_weap_m38"
 ];
 
 // Standard rifles for AI are picked from this array. Add only rifles.
 unlockedRifles = [
-	"rhs_weap_pp2000",
+	"rhs_weap_savz61",
 	"rhs_weap_kar98k",
 	"rhs_weap_m38"
 ];
@@ -296,7 +295,7 @@ unlockedMagazines = [
 	"rhs_mag_9x18_8_57N181S",
 	"rhsgref_5Rnd_762x54_m38",
 	"rhsgref_5Rnd_792x57_kar98k",
-	"rhs_mag_9x19mm_7n21_20",
+	"rhsgref_20rnd_765x17_vz61",
 	"rhs_mag_rdg2_white"
 ];
 
@@ -464,3 +463,19 @@ IND_marker_type = "rhs_flag_USA";
 
 // Name of the faction
 A3_Str_INDEP = localize "STR_GENIDENT_USMC";
+
+if (worldname == "Tanoa") then {
+    unlockedItems = unlockedItems + [
+    "U_I_C_Soldier_Para_5_F",
+    "U_I_C_Soldier_Para_4_F",
+    "U_I_C_Soldier_Para_3_F",
+    "U_I_C_Soldier_Para_2_F",
+    "U_I_C_Soldier_Para_1_F",
+    "U_I_C_Soldier_Para_1_F",
+    "U_I_C_Soldier_Bandit_1_F",
+    "U_I_C_Soldier_Bandit_2_F",
+    "U_I_C_Soldier_Bandit_3_F",
+    "U_I_C_Soldier_Bandit_4_F",
+    "U_I_C_Soldier_Bandit_5_F"
+    ];
+};

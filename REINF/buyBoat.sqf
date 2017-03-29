@@ -1,38 +1,38 @@
-private ["_chequeo","_pos","_veh","_newPos","_coste"];
+private ["_break","_spawnPos","_spawnposArray","_newPos","_cost","_vehicle"];
 
-_chequeo = false;
+_break = false;
 {
-	if (((side _x == side_red) or (side _x == side_green)) and (_x distance player < 500) and (not(captive _x))) then {_chequeo = true};
+	if (((side _x == side_red) OR (side _x == side_green)) AND (_x distance player < safeDistance_fasttravel) AND !(captive _x)) then {_break = true};
 } forEach allUnits;
 
-if (_chequeo) exitWith {Hint "You cannot buy vehicles with enemies nearby"};
+if (_break) exitWith {Hint "You cannot buy vehicles with enemies nearby"};
 
-_coste = server getVariable guer_veh_dinghy;
+_cost = server getVariable [guer_veh_dinghy,400];
 
-if (server getVariable "resourcesFIA" < _coste) exitWith {hint format ["You need %1 € to buy a boat",_coste]};
+if (server getVariable ["resourcesFIA",0] < _cost) exitWith {hint format ["You need %1€ to buy a boat.",_cost]};
 
-_ang = 0;
-_dist = 200;
-
-while {true} do
-	{
-	_pos = [position player, _dist, _ang] call BIS_Fnc_relPos;
-	if (surfaceIsWater _pos) then
-		{
-		while {true} do
-			{
-			_dist = _dist - 5;
-			_newPos = [position player, _dist, _ang] call BIS_Fnc_relPos;
-			if (!(surfaceIsWater _newPos)) exitWith {_chequeo = true};
-			};
-		};
-	if (_chequeo) exitWith {};
-	_ang = _ang + 31;
+_spawnPos = [];
+_spawnposArray = selectBestPlaces [position player, 50, "sea", 1, 1];
+{
+	if ((_x select 1) > 0) exitWith {
+		if (surfaceIsWater (_x select 0)) then {_spawnPos = (_x select 0)};
 	};
+} forEach _spawnposArray;
 
-_veh = guer_veh_dinghy createVehicle _pos;
+if !(count _spawnPos > 0) then {
+	_spawnposArray = selectBestPlaces [position player, 100, "sea", 1, 1];
+	{
+		if ((_x select 1) > 0) exitWith {
+			if (surfaceIsWater (_x select 0)) then {_spawnPos = (_x select 0)};
+		};
+	} forEach _spawnposArray;
+};
 
-[_veh] spawn VEHinit;
-player reveal _veh;
-[0,-200] remoteExec ["resourcesFIA",2];
+if !(count _spawnPos > 0) exitWith {hint "No place for a boat."};
+
+_vehicle = guer_veh_dinghy createVehicle _spawnPos;
+
+[_vehicle] spawn VEHinit;
+player reveal _vehicle;
+[0,-_cost] remoteExec ["resourcesFIA",2];
 hint "Boat purchased";

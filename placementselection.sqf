@@ -1,22 +1,10 @@
-if (!isNil "placementDone") then
-	{
+if (!isNil "placementDone") then {
 	Slowhand allowDamage false;
-	"Petros is Dead" hintC "Petros has been killed. You lost part of your assets and need to select a new HQ position far from the enemies.";
-	}
-else
-	{
+	(localize "STR_HINTS_HQPLACE_DEATH_TITLE") hintC localize "STR_HINTS_HQPLACE_DEATH";
+} else {
 	diag_log "Antistasi: New Game selected";
-	"Initial HQ Placement Selection" hintC ["Click on the Map Position you want to start the Game.","Close the map with M to start in the default position.","Don't select areas with enemies nearby!!\n\nGame experience changes a lot on different starting positions."];
-	};
-
-hintC_arr_EH = findDisplay 72 displayAddEventHandler ["unload",
-	{
-	0 = _this spawn
-		{
-		_this select 0 displayRemoveEventHandler ["unload", hintC_arr_EH];
-		hintSilent "";
-		};
-	}];
+	(localize "STR_HINTS_HQPLACE_START_TITLE") hintC [localize "STR_HINTS_HQPLACE_START_1",localize "STR_HINTS_HQPLACE_START_2",localize "STR_HINTS_HQPLACE_START_3"];
+};
 
 private ["_posicionTel","_marcador","_marcadores"];
 _marcadores = mrkAAF;
@@ -39,8 +27,8 @@ while {true} do
 	if (not visiblemap) exitWith {};
 	_posicionTel = posicionTel;
 	_marcador = [_marcadores,_posicionTel] call BIS_fnc_nearestPosition;
-	if (getMarkerPos _marcador distance _posicionTel < 1000) then {hint "Place selected is very close to enemy zones.\n\n Please select another position"};
-	if (surfaceIsWater _posicionTel) then {hint "Selected position cannot be in water"};
+	if (getMarkerPos _marcador distance _posicionTel < 1000) then {hint localize "STR_HINTS_HQPLACE_ZONES"};
+	if (surfaceIsWater _posicionTel) then {hint localize "STR_HINTS_HQPLACE_WATER"};
 	_enemigos = false;
 	if (!isNil "placementDone") then
 		{
@@ -51,7 +39,7 @@ while {true} do
 			};
 		} forEach allUnits;
 		};
-	if (_enemigos) then {hint "There are enemies in the surroundings of that area, please select another."};
+	if (_enemigos) then {hint localize "STR_HINTS_HQPLACE_ENEMIES"};
 	if ((getMarkerPos _marcador distance _posicionTel > 1000) and (!surfaceIsWater _posicionTel) and (!_enemigos)) exitWith {};
 	};
 
@@ -93,7 +81,7 @@ if (visiblemap) then
 		[vehiclePad, {vehiclePad = nil}] remoteExec ["call", 0];
 		server setVariable ["AS_vehicleOrientation", 0, true];
 	};
-	if (isMultiplayer) then {hint "Please wait while moving HQ Assets to selected position";sleep 5};
+	if (isMultiplayer) then {hint localize "STR_HINTS_HQPLACE_MOVING"; sleep 5};
 	_pos = [_posicionTel, 3, getDir petros] call BIS_Fnc_relPos;
 	fuego setPos _pos;
 	_rnd = getdir Petros;

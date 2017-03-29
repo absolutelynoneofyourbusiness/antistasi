@@ -148,7 +148,7 @@
 				<Original>SOCOM</Original>
 			</Key>
 			<Key ID="STR_GENIDENT_SF">
-				<Original>Special Forces</Original>
+				<Original>NATO SF</Original>
 			</Key>
 		</Container>
 	</Package>
@@ -1025,6 +1025,19 @@
 			<Key ID="STR_TSK_AAWP_DESTROYED">
 				<Original>%1 emplacement destroyed.</Original>
 			</Key>
+			<Key ID="STR_TSK_CAMP_DESTROYED">
+				<Original>Camp %1 was destroyed by hostile forces.</Original>
+			</Key>
+
+			<Key ID="STR_TSK_CA_CREATE">
+				<Original>Significant activity is being reported at %2. %1 appear to be preparing a major assault. Get ready.</Original>
+			</Key>
+			<Key ID="STR_TSK_CA_CREATE_RED">
+				<Original>Sources near %4 report of an imminent attack by %1 and %2 on %3. Setup defences immediatly!</Original>
+			</Key>
+			<Key ID="STR_TSK_CA_TARGET">
+				<Original>%1 is under attack!</Original>
+			</Key>
 		</Container>
 	</Package>
 
@@ -1041,6 +1054,75 @@
 			</Key>
 			<Key ID="STR_INFO_MOVEASSETS_4">
 				<Original>You cannot move assets farther than %1m from the zone.</Original>
+			</Key>
+		</Container>
+	</Package>
+
+	<Package name="Dialog">
+		<Container name="Surrender">
+			<Key ID="STR_DIALOG_SURRENDER_REQ">
+				<Original>You have one chance, join us and help us liberate %1 from tyranny!</Original>
+			</Key>
+			<Key ID="STR_DIALOG_SURRENDER_ACC">
+				<Original>Okay, thank you. I wasn't expecting this. See you at HQ.</Original>
+			</Key>
+			<Key ID="STR_DIALOG_SURRENDER_REF">
+				<Original>Sod off!</Original>
+			</Key>
+		</Container>
+	</Package>
+
+	<Package name="Hints">
+		<Container name="HQ Placement">
+			<Key ID="STR_HINTS_HQPLACE_START_TITLE">
+				<Original>Initial HQ Placement Selection</Original>
+			</Key>
+			<Key ID="STR_HINTS_HQPLACE_START_1">
+				<Original>Click on a map position to select your starting location</Original>
+			</Key>
+			<Key ID="STR_HINTS_HQPLACE_START_2">
+				<Original>Close the map with M or ESC to start in the default position</Original>
+			</Key>
+			<Key ID="STR_HINTS_HQPLACE_START_3">
+				<Original>Try not to select areas with nearby enemies\n\nGameplay and difficulty change with different starting locations.</Original>
+			</Key>
+			
+			<Key ID="STR_HINTS_HQPLACE_DEATH_TITLE">
+				<Original>Petros is Dead</Original>
+			</Key>
+			<Key ID="STR_HINTS_HQPLACE_DEATH">
+				<Original>Petros has been killed. You lost part of your assets and need to select a new HQ position.</Original>
+			</Key>
+
+			<Key ID="STR_HINTS_HQPLACE_ZONES">
+				<Original>The selected position is too close to enemy zones, please select another.</Original>
+			</Key>
+			<Key ID="STR_HINTS_HQPLACE_WATER">
+				<Original>You cannot place your HQ in the water. Please select another position.</Original>
+			</Key>
+			<Key ID="STR_HINTS_HQPLACE_ENEMIES">
+				<Original>There are enemies nearby, please select another position.</Original>
+			</Key>
+			<Key ID="STR_HINTS_HQPLACE_MOVING">
+				<Original>Please wait while your assets are being moved to the selected location.</Original>
+			</Key>
+		</Container>
+
+		<Container name="Persistent Save">
+			<Key ID="STR_HINTS_SAVE_COM_TITLE">
+				<Original>Progress Saved</Original>
+			</Key>
+			<Key ID="STR_HINTS_SAVE_COM_1">
+				<Original>You won't lose your stats in the event of a game update.</Original>
+			</Key>
+			<Key ID="STR_HINTS_SAVE_COM_2">
+				<Original>Vehicles outside of your garage will only be saved if they are within 50m of your HQ flag, with no AI inside.</Original>
+			</Key>
+			<Key ID="STR_HINTS_SAVE_COM_3">
+				<Original>AI units and squads will not be saved, but you will be reimbursed.</Original>
+			</Key>
+			<Key ID="STR_HINTS_SAVE_COM_4">
+				<Original>Static weapons need to be within 50m of a friendly flag, and they need to be assembled, otherwise they will not be saved.</Original>
 			</Key>
 		</Container>
 	</Package>

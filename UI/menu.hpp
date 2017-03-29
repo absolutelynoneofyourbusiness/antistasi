@@ -65,8 +65,8 @@ class menu_default {
 
 	class controls {
 
-		MENU_CBTN(1401, (UI_BASE_X + 0.078) * safezoneH + safezoneY, "['nav'] call AS_fnc_UI_createMenu;", "['STR_UI_MENU_COM_TT'] call AS_fnc_UI_setTText;");
-		MENU_CBTN(1402, (UI_BASE_X + 0.156) * safezoneH + safezoneY, "if (player == Slowhand) then {['navCom'] call AS_fnc_UI_createMenu;};", "['STR_UI_MENU_PLAYER_TT'] call AS_fnc_UI_setTText;");
+		MENU_CBTN(1401, (UI_BASE_X + 0.078) * safezoneH + safezoneY, "['nav'] call AS_fnc_UI_createMenu;", "['STR_UI_MENU_PLAYER_TT'] call AS_fnc_UI_setTText;");
+		MENU_CBTN(1402, (UI_BASE_X + 0.156) * safezoneH + safezoneY, "if (player == Slowhand) then {['navCom'] call AS_fnc_UI_createMenu;};", "['STR_UI_MENU_COM_TT'] call AS_fnc_UI_setTText;");
 		MENU_CBTN(1403, (UI_BASE_X + 0.235) * safezoneH + safezoneY, "if (isServer || (serverCommandAvailable '#logout')) then {['admin'] call AS_fnc_UI_createMenu;}", "['STR_UI_MENU_ADMIN_TT'] call AS_fnc_UI_setTText;");
 
 		MENU_BG();
