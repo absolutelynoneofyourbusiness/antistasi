@@ -73,6 +73,13 @@ while {true} do {
 			[["TaskSucceeded", ["", format ["%1 joined FIA",[_city, false] call AS_fnc_location]]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
 			mrkAAF = mrkAAF - [_city];
 			mrkFIA = mrkFIA + [_city];
+			// Respawn city with new garrison
+			[_city] spawn {
+				spawner setVariable [_city,false,true];
+				sleep 30;
+				waitUntil {sleep 3; !([distanciaSPWN,1,getMarkerPos _city,"BLUFORSpawn"] call distanceUnits) AND !([distanciaSPWN,1,getMarkerPos _city,"OPFORSpawn"] call distanceUnits)};
+				[_city] call AS_fnc_respawnZone;
+			};
 			if (activeBE) then {["con_cit"] remoteExec ["fnc_BE_XP", 2]};
 			publicVariable "mrkAAF";
 			publicVariable "mrkFIA";

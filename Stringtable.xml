@@ -118,9 +118,6 @@
 			<Key ID="STR_ACT_SELLMENU">
 				<Original>&lt;img size='1.2' image='\A3\ui_f\data\IGUI\Cfg\HoldActions\holdAction_hack_ca.paa' /&gt; Bobby Ray's</Original>
 			</Key>
-			<Key ID="STR_ACT_CAPTURE_HVT">
-				<Original>&lt;img size='1.2' image='\A3\ui_f\data\GUI\cfg\CommunicationMenu\instructor_ca.paa' /&gt; Capture the HVT</Original>
-			</Key>
 		</Container>
 	</Package>
 
@@ -158,18 +155,6 @@
 			</Key>
 			<Key ID="STR_GENIDENT_SF">
 				<Original>NATO SF</Original>
-			</Key>
-			<Key ID="STR_GENIDENT_KSK">
-				<Original>KSK</Original>
-			</Key>
-			<Key ID="STR_GENIDENT_BW">
-				<Original>Bundeswehr</Original>
-			</Key>
-			<Key ID="STR_GENIDENT_RoyMar">
-				<Original>Royal Marines</Original>
-			</Key>
-			<Key ID="STR_GENIDENT_SAS">
-				<Original>SAS</Original>
 			</Key>
 		</Container>
 	</Package>
@@ -798,11 +783,11 @@
 			</Key>
 
 			<Key ID="STR_TSK_ASSMAYOR">
- 				<Original>Kidnap the Mayor</Original>
- 			</Key>
- 			<Key ID="STR_TSKDESC_ASSMAYOR">
- 				<Original>The mayor of %1 is having a meeting with an enemy representetive, this is our chance to kidnap him and take him to our HQ for a much needed chat. The mayor must not die! Do this before %2:%3.</Original>
- 			</Key>
+				<Original>Kidnap the Mayor</Original>
+			</Key>
+			<Key ID="STR_TSKDESC_ASSMAYOR">
+				<Original>The mayor of %1 is having a meeting with an enemy representetive, this is our chance to kidnap him and take him to our HQ for a much needed chat. The mayor must not die! Do this before %2:%3.</Original>
+			</Key>
 
 			<Key ID="STR_TSK_HQATTACK">
 				<Original>Defend Petros</Original>
@@ -1017,6 +1002,13 @@
 				<Original>Intercept Reinforcements</Original>
 			</Key>
 			<Key ID="STR_TSKDESC_INTREINF">
+				<Original>In response to the casualties suffered by the garrison at the %2, %1 are preparing to send reinforcements from %3. They will be ready to roll out within minutes. Try to catch them on the move!</Original>
+			</Key>
+
+			<Key ID="STR_TSK_INTRREPL">
+				<Original>Intercept Reinforcements</Original>
+			</Key>
+			<Key ID="STR_TSKDESC_INTRREPL">
 				<Original>In response to the casualties suffered by the garrison at the %2, %1 are preparing to send reinforcements from %3. They will be ready to roll out within minutes. Try to catch them on the move!</Original>
 			</Key>
 
@@ -1438,6 +1430,9 @@
 			</Key>
 			<Key ID="STR_HINTS_UND_CMP_ROAD">
 				<Original>You went far from roads and have been spotted.</Original>
+			</Key>
+			<Key ID="STR_HINTS_UND_CMP_EXP">
+				<Original>Explosives have been spotted on your vehicle.</Original>
 			</Key>
 			<Key ID="STR_HINTS_UND_CMP_EXP">
 				<Original>Explosives have been spotted on your vehicle.</Original>

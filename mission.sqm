@@ -20,10 +20,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={3616.5139,31.907839,10266.799};
-		dir[]={0.18587691,-0.80337799,0.56572056};
-		up[]={0.25077483,0.59546191,0.76324046};
-		aside[]={0.95003647,9.2491973e-008,-0.31215009};
+		pos[]={3597.6206,34.922832,10261.271};
+		dir[]={0.73469609,-0.4720701,0.48722318};
+		up[]={0.3934359,0.88155061,0.26091287};
+		aside[]={0.55268347,5.98724e-007,-0.83340305};
 	};
 };
 binarizationWanted=0;
@@ -74,15 +74,15 @@ class AddonsMetaData
 		};
 		class Item4
 		{
-			className="A3_Characters_F";
-			name="Arma 3 Alpha - Characters and Clothing";
+			className="A3_Modules_F";
+			name="Arma 3 Alpha - Scripted Modules";
 			author="Bohemia Interactive";
 			url="https://www.arma3.com";
 		};
 		class Item5
 		{
-			className="A3_Modules_F";
-			name="Arma 3 Alpha - Scripted Modules";
+			className="A3_Characters_F";
+			name="Arma 3 Alpha - Characters and Clothing";
 			author="Bohemia Interactive";
 			url="https://www.arma3.com";
 		};
@@ -146,12 +146,36 @@ class CustomAttributes
 		};
 		nAttributes=1;
 	};
+	class Category1
+	{
+		name="Scenario";
+		class Attribute0
+		{
+			property="EnableDebugConsole";
+			expression="true";
+			class Value
+			{
+				class data
+				{
+					class type
+					{
+						type[]=
+						{
+							"SCALAR"
+						};
+					};
+					value=2;
+				};
+			};
+		};
+		nAttributes=1;
+	};
 };
 class Mission
 {
 	class Intel
 	{
-		briefingName="[SP/CO50] A3 - Antistasi Altis (Blue)";
+		briefingName="A3 Test - Antistasi Altis (Blue)";
 		overviewText="Build an FIA Army from scratch and defeat the AAF and CSAT forces in a whole map Dynamic Mission.";
 		resistanceWest=0;
 		resistanceEast=1;
@@ -1435,7 +1459,7 @@ class Mission
 			};
 			id=96;
 			type="Flag_FIA_F";
-			atlOffset=0.017999649;
+			atlOffset=0.017998695;
 		};
 		class Item97
 		{
@@ -1455,7 +1479,7 @@ class Mission
 			};
 			id=97;
 			type="MapBoard_altis_F";
-			atlOffset=-0.0050001144;
+			atlOffset=-0.0050010681;
 		};
 		class Item98
 		{

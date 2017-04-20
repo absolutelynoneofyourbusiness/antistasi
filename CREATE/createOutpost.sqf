@@ -26,6 +26,7 @@ for "_i" from 0 to (count _buildings) - 1 do {
 			_vehicle = createVehicle [statAA, (_building buildingPos 8), [],0, "CAN_COLLIDE"];
 			_vehicle setPosATL [(getPos _building select 0),(getPos _building select 1),(getPosATL _vehicle select 2)];
 			_vehicle setDir (getDir _building);
+			_vehicle enableDynamicSimulation true;
 			_unit = ([_markerPos, 0, infGunner, _groupGunners] call bis_fnc_spawnvehicle) select 0;
 			_unit moveInGunner _vehicle;
 			_allVehicles pushBack _vehicle;
@@ -38,6 +39,7 @@ for "_i" from 0 to (count _buildings) - 1 do {
 			_position = [getPosATL _vehicle, 2.5, _ang] call BIS_Fnc_relPos;
 			_vehicle setPosATL _position;
 			_vehicle setDir (getDir _building) - 180;
+			_vehicle enableDynamicSimulation true;
 			_unit = ([_markerPos, 0, infGunner, _groupGunners] call bis_fnc_spawnvehicle) select 0;
 			_unit moveInGunner _vehicle;
 			_allVehicles pushBack _vehicle;
@@ -46,12 +48,14 @@ for "_i" from 0 to (count _buildings) - 1 do {
 
 		if 	(_type in listbld) exitWith {
 			_vehicle = createVehicle [statMGtower, (_building buildingPos 13), [], 0, "CAN_COLLIDE"];
+			_vehicle enableDynamicSimulation true;
 			_unit = ([_markerPos, 0, infGunner, _groupGunners] call bis_fnc_spawnvehicle) select 0;
 			_unit moveInGunner _vehicle;
 			_allSoldiers = _allSoldiers + [_unit];
 			sleep 1;
 			_allVehicles = _allVehicles + [_vehicle];
 			_vehicle = createVehicle [statMGtower, (_building buildingPos 17), [], 0, "CAN_COLLIDE"];
+			_vehicle enableDynamicSimulation true;
 			_unit = ([_markerPos, 0, infGunner, _groupGunners] call bis_fnc_spawnvehicle) select 0;
 			_unit moveInGunner _vehicle;
 			_allVehicles pushBack _vehicle;
@@ -76,6 +80,7 @@ if (_marker in puertos) then {
 	_position = [_markerPos,_size,_size*3,25,2,0,0] call BIS_Fnc_findSafePos;
 	_vehicleData = [_position, 0, (selectRandom vehPatrolBoat), side_green] call bis_fnc_spawnvehicle;
 	_vehicle = _vehicleData select 0;
+	_vehicle enableDynamicSimulation true;
 	_vehCrew = _vehicleData select 1;
 	_groupVehicle = _vehicleData select 2;
 
@@ -129,6 +134,7 @@ if (_marker in puertos) then {
 		if ((_base in mrkFIA) or ((getMarkerPos _base) distance _markerPos > 1000)) then {
 			_position = [_markerPos] call mortarPos;
 			_vehicle = statMortar createVehicle _position;
+			_vehicle enableDynamicSimulation true;
 			[_vehicle] execVM "scripts\UPSMON\MON_artillery_add.sqf";
 			_unit = ([_markerPos, 0, infGunner, _groupGunners] call bis_fnc_spawnvehicle) select 0;
 			_unit moveInGunner _vehicle;
@@ -141,6 +147,7 @@ if (_marker in puertos) then {
 			_data = [_markerPos, _roads, statAT] call AS_fnc_spawnBunker;
 			_allVehicles pushBack (_data select 0);
 			_vehicle = (_data select 1);
+			_vehicle enableDynamicSimulation true;
 			_allVehicles pushBack _vehicle;
 			_unit = ([_markerPos, 0, infGunner, _groupGunners] call bis_fnc_spawnvehicle) select 0;
 			_unit moveInGunner _vehicle;
@@ -218,10 +225,14 @@ if ((random 100 < (((server getVariable "prestigeNATO") + (server getVariable "p
 };
 
 {
-	[_x] spawn genVEHinit
+	_x enableDynamicSimulation true;
+	[_x] spawn genVEHinit;
 } forEach _allVehicles;
 
-[_marker, _allSoldiers] spawn AS_fnc_garrisonMonitor;
+sleep 10;
+{
+	_x enableDynamicSimulation true;
+} forEach _allGroups;
 
 waitUntil {sleep 1; !(spawner getVariable _marker) OR (({!(vehicle _x isKindOf "Air")} count ([_size,0,_markerPos,"BLUFORSpawn"] call distanceUnits)) > 3*count (allUnits select {((side _x == side_green) OR (side _x == side_red)) AND (_x distance _markerPos <= (_size max 200)) AND !(captive _x)}))};
 

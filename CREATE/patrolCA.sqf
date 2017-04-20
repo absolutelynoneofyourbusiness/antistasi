@@ -103,9 +103,6 @@ if (_isMarker) then {
 
 diag_log format ["Info: Small attack on %1 triggered, starting from %2 with %3 involvement.", _marker, [_airport, _base] select (_airport == ""), ["no CSAT", "CSAT"] select (_involveCSAT)];
 
-_allSoldiers = [];
-_allVehicles = [];
-_allGroups = [];
 _roads = [];
 
 if !(_base == "") then {

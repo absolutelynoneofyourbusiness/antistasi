@@ -8,14 +8,14 @@ private ["_allVehicles","_vehicle"];
 //Don't touch them.
 antistasiVersion = "v 1.7 -- modded";
 
-servidoresOficiales = ["Antistasi Official: Main","Antistasi Official: DLC", "Antistasi Official: USA"];//this is for author's fine tune the official servers. If I get you including your server in this variable, I will create a special variable for your server. Understand?
+servidoresOficiales = ["Antistasi Official: Main","Antistasi Official: Hardcore", "Antistasi Official: USA"];//this is for author's fine tune the official servers. If I get you including your server in this variable, I will create a special variable for your server. Understand?
 
 debug = false;//debug variable, not useful for everything..
 
 cleantime = 900;//time to delete dead bodies, vehicles etc..
 distanciaSPWN = 1200;//initial spawn distance. Less than 1Km makes parked vehicles spawn in your nose while you approach.
 musicON = true;
-civPerc = 0.1;//initial % civ spawn rate
+civPerc = 0.05;//initial % civ spawn rate
 minimoFPS = 15;//initial FPS minimum.
 autoHeal = false;
 allowPlayerRecruit = true;
@@ -31,10 +31,6 @@ static_playerSide = "B";
 enableRestart = true;
 status_templatesLoaded = false;
 activeJNA = (("AS_param_useJNA" call BIS_fnc_getParamValue) == 1);
-if (activeJNA) then {
-	jna_dataList = [[],[],[],[],[],[],[],[],[],[],[["ItemMap",40]],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]];
-};
-
 missionPath = [(str missionConfigFile), 0, -15] call BIS_fnc_trimString;
 
 AS_customGroups = false;
@@ -174,6 +170,9 @@ flag_savingServer = false;
 flag_chopForest = false;
 misiones = [];
 revelar = false;
+jamTest = false;
+allZonesSetup = false;
+settingUpZones = false;
 
 vehInGarage = ["C_Van_01_transport_F","C_Offroad_01_F","C_Offroad_01_F",guer_veh_quad,guer_veh_quad,guer_veh_quad]; // initial motorpool
 destroyedBuildings = []; publicVariable "destroyedBuildings";

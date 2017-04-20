@@ -27,6 +27,8 @@ if ((typeOf _vehicle in CIV_vehicles) AND ({_x getVariable ["BLUFORSpawn",false]
 	};
 };
 
+sleep 30;
+
 while {alive _vehicle} do {
 	if (!([distanciaSPWN,1,_vehicle,"BLUFORSpawn"] call distanceUnits) AND !([distanciaSPWN,1,_vehicle,"OPFORSpawn"] call distanceUnits) AND !(_vehicle in staticsToSave) AND (_vehicle distance getMarkerPos guer_respawn > 100)) then {
 		if (_vehicle in reportedVehs) then {reportedVehs = reportedVehs - [_vehicle]; publicVariable "reportedVehs"};

@@ -59,24 +59,53 @@ if (_onRoad) then {
 
 {_allSoldiers pushBack _x} forEach units _group;
 
-waitUntil {sleep 1; !(spawner getVariable _marker) OR ({alive _x} count units _group == 0) OR !(_marker in puestosFIA)};
+// Dynamic Simulation
+([_marker,_allGroups] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
 
-if ({alive _x} count units _group == 0) then {
-	puestosFIA = puestosFIA - [_marker]; publicVariable "puestosFIA";
-	mrkFIA = mrkFIA - [_marker]; publicVariable "mrkFIA";
-	marcadores = marcadores - [_marker]; publicVariable "marcadores";
-	[5,-5,_markerPos] remoteExec ["AS_fnc_changeCitySupport",2];
-	deleteMarker _marker;
-	if (_onRoad) then {
-		FIA_RB_list = FIA_RB_list - [_marker]; publicVariable "FIA_RB_list";
-		[["TaskFailed", ["", "Roadblock Lost"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
-	} else {
-		FIA_WP_list = FIA_WP_list - [_marker]; publicVariable "FIA_WP_list";
-		[["TaskFailed", ["", "Watchpost Lost"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
-		deleteVehicle (nearestObjects [getMarkerPos _marker, [guer_rem_des], 50] select 0);
+{
+	_x enableDynamicSimulation true;
+	[_x] spawn genVEHinit
+} forEach _allVehicles;
+
+sleep 10;
+{
+	_x enableDynamicSimulation true;
+} forEach _allGroups;
+
+while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength) AND (spawner getVariable _marker)} do {
+	while {(count ((_markerPos nearEntities ["Man", 1000]) select {_x getVariable ["OPFORSpawn",true]}) < 1) AND (spawner getVariable _marker)} do {
+		sleep 10;
+	};
+
+	sleep 5;
+};
+
+waitUntil {sleep 3; !(spawner getVariable _marker) OR ({alive _x} count units _group == 0) OR !(_marker in puestosFIA)};
+
+call {
+	// Garrison was overwhelmed
+	if ({alive _x} count units _group == 0) then {
+		puestosFIA = puestosFIA - [_marker]; publicVariable "puestosFIA";
+		mrkFIA = mrkFIA - [_marker]; publicVariable "mrkFIA";
+		marcadores = marcadores - [_marker]; publicVariable "marcadores";
+		[5,-5,_markerPos] remoteExec ["AS_fnc_changeCitySupport",2];
+		deleteMarker _marker;
+		if (_onRoad) then {
+			FIA_RB_list = FIA_RB_list - [_marker]; publicVariable "FIA_RB_list";
+			[["TaskFailed", ["", "Roadblock Lost"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
+		} else {
+			FIA_WP_list = FIA_WP_list - [_marker]; publicVariable "FIA_WP_list";
+			[["TaskFailed", ["", "Watchpost Lost"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
+			deleteVehicle (nearestObjects [getMarkerPos _marker, [guer_rem_des], 50] select 0);
+		};
+	};
+
+	// Zone was despawned
+	if !(spawner getVariable _marker) exitWith {
+
 	};
 };
 
-waitUntil {sleep 1; !(spawner getVariable _marker) OR !(_marker in puestosFIA)};
-
+waitUntil {sleep 3; !([distanciaSPWN,1,_markerPos,"BLUFORSpawn"] call distanceUnits)};
 [_allGroups, _allSoldiers, _allVehicles] spawn AS_fnc_despawnUnits;
+spawner setVariable [_marker,false,true];

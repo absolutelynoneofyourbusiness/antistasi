@@ -48,7 +48,7 @@ call {
     if (worldName == "Bornholm") exitWith {
         call compile preprocessFileLineNumbers "Worlds\BornholmData.sqf";
     };
-	if (worldName == "xcam_taunus") exitWith {
+    if (worldName == "xcam_taunus") exitWith {
         call compile preprocessFileLineNumbers "Worlds\xcam_taunusData.sqf";
     };
 };
@@ -83,8 +83,10 @@ garrison setVariable ["FIA_HQ",[],true];
 marcadores = power + bases + aeropuertos + recursos + fabricas + puestos + puertos + controles + colinas + colinasAA + puestosAA + ["FIA_HQ"];
 
 // Make sure all markers are invisible and not currently marked as having been spawned in.
-{_x setMarkerAlpha 0;
+{
+    _x setMarkerAlpha 0;
     spawner setVariable [_x,false,true];
+    garrison setVariable [format ["%1_reduced", _x],false,true];
 } forEach (marcadores + artyEmplacements);
 {_x setMarkerAlpha 0} forEach seaMarkers;
 
@@ -191,7 +193,7 @@ if (worldName in ["Altis","Bornholm","Tanoa"]) then {
         _pos = getMarkerPos _loc;
         _dmrk = createMarker [format ["Dum%1",_loc], _pos];
         _dmrk setMarkerShape "ICON";
-        if !(_loc in (aeropuertos+bases)) then {_dmrk setMarkerColor IND_marker_colour};
+        _dmrk setMarkerColor IND_marker_colour;
         [_loc] call AS_fnc_createRoadblocks;
         garrison setVariable [_loc,[],true];
         _dmrk setMarkerType _type;
@@ -267,6 +269,7 @@ publicVariable "safeDistance_fasttravel";
 "spawnNATO" setMarkerType BLUFOR_marker_type;
 "spawnNATO" setMarkerText format ["%1 Carrier", A3_Str_BLUE];
 
+// Setup radio towers at locations defined in the corresponding world data file to be used for missions, etc.
 if (count posAntenas > 0) then {
     for "_i" from 0 to (count posantenas - 1) do {
         _antennaArray = nearestObjects [posantenas select _i,["Land_TTowerBig_1_F","Land_TTowerBig_2_F","Land_Communication_F"], 25];

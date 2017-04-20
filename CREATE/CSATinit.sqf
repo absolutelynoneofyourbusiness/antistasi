@@ -2,6 +2,7 @@ params ["_unit"];
 private ["_unitType"];
 
 _unit setVariable ["OPFORSpawn",true,true];
+_unit triggerDynamicSimulation true;
 _unit addEventHandler ["HandleDamage",handleDamageAAF];
 _unit addEventHandler ["killed",AAFKilledEH];
 

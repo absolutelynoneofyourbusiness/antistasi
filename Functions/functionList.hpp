@@ -128,6 +128,9 @@ class CfgFunctions {
 			class addGearToCrate {};
 			class transferGear {};
 			class resetHQ {};
+			class setGarrisonSize {};
+			class respawnZone {};
+			class setupZones {};
 		};
 		class QRF {
 			file = "Functions";

@@ -1,141 +1,139 @@
-private ["_bandera","_pos","_marcador","_posicion","_size","_powerpl","_arevelar"];
+params ["_flag"];
+private ["_player","_marker","_markerPos","_size","_hostiles","_antenna","_hostileMines"];
 
-_bandera = _this select 0;
-_jugador = objNull;
-if (count _this > 1) then {_jugador = _this select 1};
+_player = objNull;
+if (count _this > 1) then {_player = _this select 1};
 
-if ((player != _jugador) and (!isServer)) exitWith {};
+if ((player != _player) and (!isServer)) exitWith {};
 
-_pos = getPos _bandera;
-_marcador = [marcadores,_pos] call BIS_fnc_nearestPosition;
-if (_marcador in mrkFIA) exitWith {};
-_posicion = getMarkerPos _marcador;
-_size = [_marcador] call sizeMarker;
+_marker = [marcadores,getPos _flag] call BIS_fnc_nearestPosition;
+if (_marker in mrkFIA) exitWith {};
+_markerPos = getMarkerPos _marker;
+_size = [_marker] call sizeMarker;
 
-if ((!isNull _jugador) and (captive _jugador)) exitWith {hint "You cannot Capture the Flag while in Undercover Mode"};
+if ((!isNull _player) and (captive _player)) exitWith {hint "You cannot Capture the Flag while in Undercover Mode"};
 
-if (!isNull _jugador) then
-	{
+if (!isNull _player) then {
 	if (_size > 300) then {_size = 300};
-	_arevelar = [];
+	_hostiles = [];
 	{
-	if (((side _x == side_green) or (side _x == side_red)) and (alive _x) and (not(fleeing _x)) and (_x distance _posicion < _size)) then {_arevelar pushBack _x};
+		if (((side _x == side_green) OR (side _x == side_red)) AND (alive _x) AND !(fleeing _x) AND (_x distance _markerPos < _size)) then {_hostiles pushBack _x};
 	} forEach allUnits;
-	if (player == _jugador) then
-		{
-		_jugador playMove "MountSide";
+	if (player == _player) then {
+		_player playMove "MountSide";
 		sleep 8;
-		_jugador playMove "";
-		{player reveal _x} forEach _arevelar;
-		};
+		_player playMove "";
+		{player reveal _x} forEach _hostiles;
 	};
+};
 
 if (!isServer) exitWith {};
 
 {
-if (isPlayer _x) then
-	{
-	[5,_x] remoteExec ["playerScoreAdd",_x];
-	[[_marcador], "intelFound.sqf"] remoteExec ["execVM",_x];
-	if (captive _x) then {[_x,false] remoteExec ["setCaptive",_x]};
+	if (isPlayer _x) then {
+		[5,_x] remoteExec ["playerScoreAdd",_x];
+		[[_marker], "intelFound.sqf"] remoteExec ["execVM",_x];
+		if (captive _x) then {[_x,false] remoteExec ["setCaptive",_x]};
 	}
-} forEach ([_size,0,_posicion,"BLUFORSpawn"] call distanceUnits);
+} forEach ([_size,0,_markerPos,"BLUFORSpawn"] call distanceUnits);
 
-//if (!isNull _jugador) then {[5,_jugador] call playerScoreAdd};
-[[_bandera,"remove"],"AS_fnc_addActionMP"] call BIS_fnc_MP;
-_bandera setFlagTexture guer_flag_texture;
+[_flag,"remove"] remoteExec ["AS_fnc_addActionMP"];
+_flag setFlagTexture guer_flag_texture;
 
 sleep 5;
-[[_bandera,"unit"],"AS_fnc_addActionMP"] call BIS_fnc_MP;
-[[_bandera,"vehicle"],"AS_fnc_addActionMP"] call BIS_fnc_MP;
-[[_bandera,"garage"],"AS_fnc_addActionMP"] call BIS_fnc_MP;
+[_flag,"unit"] remoteExec ["AS_fnc_addActionMP"];
+[_flag,"vehicle"] remoteExec ["AS_fnc_addActionMP"];
+[_flag,"garage"] remoteExec ["AS_fnc_addActionMP"];
 
-_antenna = [antenas,_posicion] call BIS_fnc_nearestPosition;
-if (getPos _antenna distance _posicion < 100) then {
-	[_bandera,"jam"] remoteExec ["AS_fnc_addActionMP"];
+_antenna = [antenas,_markerPos] call BIS_fnc_nearestPosition;
+if (getPos _antenna distance _markerPos < 100) then {
+	[_flag,"jam"] remoteExec ["AS_fnc_addActionMP"];
 };
 
-mrkAAF = mrkAAF - [_marcador];
-mrkFIA = mrkFIA + [_marcador];
+mrkAAF = mrkAAF - [_marker];
+mrkFIA = mrkFIA + [_marker];
 publicVariable "mrkAAF";
 publicVariable "mrkFIA";
 
-reducedGarrisons = reducedGarrisons - [_marcador];
+reducedGarrisons = reducedGarrisons - [_marker];
 publicVariable "reducedGarrisons";
 
-[_marcador] call AS_fnc_markerUpdate;
+[_marker] call AS_fnc_markerUpdate;
+[_marker] remoteExec ["patrolCA",HCattack];
 
-[_marcador] remoteExec ["patrolCA",HCattack];
+call {
+	if (_marker in aeropuertos) exitWith {
+		[0,10,_markerPos] remoteExec ["AS_fnc_changeCitySupport",2];
+		["TaskSucceeded", ["", "Airport Taken"]] remoteExec ["BIS_fnc_showNotification"];
+		[20,10] remoteExec ["prestige",2];
+		planesAAFmax = planesAAFmax - 1;
+	    helisAAFmax = helisAAFmax - 2;
+	   	if (activeBE) then {["con_bas"] remoteExec ["fnc_BE_XP", 2]};
+	};
 
-if (_marcador in aeropuertos) then
-	{
-	[0,10,_posicion] remoteExec ["AS_fnc_changeCitySupport",2];
-	[["TaskSucceeded", ["", "Airport Taken"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
-	[20,10] remoteExec ["prestige",2];
-	planesAAFmax = planesAAFmax - 1;
-    helisAAFmax = helisAAFmax - 2;
-   	if (activeBE) then {["con_bas"] remoteExec ["fnc_BE_XP", 2]};
-    };
-if (_marcador in bases) then
-	{
-	[0,10,_posicion] remoteExec ["AS_fnc_changeCitySupport",2];
-	[["TaskSucceeded", ["", "Base Taken"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
-	[20,10] remoteExec ["prestige",2];
-	APCAAFmax = APCAAFmax - 2;
-    tanksAAFmax = tanksAAFmax - 1;
-	_minasAAF = allmines - (detectedMines side_blue);
-	if (count _minasAAF > 0) then
-		{
-		{if (_x distance _pos < 1000) then {side_blue revealMine _x}} forEach _minasAAF;
+	if (_marker in bases) exitWith {
+		[0,10,_markerPos] remoteExec ["AS_fnc_changeCitySupport",2];
+		["TaskSucceeded", ["", "Base Taken"]] remoteExec ["BIS_fnc_showNotification"];
+		[20,10] remoteExec ["prestige",2];
+		APCAAFmax = APCAAFmax - 2;
+	    tanksAAFmax = tanksAAFmax - 1;
+		_hostileMines = allmines - (detectedMines side_blue);
+		if (count _hostileMines > 0) then {
+			{
+				if (_x distance _pos < 1000) then {side_blue revealMine _x};
+			} forEach _hostileMines;
 		};
-	if (activeBE) then {["con_bas"] remoteExec ["fnc_BE_XP", 2]};
+		if (activeBE) then {["con_bas"] remoteExec ["fnc_BE_XP", 2]};
 	};
 
-if (_marcador in power) then
-	{
-	[["TaskSucceeded", ["", "Powerplant Taken"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
-	[0,5] remoteExec ["prestige",2];
-	if (activeBE) then {["con_ter"] remoteExec ["fnc_BE_XP", 2]};
-	[_marcador] call AS_fnc_powerReorg;
+	if (_marker in power) exitWith {
+		["TaskSucceeded", ["", "Powerplant Taken"]] remoteExec ["BIS_fnc_showNotification"];
+		[0,5] remoteExec ["prestige",2];
+		if (activeBE) then {["con_ter"] remoteExec ["fnc_BE_XP", 2]};
+		[_marker] call AS_fnc_powerReorg;
 	};
-if (_marcador in puestos) then
-	{
-	[["TaskSucceeded", ["", "Outpost Taken"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
-	if (activeBE) then {["con_ter"] remoteExec ["fnc_BE_XP", 2]};
+
+	if (_marker in puestos) exitWith {
+		["TaskSucceeded", ["", "Outpost Taken"]] remoteExec ["BIS_fnc_showNotification"];
+		if (activeBE) then {["con_ter"] remoteExec ["fnc_BE_XP", 2]};
 	};
-if (_marcador in puertos) then
-	{
-	[["TaskSucceeded", ["", "Seaport Taken"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
-	[10,10] remoteExec ["prestige",2];
-	if (activeBE) then {["con_ter"] remoteExec ["fnc_BE_XP", 2]};
-	[[_bandera,"seaport"],"AS_fnc_addActionMP"] call BIS_fnc_MP;
+
+	if (_marker in puertos) exitWith {
+		["TaskSucceeded", ["", "Seaport Taken"]] remoteExec ["BIS_fnc_showNotification"];
+		[10,10] remoteExec ["prestige",2];
+		if (activeBE) then {["con_ter"] remoteExec ["fnc_BE_XP", 2]};
+		[_flag,"seaport"] remoteExec ["AS_fnc_addActionMP"];
 	};
-if ((_marcador in fabricas) or (_marcador in recursos)) then
-	{
-	if (_marcador in fabricas) then {[["TaskSucceeded", ["", "Factory Taken"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;};
-	if (_marcador in recursos) then {[["TaskSucceeded", ["", "Resource Taken"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;};
-	if (activeBE) then {["con_ter"] remoteExec ["fnc_BE_XP", 2]};
-	[0,10] remoteExec ["prestige",2];
-	_powerpl = [power, _posicion] call BIS_fnc_nearestPosition;
-	if (_powerpl in mrkAAF) then
-		{
-		sleep 5;
-		[["TaskFailed", ["", "Resource out of Power"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
-		[_marcador, false] call AS_fnc_adjustLamps;
-		}
-	else
-		{
-		[_marcador, true] call AS_fnc_adjustLamps;
+
+	if (_marker in (fabricas+recursos)) exitWith {
+		if (_marker in fabricas) then {["TaskSucceeded", ["", "Factory Taken"]] remoteExec ["BIS_fnc_showNotification"]};
+		if (_marker in recursos) then {["TaskSucceeded", ["", "Resource Taken"]] remoteExec ["BIS_fnc_showNotification"]};
+		if (activeBE) then {["con_ter"] remoteExec ["fnc_BE_XP", 2]};
+		[0,10] remoteExec ["prestige",2];
+		if (([power, _markerPos] call BIS_fnc_nearestPosition) in mrkAAF) then {
+			sleep 5;
+			["TaskFailed", ["", "Resource out of Power"]] remoteExec ["BIS_fnc_showNotification"];
+			[_marker, false] call AS_fnc_adjustLamps;
+		} else {
+			[_marker, true] call AS_fnc_adjustLamps;
 		};
 	};
+};
 
-{[_marcador,_x] spawn AS_fnc_deleteRoadblock} forEach controles;
+{[_marker,_x] spawn AS_fnc_deleteRoadblock} forEach controles;
 sleep 15;
-[_marcador] remoteExec ["autoGarrison",HCattack];
+[_marker] remoteExec ["autoGarrison",HCattack];
 
-waitUntil {sleep 1; (not (spawner getVariable _marcador)) or (({(not(vehicle _x isKindOf "Air")) and (alive _x) and (!fleeing _x)} count ([_size,0,_posicion,"OPFORSpawn"] call distanceUnits)) > 3*({(alive _x)} count ([_size,0,_posicion,"BLUFORSpawn"] call distanceUnits)))};
+waitUntil {sleep 3; (({_x distance _markerPos < distanciaSPWN} count (allPlayers - hcArray) == 0) AND ({(alive _x)} count ([_size,0,_markerPos,"OPFORSpawn"] call distanceUnits) == 0)) OR (({!(vehicle _x isKindOf "Air") AND (alive _x) AND (!fleeing _x)} count ([_size,0,_markerPos,"OPFORSpawn"] call distanceUnits)) > 3*({(alive _x)} count ([_size,0,_markerPos,"BLUFORSpawn"] call distanceUnits)))};
 
-if (spawner getVariable _marcador) then
-	{
-	[_marcador] spawn mrkLOOSE;
+call {
+	// Clear to respawn zone
+	if (({_x distance _markerPos < distanciaSPWN} count (allPlayers - hcArray) == 0) AND ({(alive _x)} count ([_size,0,_markerPos,"OPFORSpawn"] call distanceUnits) == 0)) then {
+		[_marker] call AS_fnc_respawnZone;
 	};
+
+	// Zone lost
+	if (({!(vehicle _x isKindOf "Air") AND (alive _x) AND (!fleeing _x)} count ([_size,0,_markerPos,"OPFORSpawn"] call distanceUnits)) > 3*({(alive _x)} count ([_size,0,_markerPos,"BLUFORSpawn"] call distanceUnits))) then {
+		[_marker] spawn mrkLOOSE;
+	};
+};

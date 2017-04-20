@@ -19,17 +19,23 @@ _vehicle setDir (markerDir _marker);
 _normalPos = surfaceNormal (position _vehicle);
 _vehicle setVectorUp _normalPos;
 
+sleep 0.25;
+
 _vehicle = createVehicle [cFlag, _markerPos, [],0, "NONE"];
 _allVehicles pushBack _vehicle;
+
+sleep 0.25;
 
 _vehicle = createVehicle ["I_supplyCrate_F", _markerPos, [],0, "NONE"];
 _allVehicles pushBack _vehicle;
 [_vehicle] call cajaAAF;
 
+sleep 0.25;
+
 _position = _markerPos findEmptyPosition [5,50,enemyMotorpoolDef];
 if !(count _position == 0) then {
 	_vehicle = createVehicle [selectRandom vehTrucks, _position, [], 0, "NONE"];
-	_vehicle setDir random 360;
+	_vehicle setDir ((_vehicle getDir (_allVehicles select 0)) + 90);
 	_allVehicles pushBack _vehicle;
 };
 
@@ -38,7 +44,7 @@ sleep 1;
 if !(worldName == "Tanoa") then {
 	_position = [_markerPos] call mortarPos;
 	_vehicle = statMortar createVehicle _position;
-	//_vehicle enableDynamicSimulation true;
+	_vehicle enableDynamicSimulation true;
 	_unit = ([_markerPos, 0, infGunner, _group] call bis_fnc_spawnvehicle) select 0;
 	_unit moveInGunner _vehicle;
 	[_vehicle] execVM "scripts\UPSMON\MON_artillery_add.sqf";
@@ -61,12 +67,25 @@ _group allowFleeing 0;
 	{
 		[_x] spawn genInitBASES; _allSoldiers pushBack _x
 	} forEach units _tempGroup;
-	//_tempGroup enableDynamicSimulation true;
 } forEach _allGroups;
 
 {
+	_x enableDynamicSimulation true;
 	[_x] spawn genVEHinit;
 } forEach _allVehicles;
+
+([_marker,_allGroups] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
+
+sleep 10;
+{
+	_x enableDynamicSimulation true;
+} forEach _allGroups;
+
+
+waitUntil {sleep 1; !(spawner getVariable _marker) or (count (allUnits select {((side _x == side_green) or (side _x == side_red)) and (_x distance _markerPos <= (_size max 200)) AND !(captive _x)}) <= _reinfStrength)};
+
+diag_log "Strength check triggered.";
+//_marker remoteExec ["INT_Replenishment", HCattack];
 
 waitUntil {sleep 1; !(spawner getVariable _marker) or (count (allUnits select {((side _x == side_green) or (side _x == side_red)) and (_x distance _markerPos <= (_size max 200)) AND !(captive _x)}) < 1)};
 

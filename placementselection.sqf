@@ -16,11 +16,13 @@ if (isNil "placementDone") then {
 	openMap [true,true];
 };
 
-while {true} do {
+_time = time + 15;
+while {time < _time} do {
 	clickPosition = [];
 	onMapSingleClick "clickPosition = _pos;";
 
-	waitUntil {sleep 1; (count clickPosition > 0) OR !visiblemap};
+	waitUntil {sleep 1; (count clickPosition > 0) OR !visiblemap or (time > _time)};
+	if (time > _time) exitWith {_position = static_defPosHQ; hint "Placing HQ at default location."};
 	onMapSingleClick "";
 	if !(visiblemap) exitWith {};
 	_position = clickPosition;
@@ -117,6 +119,8 @@ if (visiblemap) then {
 "FIA_HQ" setMarkerPos (getMarkerPos guer_respawn);
 posHQ = getMarkerPos guer_respawn; publicVariable "posHQ";
 server setVariable ["posHQ", getMarkerPos guer_respawn, true];
+
+[] spawn fn_setupZones;
 
 if (isNil "placementDone") then {
 	placementDone = true;

@@ -3,6 +3,7 @@ private ["_skill","_skillFIA","_aiming","_spotD","_spotT","_cour","_comm","_aimi
 
 [_unit] call initRevive;
 _unit setVariable ["BLUFORSpawn",true,true];
+_unit triggerDynamicSimulation true;
 
 _skillFIA = server getVariable ["skillFIA", 1];
 

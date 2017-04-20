@@ -247,7 +247,7 @@ else {
 
 	// small delay to allow for AI pathfinding shenanigans
 	if (_composition == "mixed") then {
-		sleep 25;
+		sleep 15;
 	};
 
 	if ((_composition == "transport") || (_composition == "mixed")) then {
@@ -255,7 +255,6 @@ else {
 		_dist = 200 min ([_mrk] call sizeMarker);
 		_dist = -1 * ((400 - _dist) / 10);
 		_dist = _dist max (-35);
-		diag_log format ["dist: %1", _dist];
 		_landpos1 = [_dest, _posRoad, _dist] call findSafeRoadToUnload;
 
 		// second vehicle

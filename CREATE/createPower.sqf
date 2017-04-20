@@ -91,10 +91,10 @@ sleep 3;
 } forEach _allGroups;
 
 {
-	[_x] spawn genVEHinit
+	_x enableDynamicSimulation true;
+	[_x] spawn genVEHinit;
 } forEach _allVehicles;
 
-[_marker, _allSoldiers] spawn AS_fnc_garrisonMonitor;
 
 if !(_marker in destroyedCities) then {
 	if ((daytime > 8) AND (daytime < 18)) then {
@@ -110,6 +110,11 @@ if !(_marker in destroyedCities) then {
 		[leader _group, _marker, "SAFE", "SPAWNED","NOFOLLOW", "NOSHARE","DORELAX"] execVM "scripts\UPSMON.sqf";
 	};
 };
+
+sleep 10;
+{
+	_x enableDynamicSimulation true;
+} forEach _allGroups;
 
 waitUntil {sleep 1; !(spawner getVariable _marker) OR (({!(vehicle _x isKindOf "Air")} count ([_size,0,_markerPos,"BLUFORSpawn"] call distanceUnits)) > 3*count (allUnits select {((side _x == side_green) OR (side _x == side_red)) AND (_x distance _markerPos <= (_size max 200)) AND !(captive _x)}))};
 

@@ -1,7 +1,7 @@
 if (!isServer and hasInterface) exitWith {};
 
 params ["_marker"];
-private ["_allVehicles","_allGroups","_allSoldiers","_markerPos","_size","_distance","_roads","_connectedRoads","_position","_bunker","_static","_group","_unit","_groupType","_tempGroup","_dog","_normalPos"];
+private ["_allVehicles","_allGroups","_allSoldiers","_markerPos","_size","_distance","_roads","_connectedRoads","_position","_bunker","_static","_group","_unit","_groupType","_tempGroup","_dog","_normalPos","_spawnPos"];
 
 _allVehicles = [];
 _allGroups = [];
@@ -36,6 +36,7 @@ _static setPosATL _position;
 _static setDir _direction;
 _normalPos = surfaceNormal (position _static);
 _static setVectorUp _normalPos;
+_static enableDynamicSimulation true;
 sleep 1;
 
 _unit = ([_markerPos, 0, infGunner, _tempGroup] call bis_fnc_spawnvehicle) select 0;
@@ -54,6 +55,7 @@ _static setPosATL _position;
 _static setDir _direction;
 _normalPos = surfaceNormal (position _static);
 _static setVectorUp _normalPos;
+_static enableDynamicSimulation true;
 sleep 1;
 
 _unit = ([_markerPos, 0, infGunner, _tempGroup] call bis_fnc_spawnvehicle) select 0;
@@ -63,25 +65,48 @@ _position = [getPos _bunker, 6, getDir _bunker] call BIS_fnc_relPos;
 _static = createVehicle [cFlag, _position, [],0, "CAN_COLLIDE"];
 _allVehicles pushBack _static;
 
-{[_x] spawn genVEHinit} forEach _allVehicles;
+{
+	_x enableDynamicSimulation true;
+} forEach _allVehicles;
 
+while {true} do {
+	_spawnPos = [_markerPos, 10 + (random _size),random 360] call BIS_fnc_relPos;
+	if (!surfaceIsWater _spawnPos) exitWith {};
+};
 _groupType = [infAT, side_green] call AS_fnc_pickGroup;
-_group = [_markerPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
+_group = [_spawnPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
 {[_x] join _group} forEach units _tempGroup;
-_soldier = ([_markerPos, 0, sol_MED, _group] call bis_fnc_spawnvehicle) select 0;
-_soldier = ([_markerPos, 0, sol_LAT, _group] call bis_fnc_spawnvehicle) select 0;
+_soldier = ([_spawnPos, 0, sol_MED, _group] call bis_fnc_spawnvehicle) select 0;
+_soldier = ([_spawnPos, 0, sol_LAT, _group] call bis_fnc_spawnvehicle) select 0;
 _group selectLeader (units _group select 1);
 _group allowFleeing 0;
 deleteGroup _tempGroup;
 
 if (random 10 < 2.5) then {
-	_dog = _group createUnit ["Fin_random_F",_markerPos,[],0,"FORM"];
+	_dog = _group createUnit ["Fin_random_F",_spawnPos,[],0,"FORM"];
 	[_dog,_group] spawn guardDog;
 };
 
 [leader _group, _marker, "SAFE","SPAWNED","NOVEH2","NOFOLLOW"] execVM "scripts\UPSMON.sqf";
 {[_x] spawn genInitBASES; _allSoldiers pushBack _x} forEach units _group;
 _allGroups pushBack _group;
+
+([_marker,_allGroups] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
+
+{
+	[_x] spawn genVEHinit;
+} forEach _allVehicles;
+
+sleep 10;
+{
+	_x enableDynamicSimulation true;
+} forEach _allGroups;
+
+waitUntil {sleep 1; !(spawner getVariable _marker) or (count (allUnits select {((side _x == side_green) or (side _x == side_red)) and (_x distance _markerPos <= (_size max 200)) AND !(captive _x)}) <= _reinfStrength)};
+
+diag_log "Strength check triggered.";
+//_marker remoteExec ["INT_Replenishment", HCattack];
+
 
 waitUntil {sleep 1; !(spawner getVariable _marker) or (count (allUnits select {((side _x == side_green) or (side _x == side_red)) and (_x distance _markerPos <= _size) AND !(captive _x)}) < 1)};
 

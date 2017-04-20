@@ -56,12 +56,60 @@ while {(spawner getVariable _marker) AND (_counter < _size)} do {
 	_counter = _counter + 1;
 };
 
-waitUntil {sleep 1; !(spawner getVariable _marker) OR ({alive _x} count _allSoldiers == 0) OR ({fleeing _x} count _allSoldiers == {alive _x} count _allSoldiers)};
+// Dynamic Simulation
+([_marker,_allGroups] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
 
-if ((({alive _x} count _allSoldiers == 0) OR ({fleeing _x} count _allSoldiers == {alive _x} count _allSoldiers)) AND (_marker in mrkAAF)) then {
-	[_markerPos] remoteExec ["patrolCA",HCattack];
+sleep 10;
+{
+	_x enableDynamicSimulation true;
+} forEach _allGroups;
+
+while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength) AND (spawner getVariable _marker)} do {
+	if (_isHostile) then {
+		while {(count ((_markerPos nearEntities ["Man", 1500]) select {side _x == side_blue}) < 1) AND (spawner getVariable _marker)} do {
+			sleep 10;
+		};
+	} else {
+		while {(count ((_markerPos nearEntities ["Man", 400]) select {_x getVariable ["OPFORSpawn",true]}) < 1) AND (spawner getVariable _marker)} do {
+			sleep 10;
+		};
+	};
+
+
+	sleep 5;
 };
 
-waitUntil {sleep 1; !(spawner getVariable _marker)};
+sleep 5;
 
-[_allGroups, _allSoldiers, []] spawn AS_fnc_despawnUnits;
+diag_log "Strength check triggered.";
+if (spawner getVariable _marker) then {
+	garrison setVariable [format ["%1_reduced", _marker],true,true];
+};
+
+//_marker remoteExec ["INT_Replenishment", HCattack];
+
+waitUntil {sleep 3; !(spawner getVariable _marker) OR ({alive _x} count _allSoldiers == 0) OR ({fleeing _x} count _allSoldiers == {alive _x} count _allSoldiers)};
+
+call {
+	// Enemy garrison was overwhelmed
+	if ((({alive _x} count _allSoldiers == 0) OR ({fleeing _x} count _allSoldiers == {alive _x} count _allSoldiers)) AND (_marker in mrkAAF)) then {
+		[_markerPos] remoteExec ["patrolCA",HCattack];
+	};
+
+	// Zone was despawned
+	if !(spawner getVariable _marker) exitWith {
+
+	};
+};
+
+[_allGroups, _allSoldiers, _markerPos nearObjects ["Box_IND_Wps_F", (_size max 200)]] spawn AS_fnc_despawnUnits;
+
+// If garrison was overwhelmed, respawn the zone after 30 minutes.
+if (spawner getVariable _marker) then {
+	sleep 1800;
+	if (spawner getVariable _marker) then {
+		waitUntil {sleep 3; !([distanciaSPWN,1,_markerPos,"BLUFORSpawn"] call distanceUnits)};
+		spawner setVariable [_marker,false,true];
+		[_marker] call AS_fnc_respawnZone;
+	};
+};

@@ -34,6 +34,12 @@ if ((typename _shorecheck) == "ARRAY") then {[[_fire,"seaport"],"AS_fnc_addActio
 sleep 10;
 _fire inflame true;
 
+// Dynamic Simulation
+sleep 10;
+{
+	_x enableDynamicSimulation true;
+} forEach _allGroups;
+
 waitUntil {sleep 5; !(spawner getVariable _marker) OR ({alive _x} count units _group == 0) OR !(_marker in campsFIA)};
 
 if ({alive _x} count units _group == 0) then {

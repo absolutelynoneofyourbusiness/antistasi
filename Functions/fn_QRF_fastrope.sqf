@@ -10,7 +10,6 @@ if (typeName _mrk == "STRING") then {
 if (typeName _infGroups == "ARRAY") then {
 	_infGroup1 = _infGroups select 0;
 	_infGroup2 = _infGroups select 1;
-	diag_log format ["QRF - fast rope // two inf groups: %1; %2", _infGroup1, _infGroup2];
 };
 
 _wp600 = _vehGroup addWaypoint [_dest, 10];

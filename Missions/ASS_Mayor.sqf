@@ -2,13 +2,11 @@
 
 if (!isServer and hasInterface) exitWith {};
 
+params ["_initialMarker","_source"];
 private ["_houses","_mayor"];
 
-_tskTitle = localize "Str_tsk_ASSMAYOR";
-_tskDesc = localize "Str_tskDesc_ASSMAYOR";
-
-_initialMarker = _this select 0;
-_source = _this select 1;
+_tskTitle = localize "STR_TSK_ASSMAYOR";
+_tskDesc = localize "STR_TSKDESC_ASSMAYOR";
 
 _initialPosition = getMarkerPos _initialMarker;
 

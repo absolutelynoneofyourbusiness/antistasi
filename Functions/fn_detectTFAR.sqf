@@ -4,6 +4,9 @@ if (isClass (configFile >> "CfgPatches" >> "task_force_radio")) then {
     activeTFAR = true;
     unlockedItems pushBackUnique "ItemRadio";
 	unlockedItems pushBackUnique guer_radio_TFAR;
+	if (activeJNA) then {
+		[["ItemRadio",guer_radio_TFAR]] call AS_fnc_JNA_setupGear;
+	};
     tf_no_auto_long_range_radio = true; publicVariable "tf_no_auto_long_range_radio";
 	tf_west_radio_code = ""; publicVariable "tf_west_radio_code";
 	tf_east_radio_code = tf_west_radio_code; publicVariable "tf_east_radio_code";

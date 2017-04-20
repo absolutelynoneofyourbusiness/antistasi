@@ -127,6 +127,7 @@ mrkLOOSE = compile preProcessFileLineNumbers "mrkLOOSE.sqf";
 moveHQ = compile preProcessFileLineNumbers "moveHQ.sqf";
 buildHQ = compile preProcessFileLineNumbers "buildHQ.sqf";
 statistics = compile preProcessFileLineNumbers "statistics.sqf";
+
 /*
 Generics
 */
@@ -167,6 +168,7 @@ FND_CivCon = compile preProcessFileLineNumbers "Missions\FND_CivCon.sqf";
 FND_ExpDealer = compile preProcessFileLineNumbers "Missions\FND_ExpDealer.sqf";
 FND_MilCon = compile preProcessFileLineNumbers "Missions\FND_MilCon.sqf";
 INT_Reinforcements = compile preProcessFileLineNumbers "Missions\INT_Reinforcements.sqf";
+INT_Replenishment = compile preProcessFileLineNumbers "Missions\INT_Replenishment.sqf";
 LOG_Medical = compile preProcessFileLineNumbers "Missions\LOG_Medical.sqf";
 misReqCiv = compile preProcessFileLineNumbers "Missions\misReqCiv.sqf";
 misReqMil = compile preProcessFileLineNumbers "Missions\misReqMil.sqf";
@@ -174,8 +176,8 @@ missionSelect = compile preProcessFileLineNumbers "Missions\missionSelect.sqf";
 PR_Brainwash = compile preProcessFileLineNumbers "Missions\PR_Brainwash.sqf";
 PR_Pamphlet = compile preProcessFileLineNumbers "Missions\PR_Pamphlet.sqf";
 DES_fuel = compile preProcessFileLineNumbers "Missions\DES_Fuel.sqf";
-AS_forest = compile preProcessFileLineNumbers "Missions\AS_ForestPatrol.sqf";
-AS_Mayor = compile preProcessFileLineNumbers "Missions\AS_Mayor.sqf";
+ASS_forest = compile preProcessFileLineNumbers "Missions\AS_ForestPatrol.sqf";
+ASS_Mayor = compile preProcessFileLineNumbers "Missions\ASS_Mayor.sqf";
 
 HQ_adds = compile preprocessFileLineNumbers "Compositions\HQ_adds.sqf";
 compNATORoadblock = compile preprocessFileLineNumbers "Compositions\cmpNATO_RB.sqf";
@@ -188,6 +190,7 @@ cleanGear = compile preProcessFileLineNumbers "OrgPlayers\cleanGear.sqf";
 localSupport = compile preprocessFileLineNumbers "Scripts\localSupport.sqf";
 petrosAnimation = compile preprocessFileLineNumbers "Scripts\petrosAnimation.sqf";
 rankCheck = compile preprocessFileLineNumbers "Scripts\rankCheck.sqf";
+zoneSpawner = compile preprocessFileLineNumbers "Scripts\zoneSpawner.sqf";
 
 ACErespawn = compile preProcessFileLineNumbers "Revive\ACErespawn.sqf";
 

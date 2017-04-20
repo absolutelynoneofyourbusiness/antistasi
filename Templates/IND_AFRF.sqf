@@ -68,17 +68,13 @@ infList_pilots = 	[sol_HPIL, sol_HPIL2, sol_PIL];
 // Vehicles
 vehTrucks = 		["rhs_kamaz5350_open_vdv","rhs_kamaz5350_vdv","RHS_Ural_Open_VDV_01","RHS_Ural_VDV_01"]; // trucks that spawn at outposts, etc
 vehPatrol =			["rhs_tigr_m_vdv","RHS_Mi8mt_vvsc"]; // vehicles used for road patrols;
-if (activeGREF) then {vehPatrol = vehPatrol + ["rhsgref_BRDM2_HQ_vdv"];};
 vehAPC = 			["rhs_btr80_vdv"]; // APCs
 vehIFV = 			["rhs_bmp2d_vdv","rhs_bmp1p_vdv","rhs_bmd2m","rhs_bmd2k"]; // IFVs
 vehTank = 			["rhs_t72bb_tv","rhs_t72bd_tv","rhs_t90a_tv"]; // MBTs
 vehSupply = 		["rhs_gaz66_ammo_vdv","RHS_Ural_Fuel_VDV_01","rhs_gaz66_repair_vdv","rhs_gaz66_ap2_vdv"]; // supply vehicles (ammo, fuel, med)
 vehAmmo = 			"rhs_gaz66_ammo_vdv"; // ammo truck, for special missions
 vehFuel = 			["RHS_Ural_Fuel_VDV_01"]; // fuel truck for missions
-if (activeGREF) then {
-vehLead = 			["rhsgref_BRDM2_vdv"];// lead vehicle for convoys, preferably armed MRAP/car
-} else {
-vehLead = 			["rhs_tigr_sts_3camo_vdv"];};
+vehLead = 			["rhs_tigr_sts_3camo_vdv"]; // lead vehicle for convoys, preferably armed MRAP/car
 standardMRAP = 		["rhs_tigr_vdv","rhs_uaz_vdv"]; // default transport MRAP/car
 vehTruckBox = 		["rhs_gaz66_repair_vdv"]; // repair truck or at least a prop
 vehPatrolBoat = 	["I_Boat_Armed_01_minigun_F"];
@@ -353,50 +349,28 @@ genHelmets = [
 ];
 
 // Equipment unlocked by default
-if (activeGREF) then {
-	unlockedWeapons = [
+unlockedWeapons = [
 	"rhs_weap_makarov_pm",
-	"rhs_weap_savz61",
-	"rhs_weap_kar98k",
-	"rhs_weap_m38"
-	];
+	"rhs_weap_aks74u"
+];
 
-	unlockedRifles = [
-	"rhs_weap_savz61",
-	"rhs_weap_kar98k",
-	"rhs_weap_m38"
-	];
+// Standard rifles for AI are picked from this array. Add only rifles.
+unlockedRifles = [
+	"rhs_weap_aks74u"
+];
 
-	unlockedMagazines = [
+unlockedMagazines = [
 	"rhs_mag_9x18_8_57N181S",
-	"rhsgref_5Rnd_762x54_m38",
-	"rhsgref_5Rnd_792x57_kar98k",
-	"rhsgref_20rnd_765x17_vz61"
-
-	];
-} else {
-	unlockedWeapons = [
-		"rhs_weap_makarov_pm",
-		"rhs_weap_pp2000",
-		"rhs_weap_pp2000_folded"
-	];
-
-	unlockedRifles = [
-		"rhs_weap_pp2000"
-	];
-
-	unlockedMagazines = [
-		"rhs_mag_9x18_8_57N181S",
-		"rhs_mag_9x19mm_7n31_44"
-
-	];
-};
+	"rhs_30Rnd_545x39_AK",
+	"rhs_mag_rdg2_white"
+];
 
 unlockedItems = [
 	"Binocular",
 	"ItemMap",
 	"ItemWatch",
 	"ItemCompass",
+	"ItemRadio",
 	"FirstAidKit",
 	"Medikit",
 	"ToolKit",
@@ -407,23 +381,32 @@ unlockedItems = [
 	"U_BG_Guerilla2_2",
 	"U_BG_Guerilla2_3",
 	"U_BG_Guerilla3_1",
+	"U_BG_Guerilla3_2",
 	"U_BG_leader",
 	"H_Booniehat_khk",
 	"H_Booniehat_oli",
+	"H_Booniehat_grn",
+	"H_Booniehat_dirty",
 	"H_Cap_oli",
 	"H_Cap_blk",
 	"H_MilCap_rucamo",
 	"H_MilCap_gry",
+	"H_BandMask_blk",
 	"H_Bandanna_khk",
 	"H_Bandanna_gry",
 	"H_Bandanna_camo",
-	"H_ShemagOpen_khk",
-	"H_ShemagOpen_tan",
+	"H_Shemag_khk",
+	"H_Shemag_tan",
 	"H_Shemag_olive",
+	"H_ShemagOpen_tan",
+	"H_Beret_grn",
+	"H_Beret_grn_SF",
 	"H_Watchcap_camo",
+	"H_TurbanO_blk",
 	"H_Hat_camo",
 	"H_Hat_tan",
 	"H_Beret_blk",
+	"H_Beret_red",
 	"H_Beret_02",
 	"H_Watchcap_khk",
 	"G_Balaclava_blk",
@@ -433,7 +416,6 @@ unlockedItems = [
 	"G_Bandanna_beast",
 	"G_Tactical_Black",
 	"G_Aviator",
-	"G_Bandanna_aviator",
 	"G_Shades_Black",
 	"U_C_Poloshirt_blue",
 	"U_C_Poloshirt_burgundy",
@@ -442,6 +424,9 @@ unlockedItems = [
 	"U_C_Poor_1",
 	"U_Rangemaster",
 	"U_NikosBody",
+	"U_IG_Guerilla3_2",
+	"U_OG_Guerilla2_1",
+	"U_IG_Guerilla1_1",
 	"U_I_G_Story_Protagonist_F",
 	"U_I_G_resistanceLeader_F",
 	"U_C_Poloshirt_blue",
@@ -450,15 +435,24 @@ unlockedItems = [
 	"U_C_Poloshirt_tricolour",
 	"U_C_Poloshirt_salmon",
 	"U_C_Poloshirt_redwhite",
+	"U_C_Commoner1_1",
+	"U_C_Commoner1_2",
+	"U_C_Commoner1_3",
 	"U_Rangemaster",
 	"U_NikosBody",
 	"U_C_Poor_1",
+	"U_C_Poor_2",
 	"U_C_WorkerCoveralls",
+	"U_C_Poor_shorts_1",
+	"U_C_Commoner_shorts",
+	"U_C_ShirtSurfer_shorts",
+	"U_C_TeeSurfer_shorts_1",
+	"U_C_TeeSurfer_shorts_2",
 	"U_BG_Guerrilla_6_1",
 	"U_B_survival_uniform",
 	"U_OrestesBody",
-	"V_BandollierB_oli",
-	"G_Bandanna_khk"
+	"rhs_vest_pistol_holster",
+	"rhs_scarf"
 ];
 
 unlockedBackpacks = [
@@ -466,22 +460,6 @@ unlockedBackpacks = [
 ];
 
 unlockedOptics = [];
-
-if (worldname == "Tanoa") then {
-    unlockedItems = unlockedItems + [
-    "U_I_C_Soldier_Para_5_F",
-    "U_I_C_Soldier_Para_4_F",
-    "U_I_C_Soldier_Para_3_F",
-    "U_I_C_Soldier_Para_2_F",
-    "U_I_C_Soldier_Para_1_F",
-    "U_I_C_Soldier_Para_1_F",
-    "U_I_C_Soldier_Bandit_1_F",
-    "U_I_C_Soldier_Bandit_2_F",
-    "U_I_C_Soldier_Bandit_3_F",
-    "U_I_C_Soldier_Bandit_4_F",
-    "U_I_C_Soldier_Bandit_5_F"
-    ];
-};
 
 // Default rifle types, required to unlock specific unit types. Unfortunatly, not all mods classify their weapons the same way, so automatic detection doesn't work reliably enough.
 gear_machineGuns = gear_machineGuns + ["rhs_weap_pkp","rhs_weap_pkm"];

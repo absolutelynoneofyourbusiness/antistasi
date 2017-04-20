@@ -90,7 +90,8 @@ if(isServer) then {
     };
     [unlockedWeapons] spawn AS_fnc_weaponsCheck;
     waitUntil {!(isNil "placementDone")};
-    distancias = [] spawn distancias3;
+    //distancias = [] spawn distancias3;
+    [] spawn zoneSpawner;
     resourcecheck = [] execVM "resourcecheck.sqf";
 };
 

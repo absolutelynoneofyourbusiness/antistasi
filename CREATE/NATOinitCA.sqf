@@ -2,6 +2,7 @@ private ["_unit","_muerto","_killer"];
 
 _unit = _this select 0;
 _unit setVariable ["BLUFORSpawn",true,true];
+_unit triggerDynamicSimulation true;
 
 _unit allowFleeing 0;
 _unit setSkill 0.7;

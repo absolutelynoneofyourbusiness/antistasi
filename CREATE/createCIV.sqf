@@ -84,10 +84,10 @@ if ((random 100 < ((server getVariable ["prestigeNATO",0]) + (server getVariable
 
 [leader _group, _marker, "SAFE", "SPAWNED","NOFOLLOW", "NOVEH2","NOSHARE","DoRelax"] execVM "scripts\UPSMON.sqf";
 
-_patrolCities = [_marker] call AS_fnc_getNearbyCities;
+/*_patrolCities = [_marker] call AS_fnc_getNearbyCities;
 
 _counter = 0;
-_patrolCounter = (round (_countCiv / 30)) max 1;
+_patrolCounter = (round (_countCiv / 50)) max 1;
 for "_i" from 1 to _patrolCounter do {
 	while {(spawner getVariable _marker) AND (_counter < (count _patrolCities - 1))} do {
 		_p1 = selectRandom _roads;
@@ -128,7 +128,17 @@ for "_i" from 1 to _patrolCounter do {
 		_counter = _counter + 1;
 		sleep 5;
 	};
-};
+};*/
+
+{
+	_x enableDynamicSimulation true;
+	[_x] spawn civVEHinit;
+} forEach _allVehicles;
+
+sleep 10;
+{
+	_x enableDynamicSimulation true;
+} forEach _allGroups;
 
 waitUntil {sleep 1; !(spawner getVariable _marker)};
 

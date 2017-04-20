@@ -34,7 +34,12 @@ _dismountPosition = [_targetPosition, _spawnPosition, _threatEvaluationLand] cal
 for "_i" from 1 to _groupCounter do {
 	_group = [_originPosition, side_green, _groupType] call BIS_Fnc_spawnGroup;
 	{_x assignAsCargo _vehicle;_x moveInCargo _vehicle} forEach units _group;
+	_group enableDynamicSimulation true;
 	_allGroups pushBack _group;
+	[_group,_vehicle,_dismountPosition] spawn {
+		waitUntil {sleep 2; (_this select 1) distance2D (_this select 2) < 100};
+		(_this select 0) enableDynamicSimulation false;
+	};
 };
 
 _infGroupOne = _allGroups select 1;
