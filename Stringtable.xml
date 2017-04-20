@@ -118,6 +118,9 @@
 			<Key ID="STR_ACT_SELLMENU">
 				<Original>&lt;img size='1.2' image='\A3\ui_f\data\IGUI\Cfg\HoldActions\holdAction_hack_ca.paa' /&gt; Bobby Ray's</Original>
 			</Key>
+			<Key ID="STR_ACT_CAPTURE_HVT">
+				<Original>&lt;img size='1.2' image='\A3\ui_f\data\GUI\cfg\CommunicationMenu\instructor_ca.paa' /&gt; Capture the HVT</Original>
+			</Key>
 		</Container>
 	</Package>
 
@@ -155,6 +158,18 @@
 			</Key>
 			<Key ID="STR_GENIDENT_SF">
 				<Original>NATO SF</Original>
+			</Key>
+			<Key ID="STR_GENIDENT_KSK">
+				<Original>KSK</Original>
+			</Key>
+			<Key ID="STR_GENIDENT_BW">
+				<Original>Bundeswehr</Original>
+			</Key>
+			<Key ID="STR_GENIDENT_RoyMar">
+				<Original>Royal Marines</Original>
+			</Key>
+			<Key ID="STR_GENIDENT_SAS">
+				<Original>SAS</Original>
 			</Key>
 		</Container>
 	</Package>
@@ -781,6 +796,13 @@
 			<Key ID="STR_TSKDESC_ASSTRAITOR">
 				<Original>Bad news, one of our very own is planning to defect. We have tracked his movements to the nearby town of %1. We are not taking any chancs. Kill him before he provides the enemy with intel of the location of our soldiers homes and FIA cash stockpiles. Do this before %2:%3. We don't where exactly this meeting will happen. You will recognise the building by the nearby MRAP and CSAT presence.</Original>
 			</Key>
+
+			<Key ID="STR_TSK_ASSMAYOR">
+ 				<Original>Kidnap the Mayor</Original>
+ 			</Key>
+ 			<Key ID="STR_TSKDESC_ASSMAYOR">
+ 				<Original>The mayor of %1 is having a meeting with an enemy representetive, this is our chance to kidnap him and take him to our HQ for a much needed chat. The mayor must not die! Do this before %2:%3.</Original>
+ 			</Key>
 
 			<Key ID="STR_TSK_HQATTACK">
 				<Original>Defend Petros</Original>

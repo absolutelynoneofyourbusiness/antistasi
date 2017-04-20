@@ -5,6 +5,7 @@ params ["_marker"];
 
 private ["_markerPos","_size","_houses","_house","_townName","_task","_groupPOW","_count","_unit"];
 
+_markerPos = getMarkerPos _marker;
 _size = [_marker] call sizeMarker;
 _townName = [_marker] call AS_fnc_localizar;
 

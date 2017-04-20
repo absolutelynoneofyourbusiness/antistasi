@@ -40,6 +40,9 @@ if !(count (server getVariable ["obj_vehiclePad",[]]) > 0) then {
 
 _missionVehicle = "C_Van_01_transport_F" createVehicle _spawnPosition;
 
+_missionVehicle lockCargo true;
+{_missionVehicle lockCargo [_x, false];} forEach [0 ,1];
+
 _crate = "Land_WoodenCrate_01_F" createVehicle [0,0,0];
 _crate attachTo [_missionVehicle,[0,-2.5,-0.25]];
 _crate setDir (getDir _missionVehicle + 78);
@@ -228,6 +231,12 @@ while {(alive _missionVehicle) AND (dateToNumber date < _endTime) AND (_currentD
 				[_missionVehicle, true] remoteExec ["AS_fnc_lockVehicle", [0,-2] select isDedicated,true];
 				_missionVehicle lock 2;
 				_missionVehicle engineOn false;
+				switch (_currentDropCount) do
+					{
+						case 0: { {_missionVehicle lockCargo [_x, false];} forEach [8, 9, 10, 11];};
+						case 1: { {_missionVehicle lockCargo [_x, false];} forEach [3, 5, 7];};
+						case 2: { _missionVehicle lockCargo false};
+					};
 			};
 
 			_counter = _counter + 1;

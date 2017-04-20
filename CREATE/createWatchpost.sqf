@@ -38,6 +38,7 @@ sleep 1;
 if !(worldName == "Tanoa") then {
 	_position = [_markerPos] call mortarPos;
 	_vehicle = statMortar createVehicle _position;
+	//_vehicle enableDynamicSimulation true;
 	_unit = ([_markerPos, 0, infGunner, _group] call bis_fnc_spawnvehicle) select 0;
 	_unit moveInGunner _vehicle;
 	[_vehicle] execVM "scripts\UPSMON\MON_artillery_add.sqf";
@@ -60,9 +61,12 @@ _group allowFleeing 0;
 	{
 		[_x] spawn genInitBASES; _allSoldiers pushBack _x
 	} forEach units _tempGroup;
+	//_tempGroup enableDynamicSimulation true;
 } forEach _allGroups;
 
-{[_x] spawn genVEHinit} forEach _allVehicles;
+{
+	[_x] spawn genVEHinit;
+} forEach _allVehicles;
 
 waitUntil {sleep 1; !(spawner getVariable _marker) or (count (allUnits select {((side _x == side_green) or (side _x == side_red)) and (_x distance _markerPos <= (_size max 200)) AND !(captive _x)}) < 1)};
 

@@ -15,7 +15,7 @@ _markerPos = getMarkerPos (_marker);
 _size = [_marker] call sizeMarker;
 
 _support = (server getVariable "prestigeNATO")/100;
-_statics = staticsToSave select {_x distance _markerPos < _size};
+_statics = staticsToSave select {_x distance _markerPos < (_size max 50)};
 
 _buildings = nearestObjects [_markerPos, ["Land_LandMark_F"], _size / 2];
 if (count _buildings > 1) then {

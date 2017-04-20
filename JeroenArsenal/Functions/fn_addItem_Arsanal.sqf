@@ -27,4 +27,6 @@ if(_indexFix == IDC_RSCDISPLAYARSENAL_TAB_CARGOMAG)then{_indexFix = IDC_RSCDISPL
 
 jna_dataList set [_indexFix, [jna_dataList select _indexFix, [_item, _amount]] call jna_fnc_addToArray];
 
-["UpdateItemAdd",[_indexFix,_item, _amount]] call jna_fnc_arsenal;
+publicVariable "jna_dataList";
+
+["UpdateItemAdd",[_indexFix,_item, _amount]] remoteExec ["jna_fnc_arsenal",server getVariable ["jna_playersInArsenal",[]]];

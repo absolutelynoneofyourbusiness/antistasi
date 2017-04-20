@@ -39,7 +39,6 @@ _arrayTaken = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]
 _arrayMissing = [];
 _arrayReplaced = [];
 
-
 _addToArray = {
 	private ["_array","_index","_item","_amount"];
 	_array = _this select 0;
@@ -191,18 +190,22 @@ removebackpack player;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  ADD
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+_isMember = [player] call isMember;
 _availableItems = [jna_dataList, _arrayPlaced] call _addArrays;
+_itemCounts =+ _availableItems;
 {
 	_index = _foreachindex;
 	_subArray = _x;
 	{
 		_item = _x select 0;
-		_amount = (_x select 1) - (jna_minItemMember select _index);
+		_amount = (_x select 1);
+		if (_amount != -1) then {
+			_amount = [(_x select 1) - (jna_minItemMember select _index),(_x select 1)] select _isMember;
+		};
 		_subArray set [_foreachindex, [_item,_amount]];
 	} forEach _subArray;
 	_availableItems set [_index, _subArray];
 } forEach _availableItems;
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  assinged items
 _assignedItems = ((_inventory select 9) + [_inventory select 3] + [_inventory select 4] + [_inventory select 5]);					//todo add binocular batterys
@@ -222,16 +225,22 @@ _assignedItems = ((_inventory select 9) + [_inventory select 3] + [_inventory se
 	]] call jna_fnc_itemType;
 
 
-	if(_index == -1)then{
+	if(_index == -1) then {
 		_arrayMissing = [_arrayMissing,[_item,_amount]] call jna_fnc_addToArray;
-	}else{
-		if([_availableItems select _index, _item] call jna_fnc_ItemCount > 0)then{
-			player linkItem _item;
-			[_arrayTaken,_index,_item,_amount]call _addToArray;
-			[_availableItems,_index,_item,_amount]call _removeFromArray;
-		}else{
-			_arrayMissing = [_arrayMissing,[_item,_amount]] call jna_fnc_addToArray;
+	} else {
+		call {
+			if ([_itemCounts select _index, _item] call jna_fnc_ItemCount == -1) exitWith {
+				player linkItem _item;
+			};
+			if ([_availableItems select _index, _item] call jna_fnc_ItemCount > 0) then {
+				player linkItem _item;
+				[_arrayTaken,_index,_item,_amount]call _addToArray;
+				[_availableItems,_index,_item,_amount]call _removeFromArray;
+			} else {
+				_arrayMissing = [_arrayMissing,[_item,_amount]] call jna_fnc_addToArray;
+			};
 		};
+
 	};
 
 } forEach _assignedItems - [""];
@@ -254,28 +263,39 @@ _weapons = [_inventory select 6,_inventory select 7,_inventory select 8];
 		_indexMag = IDC_RSCDISPLAYARSENAL_TAB_CARGOMAGALL;
 
 		//add ammo to backpack, which need to be loaded in the gun.
-		_amountMagAvailable = [_availableItems select _indexMag, _itemMag] call jna_fnc_ItemCount;
-		if(_amountMagAvailable > 0)then{
-			if(_amountMagAvailable < _amountMag)then{
-				_arrayMissing = [_arrayMissing,[_itemMag,_amountMag]] call jna_fnc_addToArray;
-				_amountMag = _amountMagAvailable;
+		call {
+			if ([_itemCounts select _indexMag, _itemMag] call jna_fnc_ItemCount == -1) exitWith {
+				player addMagazine [_itemMag, _amountMag];
 			};
-			[_arrayTaken,_indexMag,_itemMag,_amountMag]call _addToArray;
-			[_availableItems,_indexMag,_itemMag,_amountMag]call _removeFromArray;
+
+			_amountMagAvailable = [_availableItems select _indexMag, _itemMag] call jna_fnc_ItemCount;
+			if (_amountMagAvailable > 0) then {
+				if (_amountMagAvailable < _amountMag) then {
+					_arrayMissing = [_arrayMissing,[_itemMag,_amountMag]] call jna_fnc_addToArray;
+					_amountMag = _amountMagAvailable;
+				};
+			[_arrayTaken,_indexMag,_itemMag,_amountMag] call _addToArray;
+			[_availableItems,_indexMag,_itemMag,_amountMag] call _removeFromArray;
 			player addMagazine [_itemMag, _amountMag];
-		}then{
-			_arrayMissing = [_arrayMissing,[_itemMag,_amountMag]] call jna_fnc_addToArray;
+			} else {
+				_arrayMissing = [_arrayMissing,[_itemMag,_amountMag]] call jna_fnc_addToArray;
+			};
 		};
 
 		//adding the gun
-		if((_index != -1)&&{[_availableItems select _index, _item] call jna_fnc_ItemCount > 0})then{
-			player addWeapon _item;
-			[_arrayTaken,_index,_item,_amount]call _addToArray;
-			[_availableItems,_index,_item,_amount]call _removeFromArray;
-		}else{
-			_arrayMissing = [_arrayMissing,[_item,_amount]] call jna_fnc_addToArray;
-		};
+		call {
+			if ((_index != -1) AND ([_itemCounts select _index, _item] call jna_fnc_ItemCount == -1)) exitWith {
+				player addWeapon _item;
+			};
 
+			if ((_index != -1) AND {[_availableItems select _index, _item] call jna_fnc_ItemCount > 0}) then {
+				player addWeapon _item;
+				[_arrayTaken,_index,_item,_amount] call _addToArray;
+				[_availableItems,_index,_item,_amount] call _removeFromArray;
+			} else {
+				_arrayMissing = [_arrayMissing,[_item,_amount]] call jna_fnc_addToArray;
+			};
+		};
 
 		//add attachments
 		{
@@ -290,16 +310,26 @@ _weapons = [_inventory select 6,_inventory select 7,_inventory select 8];
 					IDC_RSCDISPLAYARSENAL_TAB_ITEMBIPOD
 				]] call jna_fnc_itemType;
 
-				if((_indexAcc != -1)&&{[_availableItems select _indexAcc, _itemAcc] call jna_fnc_ItemCount > 0})then{
-					switch _index do{
-						case IDC_RSCDISPLAYARSENAL_TAB_PRIMARYWEAPON:{player addPrimaryWeaponItem _itemAcc;};
-						case IDC_RSCDISPLAYARSENAL_TAB_SECONDARYWEAPON:{player addSecondaryWeaponItem _itemAcc;};
-						case IDC_RSCDISPLAYARSENAL_TAB_HANDGUN:{player addHandgunItem _itemAcc;};
+				call {
+					if ((_indexAcc != -1) AND ([_itemCounts select _indexAcc, _itemAcc] call jna_fnc_ItemCount == -1)) exitWith {
+						switch _index do{
+							case IDC_RSCDISPLAYARSENAL_TAB_PRIMARYWEAPON:{player addPrimaryWeaponItem _itemAcc;};
+							case IDC_RSCDISPLAYARSENAL_TAB_SECONDARYWEAPON:{player addSecondaryWeaponItem _itemAcc;};
+							case IDC_RSCDISPLAYARSENAL_TAB_HANDGUN:{player addHandgunItem _itemAcc;};
+						};
 					};
-					[_arrayTaken,_indexAcc,_itemAcc,_amountAcc]call _addToArray;
-					[_availableItems,_indexAcc,_itemAcc,_amountAcc]call _removeFromArray;
-				}else{
-					_arrayMissing = [_arrayMissing,[_itemAcc,_amountAcc]] call jna_fnc_addToArray;
+
+					if ((_indexAcc != -1) AND {[_availableItems select _indexAcc, _itemAcc] call jna_fnc_ItemCount != 0}) then {
+						switch _index do{
+							case IDC_RSCDISPLAYARSENAL_TAB_PRIMARYWEAPON:{player addPrimaryWeaponItem _itemAcc;};
+							case IDC_RSCDISPLAYARSENAL_TAB_SECONDARYWEAPON:{player addSecondaryWeaponItem _itemAcc;};
+							case IDC_RSCDISPLAYARSENAL_TAB_HANDGUN:{player addHandgunItem _itemAcc;};
+						};
+						[_arrayTaken,_indexAcc,_itemAcc,_amountAcc] call _addToArray;
+						[_availableItems,_indexAcc,_itemAcc,_amountAcc] call _removeFromArray;
+					} else {
+						_arrayMissing = [_arrayMissing,[_itemAcc,_amountAcc]] call jna_fnc_addToArray;
+					};
 				};
 			};
 		}foreach _itemAttachmets;
@@ -328,27 +358,36 @@ _containers = [_uniform,_vest,_backpack];
 			IDC_RSCDISPLAYARSENAL_TAB_BACKPACK
 		] select _foreachindex;
 
-
-		if([_availableItems select _index, _item] call jna_fnc_ItemCount > 0)then{
-			call ([
-				{player forceAddUniform _uniform;},
-				{player addVest _vest;},
-				{player addBackpack _backpack;}
-			] select _foreachindex);
-			[_arrayTaken,_index,_item,_amount]call _addToArray;
-			[_availableItems,_index,_item,_amount]call _removeFromArray;
-		}else{
-			_oldItem = [_uniform_old,_vest_old,_backpack_old] select _foreachindex;
-			if!(_oldItem isEqualTo "")then{
+		call {
+			if ([_itemCounts select _index, _item] call jna_fnc_ItemCount == -1) exitWith {
 				call ([
-					{player forceAddUniform _uniform_old;},
-					{player addVest _vest_old;},
-					{player addBackpack _backpack_old;}
+					{player forceAddUniform _uniform;},//todo remove
+					{player addVest _vest;},
+					{player addBackpack _backpack;}
 				] select _foreachindex);
-				_arrayReplaced = [_arrayReplaced,[_item,_oldItem]] call jna_fnc_addToArray;
-				[_arrayTaken,_index,_oldItem,1]call _addToArray;
-			}else{
-				_arrayMissing = [_arrayMissing,[_item,_amount]] call jna_fnc_addToArray;
+			};
+
+			if ([_availableItems select _index, _item] call jna_fnc_ItemCount > 0) then {
+				call ([
+					{player forceAddUniform _uniform;},//todo remove
+					{player addVest _vest;},
+					{player addBackpack _backpack;}
+				] select _foreachindex);
+				[_arrayTaken,_index,_item,_amount] call _addToArray;
+				[_availableItems,_index,_item,_amount] call _removeFromArray;
+			} else {
+				_oldItem = [_uniform_old,_vest_old,_backpack_old] select _foreachindex;
+				if !(_oldItem isEqualTo "") then {
+					call ([
+						{player forceAddUniform _uniform_old;}, //todo remove
+						{player addVest _vest_old;},
+						{player addBackpack _backpack_old;}
+					] select _foreachindex);
+					_arrayReplaced = [_arrayReplaced,[_item,_oldItem]] call jna_fnc_addToArray;
+					[_arrayTaken,_index,_oldItem,1] call _addToArray;
+				} else {
+					_arrayMissing = [_arrayMissing,[_item,_amount]] call jna_fnc_addToArray;
+				};
 			};
 		};
 	};
@@ -365,28 +404,40 @@ _containers = [_uniform,_vest,_backpack];
 		if(_index == -1)then{
 			_amount = 1; // we will never know the ammo count in the magazines anymore :c
 			_arrayMissing = [_arrayMissing,[_item,_amount]] call jna_fnc_addToArray;
-		}else{
+		} else {
 			_amountAvailable = [_availableItems select _index, _item] call jna_fnc_ItemCount;
-			if(_index == IDC_RSCDISPLAYARSENAL_TAB_CARGOMAGALL)then{
+			if (_index == IDC_RSCDISPLAYARSENAL_TAB_CARGOMAGALL) then {
 				_amount = getNumber (configfile >> "CfgMagazines" >> _item >> "count");
-				if(_amountAvailable < _amount)then{
-					_amount = _amountAvailable;
-					_arrayMissing = [_arrayMissing,[_item,(_amount - _amountAvailable)]] call jna_fnc_addToArray;
+				call {
+					if ([_itemCounts select _index, _item] call jna_fnc_ItemCount == -1) exitWith {
+						_container addMagazineAmmoCargo  [_item,1, _amount];
+					};
+
+					if(_amountAvailable < _amount) then {
+						_amount = _amountAvailable;
+						_arrayMissing = [_arrayMissing,[_item,(_amount - _amountAvailable)]] call jna_fnc_addToArray;
+					};
+					[_arrayTaken,_index,_item,_amount] call _addToArray;
+					[_availableItems,_index,_item,_amount] call _removeFromArray;
+					if (_amount>0) then {//prevent empty mags
+						_container addMagazineAmmoCargo  [_item,1, _amount];
+					};
 				};
-				[_arrayTaken,_index,_item,_amount]call _addToArray;
-				[_availableItems,_index,_item,_amount]call _removeFromArray;
-				if(_amount>0)then{//prefent empty mags
-					_container addMagazineAmmoCargo  [_item,1, _amount];
-				};
-			}else{
+			} else {
 				_amount = 1;
-				if(_amountAvailable > _amount)then{
-					_container addItemCargo [_item,_amount];
-					[_arrayTaken,_index,_item,_amount]call _addToArray;
-					[_availableItems,_index,_item,_amount]call _removeFromArray;
-				}else{
-					_arrayMissing = [_arrayMissing,[_item,_amount]] call jna_fnc_addToArray;
-				}
+				call {
+					if ([_itemCounts select _index, _item] call jna_fnc_ItemCount == -1) exitWith {
+						_container addItemCargo [_item, 1];
+					};
+
+					if (_amountAvailable > _amount) then {
+						_container addItemCargo [_item,_amount];
+						[_arrayTaken,_index,_item,_amount] call _addToArray;
+						[_availableItems,_index,_item,_amount] call _removeFromArray;
+					} else {
+						_arrayMissing = [_arrayMissing,[_item,_amount]] call jna_fnc_addToArray;
+					};
+				};
 			};
 		};
 	} forEach _items;
@@ -407,8 +458,6 @@ _arrayRemove = [_arrayTaken, _arrayPlaced] call _subtractArrays;
 _arrayAdd call jna_fnc_addItems_Arsanal;
 _arrayRemove call jna_fnc_removeItems_Arsanal;
 
-copyToClipboard str _arrayRemove;
-
 _reportString = "";
 {
 	_index = _foreachindex;
@@ -425,18 +474,13 @@ _reportString = "";
 		default										{configfile >> "cfgweapons" 	>> _item};
 	};
 	_displayName = gettext (_xCfg >> "displayName");
-	copyToClipboard str [_displayName];
 	if(_displayName isEqualTo "")then{_displayName = _item};
 	_reportString = _reportString + _displayName + " ("+(str _amount)+")\n";
 } forEach _arrayMissing;
 
 if(_reportString != "")then{
 	titleText[("I couldn't find the following items:\n" + _reportString), "PLAIN"];
-}
-
-
-
-
+};
 
 
 /*

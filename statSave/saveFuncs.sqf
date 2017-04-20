@@ -1,98 +1,107 @@
-fn_SaveStat =
-{
-	_varName = _this select 0;
-	_varValue = _this select 1;
-	if (!isNil "_varValue") then
-		{
-		profileNameSpace setVariable [_varname + serverid + worldName + altVersion,_varvalue];
-		//if (isDedicated) then {saveProfileNamespace};
-		};
+/*
+	Data format: worldName_Side_Locality_Variable
+	Example: Tanoa_G_S_jna_dataList -- Tanoa, Green, Server, content of JNA
+	Example: Altis_B_P_GUID_gear_uniform -- Altis, Blue, Player, PlayerUID, player's uniform
+*/
+
+// player
+fn_savePlayerData = {
+	params [["_varName","",[""]],"_varValue",["_playerUID","1",[""]]];
+	if ((isNil "_varValue") OR (_varName == "") OR (count _playerUID < 16)) exitWith {diag_log format ["Error in fn_savePlayerData -- name: %1; value: %2; UID: %3", _varname,_varvalue,_playerUID]};
+	if (_varvalue isEqualTo "") exitWith {};
+	profileNameSpace setVariable [format ["%1_%2_P_%3_%4",worldName,static_playerSide,_playerUID,_varName],_varvalue];
 };
 
-fn_SaveProfile = {saveProfileNamespace};
-
-fn_LoadStat =
-{
-	_varName = _this select 0;
-	_varValue = profileNameSpace getVariable (_varName + serverID + worldName + altVersion);
-	if(isNil "_varValue") exitWith {};
-	[_varName,_varValue] call fn_SetStat;
+fn_loadPlayerData = {
+	params [["_varName","",[""]],["_playerUID","1",[""]]];
+	if ((_varName == "") OR (count _playerUID < 16)) exitWith {diag_log format ["Error in fn_loadPlayerData -- name: %1; UID: %2", _varname,_playerUID]};
+	_varValue = profileNameSpace getVariable (format ["%1_%2_P_%3_%4",worldName,static_playerSide,_playerUID,_varName]);
+	if (isNil "_varValue") exitWith {diag_log format ["Error in fn_loadPlayerData, no value -- name: %1; UID: %2", _varname,_playerUID]};
+	[_varName,_varValue] call fn_setPlayerData;
 };
 
-fn_LoadID =
-{
-	if !(isServer) exitWith {};
-	_varName = _this select 0;
-	_varValue = profileNameSpace getVariable (_varName + serverID + worldName + altVersion);
-	if(isNil "_varValue") exitWith {sessionIDloaded = true; publicVariable "sessionIDloaded"};
-	[_varName,_varValue] call fn_SetStat;
-	sessionIDloaded = true; publicVariable "sessionIDloaded";
+// server
+fn_saveData = {
+	params [["_varName","",[""]],"_varValue"];
+	if (_varName == "") exitWith {diag_log format ["Error in fn_saveData, no name --  name: %1; value: %2", _varname,_varvalue]};
+	if (isNil "_varValue") exitWith {diag_log format ["Error in fn_saveData, no value --  name: %1; value: %2", _varname,_varvalue]};
+	profileNameSpace setVariable [format ["%1_%2_S_%3",worldName,static_playerSide,_varname],_varvalue];
 };
+
+fn_loadData = {
+	params [["_varname","",[""]]];
+	if (_varName == "") exitWith {diag_log format ["Error in fn_loadData, no name -- name: %1", _varname]};
+	_varValue = profileNameSpace getVariable (format ["%1_%2_S_%3",worldName,static_playerSide,_varname]);
+	if (isNil "_varValue") exitWith {};
+	[_varName,_varValue] call fn_setData;
+};
+
+fn_saveProfile = {saveProfileNamespace};
 
 //===========================================================================
+
+fn_setPlayerData = {
+	params ["_varName","_varValue"];
+	call {
+		if(_varName == 'gear_goggles') exitWith {removeGoggles player; player addGoggles _varValue};
+		if(_varName == 'gear_vest') exitWith {removeVest player; player addVest _varValue};
+		if(_varName == 'gear_uniform') exitWith {removeUniform player; player forceAddUniform _varValue};
+		if(_varName == 'gear_head') exitWith {removeHeadGear player; player addHeadGear _varValue};
+
+		if(_varName == 'pers_funds') exitWith {player setVariable ["dinero",_varValue,true];};
+		if(_varName == 'stat_score') exitWith {player setVariable ["score",_varValue,true];};
+		if(_varName == 'stat_rank') exitWith {player setRank _varValue; player setVariable ["rango",_varValue,true]; [player, _varValue] remoteExec ["ranksMP"]};
+		if(_varName == 'pers_garage') exitWith {personalGarage = _varValue};
+	};
+};
+
 //ADD VARIABLES TO THIS ARRAY THAT NEED SPECIAL SCRIPTING TO LOAD
 specialVarLoads =
-["puestosFIA","minas","mineFieldMrk","estaticas","cuentaCA","antenas","mrkAAF","mrkFIA","prestigeNATO","prestigeCSAT","posHQ","hr","planesAAFcurrent","helisAAFcurrent","APCAAFcurrent","tanksAAFcurrent","armas","items","mochis","municion","fecha", "prestigeOPFOR","prestigeBLUFOR","resourcesAAF","resourcesFIA","skillFIA","skillAAF","distanciaSPWN","civPerc","minimoFPS","destroyedCities","garrison","tasks","gogglesPlayer","vestPlayer","outfit","hat","scorePlayer","rankPlayer","smallCAmrk","dinero","miembros","unlockedWeapons","unlockedItems","unlockedMagazines","unlockedBackpacks","vehInGarage","destroyedBuildings","personalGarage","idleBases","campsFIA","enableFTold","enableMemAcc","campList","BE_data","AS_session_server","AS_session_client","flag_chopForest","jna_dataList"];
+["campaign_playerList","cuentaCA","miembros","antenas","posHQ","prestigeNATO","prestigeCSAT","APCAAFcurrent","tanksAAFcurrent","planesAAFcurrent","helisAAFcurrent","time","resourcesAAF","skillFIA","skillAAF","destroyedBuildings","flag_chopForest","BE_data","enableOldFT","enableMemAcc","hr","resourcesFIA","vehicles","weapons","magazines","items","backpacks","objectsHQ","addObjectsHQ","supportOPFOR","supportBLUFOR","garrison","mines","emplacements","campList","tasks","idleBases","unlockedWeapons","unlockedItems","unlockedMagazines","unlockedBackpacks"];
+
+/*
+	Variables that are loaded, but do not require special procedures
+	["smallCAmrk","mrkAAF","mrkFIA","destroyedCities","distanciaSPWN","civPerc","minimoFPS","AS_destroyedZones","jna_dataList","vehInGarage"]
+*/
+
 //THIS FUNCTIONS HANDLES HOW STATS ARE LOADED
-fn_SetStat = {
-	_varName = _this select 0;
-	_varValue = _this select 1;
-	if(isNil '_varValue') exitWith {};
+fn_setData = {
+	params ["_varName","_varValue"];
 
-	if(_varName in specialVarLoads) then {
+	if (_varName in specialVarLoads) then {
 		call {
-			if(_varName == 'cuentaCA') exitWith {
-				if (_varValue < 2700) then {cuentaCA = 2700} else {cuentaCA = _varValue};
-				publicVariable "cuentaCA";
-			};
-			if(_varName == 'miembros') exitWith {miembros = _varValue; publicVariable "miembros";};
-			if(_varName == 'smallCAmrk') exitWith {smallCAmrk = _varValue};
-			if(_varName == 'mrkAAF') exitWith {mrkAAF = _varValue;};
-			if(_varName == 'mrkFIA') exitWith {mrkFIA = _varValue;};
-			if(_varName == 'gogglesPlayer') exitWith {removeGoggles player; player addGoggles _varValue;};
-			if(_varName == 'dinero') exitWith {player setVariable ["dinero",_varValue,true];};
-			if(_varName == 'vestPlayer') exitWith {removeVest player; player addVest _varValue;};
-			if(_varName == 'outfit') exitWith {removeUniform player; player forceAddUniform _varValue;};
-			if(_varName == 'hat') exitWith {removeHeadGear player; player addHeadGear _varValue;};
-			if(_varName == 'scorePlayer') exitWith {player setVariable ["score",_varValue,true];};
-			if(_varName == 'rankPlayer') exitWith {player setRank _varValue; player setVariable ["rango",_varValue,true]; [player, _varValue] remoteExec ["ranksMP"];};
-			if(_varName == 'personalGarage') exitWith {personalGarage = _varValue};
+			if(_varName == 'campaign_playerList') exitWith {server setVariable ["campaign_playerList",_varValue,true]};
+			if(_varName == 'cuentaCA') exitWith {cuentaCA = _varValue max 2700};
 			if(_varName == 'flag_chopForest') then {
-				flag_chopForest = _varValue; publicVariable "flag_chopForest";
-				[] spawn AS_fnc_clearForest;
+				flag_chopForest = _varValue;
+				if (flag_chopForest) then {[] spawn AS_fnc_clearForest};
 			};
-
 			if(_varName == 'BE_data') exitWith {[_varValue] call fnc_BE_load};
-			if(_varName == 'AS_session_server') exitWith {server setVariable ["AS_session_server",_varValue,true]; AS_session_server = _varValue; publicVariable "AS_session_server";};
-			if(_varName == 'AS_session_client') exitWith {player setVariable ["AS_session_client",_varValue,true]};
-
-			if(_varName == 'AS_destroyedZones') exitWith {AS_destroyedZones = _varvalue; publicVariable "AS_destroyedZones";};
-			if(_varName == 'jna_dataList') exitWith {jna_dataList = _varvalue; publicVariable "jna_dataList";};
 			if(_varName == 'unlockedWeapons') exitWith {
 				unlockedWeapons = _varvalue;
 				lockedWeapons = lockedWeapons - unlockedWeapons;
+				if (activeJNA) exitWith {};
 				// XLA fixed arsenal
 				if (activeXLA) then {
 					[caja,unlockedWeapons,true] call XLA_fnc_addVirtualWeaponCargo;
 				} else {
 					[caja,unlockedWeapons,true] call BIS_fnc_addVirtualWeaponCargo;
 				};
-				publicVariable "unlockedWeapons";
 			};
 			if(_varName == 'unlockedBackpacks') exitWith {
 				unlockedBackpacks = _varvalue;
 				genBackpacks = genBackpacks - unlockedBackpacks;
+				if (activeJNA) exitWith {};
 				// XLA fixed arsenal
 				if (activeXLA) then {
 					[caja,unlockedBackpacks,true] call XLA_fnc_addVirtualBackpackCargo;
 				} else {
 					[caja,unlockedBackpacks,true] call BIS_fnc_addVirtualBackpackCargo;
 				};
-				publicVariable "unlockedBackpacks";
 			};
 			if(_varName == 'unlockedItems') exitWith {
 				unlockedItems = _varValue;
-				publicVariable "unlockedItems";
+				if (activeJNA) exitWith {};
 				// XLA fixed arsenal
 				if (activeXLA) then {
 					[caja,unlockedItems,true] call XLA_fnc_addVirtualItemCargo;
@@ -102,31 +111,26 @@ fn_SetStat = {
 				{
 				if (_x in unlockedItems) then {unlockedOptics pushBack _x};
 				} forEach genOptics;
-				publicVariable "unlockedOptics";
 			};
 			if(_varName == 'unlockedMagazines') exitWith {
 				unlockedMagazines = _varValue;
+				if (activeJNA) exitWith {};
 				// XLA fixed arsenal
 				if (activeXLA) then {
 					[caja,unlockedMagazines,true] call XLA_fnc_addVirtualMagazineCargo;
 				} else {
 					[caja,unlockedMagazines,true] call BIS_fnc_addVirtualMagazineCargo;
 				};
-				publicVariable "unlockedMagazines";
 			};
 			if(_varName == 'prestigeNATO') exitWith {server setVariable ["prestigeNATO",_varValue,true]};
 			if(_varName == 'prestigeCSAT') exitWith {server setVariable ["prestigeCSAT",_varValue,true]};
 			if(_varName == 'hr') exitWith {server setVariable ["HR",_varValue,true]};
 			if(_varName == 'planesAAFcurrent') exitWith {
-				planesAAFcurrent = _varValue;
-				if (planesAAFcurrent < 0) then {planesAAFcurrent = 0};
-				publicVariable "planesAAFcurrent";
+				planesAAFcurrent = _varValue max 0;
 				if ((planesAAFcurrent > 0) and (count indAirForce < 2)) then {indAirForce = indAirForce + planes; publicVariable "indAirForce"}
 			};
 			if(_varName == 'helisAAFcurrent') exitWith {
-				helisAAFcurrent = _varValue;
-				if (helisAAFcurrent < 0) then {helisAAFcurrent = 0};
-				publicVariable "helisAAFcurrent";
+				helisAAFcurrent = _varValue max 0;
 				if (helisAAFcurrent > 0) then {
 					indAirForce = indAirForce - heli_armed;
 					indAirForce = indAirForce + heli_armed;
@@ -134,9 +138,7 @@ fn_SetStat = {
 				};
 			};
 			if(_varName == 'APCAAFcurrent') exitWith {
-				APCAAFcurrent = _varValue;
-				if (APCAAFcurrent < 0) then {APCAAFcurrent = 0};
-				publicVariable "APCAAFcurrent";
+				APCAAFcurrent = _varValue max 0;
 				if (APCAAFcurrent > 0) then {
 					enemyMotorpool = enemyMotorpool -  vehAPC - vehIFV;
 					enemyMotorpool = enemyMotorpool +  vehAPC + vehIFV;
@@ -144,19 +146,16 @@ fn_SetStat = {
 				};
 			};
 			if(_varName == 'tanksAAFcurrent') exitWith {
-				tanksAAFcurrent = _varValue;
-				if (tanksAAFcurrent < 0) then {tanksAAFcurrent = 0};
-				publicVariable "tanksAAFcurrent";
+				tanksAAFcurrent = _varValue max 0;
 				if (tanksAAFcurrent > 0) then {
 					enemyMotorpool = enemyMotorpool - vehTank;
 					enemyMotorpool = enemyMotorpool +  vehTank;
 					publicVariable "enemyMotorpool"
 				};
 			};
-			if(_varName == 'fecha') exitWith {setDate _varValue; forceWeatherChange};
+			if(_varName == 'time') exitWith {setDate _varValue; forceWeatherChange};
 			if(_varName == 'resourcesAAF') exitWith {server setVariable ["resourcesAAF",_varValue,true]};
 			if(_varName == 'resourcesFIA') exitWith {server setVariable ["resourcesFIA",_varValue,true]};
-			if(_varName == 'destroyedCities') exitWith {destroyedCities = _varValue; publicVariable "destroyedCities"};
 			if(_varName == 'destroyedBuildings') exitWith {
 				for "_i" from 0 to (count _varValue) - 1 do {
 					_posBuild = _varValue select _i;
@@ -194,39 +193,10 @@ fn_SetStat = {
 					};
 					server setVariable [_x,_coste,true];
 				} forEach units_enemySoldiers;
-				publicVariable "skillAAF";
 			};
-			if(_varName == 'distanciaSPWN') exitWith {distanciaSPWN = _varValue; publicVariable "distanciaSPWN"};
-			if(_varName == 'civPerc') exitWith {civPerc = _varValue; publicVariable "civPerc"};
-			if(_varName == 'minimoFPS') exitWith {minimoFPS=_varValue; publicVariable "minimoFPS"};
-			if(_varName == 'vehInGarage') exitWith {vehInGarage=_varValue; publicVariable "vehInGarage"};
-			if(_varName == 'minas') exitWith
-				{
-				for "_i" from 0 to (count _varvalue) - 1 do
-					{
-					_tipoMina = _varvalue select _i select 0;
-					switch _tipoMina do
-						{
-						case apMine_type: {_tipoMina = apMine_placed};
-						case atMine_type: {_tipoMina = atMine_placed};
-						case "APERSBoundingMine_Range_Ammo": {_tipoMina = "APERSBoundingMine"};
-						case "SLAMDirectionalMine_Wire_Ammo": {_tipoMina = "SLAMDirectionalMine"};
-						case "APERSTripMine_Wire_Ammo": {_tipoMina = "APERSTripMine"};
-						case "ClaymoreDirectionalMine_Remote_Ammo": {_tipoMina = "Claymore_F"};
-						};
-					_posMina = _varvalue select _i select 1;
-					_mina = createMine [_tipoMina, _posMina, [], 0];
-					_detectada = _varvalue select _i select 2;
-					if (_detectada) then {side_blue revealMine _mina};
-					if (count (_varvalue select _i) > 3) then//borrar esto en febrero
-						{
-						_dirMina = _varvalue select _i select 3;
-						_mina setDir _dirMina;
-						};
-					};
-				};
-			if(_varName == 'garrison') exitWith
-				{
+			if(_varName == 'mines') exitWith {
+			};
+			if(_varName == 'garrison') exitWith {
 				_marcadores = mrkFIA - puestosFIA - controles - ciudades;
 				_garrison = _varvalue;
 				for "_i" from 0 to (count _marcadores - 1) do
@@ -234,73 +204,44 @@ fn_SetStat = {
 					garrison setVariable [_marcadores select _i,_garrison select _i,true];
 					};
 				};
-			if(_varName == 'puestosFIA') exitWith
+			if(_varName == 'emplacements') exitWith {
 				{
-				{
-				_mrk = createMarker [format ["FIApost%1", random 1000], _x];
-				_mrk setMarkerShape "ICON";
-				_mrk setMarkerType "loc_bunker";
-				_mrk setMarkerColor "ColorYellow";
-				if (isOnRoad _x) then {
-					_mrk setMarkerText "FIA Roadblock";
-					FIA_RB_list pushBackUnique _mrk;
-					publicVariable "FIA_RB_list";
-				} else {
-					_mrk setMarkerText "FIA Watchpost";
-					FIA_WP_list pushBackUnique _mrk;
-					publicVariable "FIA_WP_list";
-				};
-				spawner setVariable [_mrk,false,true];
-				puestosFIA pushBack _mrk;
+					_mrk = createMarker [format ["FIApost%1", random 1000], _x];
+					_mrk setMarkerShape "ICON";
+					_mrk setMarkerType "loc_bunker";
+					_mrk setMarkerColor "ColorYellow";
+					if (isOnRoad _x) then {
+						_mrk setMarkerText "FIA Roadblock";
+						FIA_RB_list pushBackUnique _mrk;
+					} else {
+						_mrk setMarkerText "FIA Watchpost";
+						FIA_WP_list pushBackUnique _mrk;
+					};
+					spawner setVariable [_mrk,false,true];
+					puestosFIA pushBack _mrk;
 				} forEach _varvalue;
-				//mrkFIA = mrkFIA + puestosFIA;
-				};
-			if ((_varName == 'campList') || (_varName == 'campsFIA')) exitWith {
-				if (_varName == 'campList') then {
-					if (count _varvalue != 0) then {
-						cList = true;
-
-						{
-							_mrk = createMarker [format ["FIACamp%1", random 1000], (_x select 0)];
-							_mrk setMarkerShape "ICON";
-							_mrk setMarkerType "loc_bunker";
-							_mrk setMarkerColor "ColorOrange";
-							_txt = _x select 1;
-							_mrk setMarkerText _txt;
-							usedCN pushBackUnique _txt;
-							spawner setVariable [_mrk,false,true];
-							campList pushBack [_mrk, _txt];
-							campsFIA pushBack _mrk;
-						} forEach _varvalue;
-					};
-				}
-				else {
-					if !(cList) then {
-						{
-							_mrk = createMarker [format ["FIACamp%1", random 1000], _x];
-							_mrk setMarkerShape "ICON";
-							_mrk setMarkerType "loc_bunker";
-							_mrk setMarkerColor "ColorOrange";
-							_nameOptions = campNames - usedCN;
-							_txt = selectRandom _nameOptions;
-							_mrk setMarkerText _txt;
-							usedCN pushBack _txt;
-							spawner setVariable [_mrk,false,true];
-							campsFIA pushBack _mrk;
-						} forEach _varvalue;
-					};
+			};
+			if (_varName == 'campList') exitWith {
+				if (count _varvalue != 0) then {
+					{
+						_mrk = createMarker [format ["FIACamp%1", random 1000], (_x select 0)];
+						_mrk setMarkerShape "ICON";
+						_mrk setMarkerType "loc_bunker";
+						_mrk setMarkerColor "ColorOrange";
+						_txt = _x select 1;
+						_mrk setMarkerText _txt;
+						usedCN pushBackUnique _txt;
+						spawner setVariable [_mrk,false,true];
+						campList pushBack [_mrk, _txt];
+						campsFIA pushBack _mrk;
+					} forEach _varvalue;
 				};
 			};
-
-			if(_varName == 'enableFTold') exitWith {server setVariable ["enableFTold",_varValue,true]};
+			if(_varName == 'enableOldFT') exitWith {server setVariable ["enableFTold",_varValue,true]};
 			if(_varName == 'enableMemAcc') exitWith {server setVariable ["enableMemAcc",_varValue,true]};
-
-
-			if(_varName == 'antenas') exitWith
-				{
+			if(_varName == 'antenas') exitWith {
 				antenasmuertas = _varvalue;
-				for "_i" from 0 to (count _varvalue - 1) do
-				    {
+				for "_i" from 0 to (count _varvalue - 1) do {
 				    _posAnt = _varvalue select _i;
 				    _mrk = [mrkAntenas, _posAnt] call BIS_fnc_nearestPosition;
 				    _antena = [antenas,_mrk] call BIS_fnc_nearestPosition;
@@ -309,34 +250,27 @@ fn_SetStat = {
 				    sleep 1;
 				    _antena setDamage 1;
 				    deleteMarker _mrk;
-				    };
-				antenasmuertas = _varvalue;
-				publicVariable "antenas";
 				};
-			if(_varName == 'armas') exitWith
-				{
+				antenasmuertas = _varvalue;
+			};
+			if(_varName == 'weapons') exitWith {
 				clearWeaponCargoGlobal caja;
 				{caja addWeaponCargoGlobal [_x,1]} forEach _varValue;
-				};
-			if(_varName == 'municion') exitWith
-				{
+			};
+			if(_varName == 'magazines') exitWith {
 				clearMagazineCargoGlobal caja;
 				{caja addMagazineCargoGlobal [_x,1]} forEach _varValue;
-				};
-			if(_varName == 'items') exitWith
-				{
+			};
+			if(_varName == 'items') exitWith {
 				clearItemCargoGlobal caja;
 				{caja addItemCargoGlobal [_x,1]} forEach _varValue;
-				};
-			if(_varName == 'mochis') exitWith
-				{
+			};
+			if(_varName == 'backpacks') exitWith {
 				clearBackpackCargoGlobal caja;
 				{caja addBackpackCargoGlobal [_x,1]} forEach _varValue;
-				};
-			if(_varname == 'prestigeOPFOR') exitWith
-				{
-				for "_i" from 0 to (count ciudades) - 1 do
-					{
+			};
+			if(_varname == 'supportOPFOR') exitWith {
+				for "_i" from 0 to (count ciudades) - 1 do {
 					_ciudad = ciudades select _i;
 					_datos = server getVariable _ciudad;
 					_numCiv = _datos select 0;
@@ -345,12 +279,10 @@ fn_SetStat = {
 					_prestigeBLUFOR = _datos select 3;
 					_datos = [_numCiv,_numVeh,_prestigeOPFOR,_prestigeBLUFOR];
 					server setVariable [_ciudad,_datos,true];
-					};
 				};
-			if(_varname == 'prestigeBLUFOR') exitWith
-				{
-				for "_i" from 0 to (count ciudades) - 1 do
-					{
+			};
+			if(_varname == 'supportBLUFOR') exitWith {
+				for "_i" from 0 to (count ciudades) - 1 do {
 					_ciudad = ciudades select _i;
 					_datos = server getVariable _ciudad;
 					_numCiv = _datos select 0;
@@ -359,67 +291,112 @@ fn_SetStat = {
 					_prestigeBLUFOR = _varvalue select _i;
 					_datos = [_numCiv,_numVeh,_prestigeOPFOR,_prestigeBLUFOR];
 					server setVariable [_ciudad,_datos,true];
-					};
 				};
-			if(_varname == 'idleBases') exitWith
+			};
+			if(_varname == 'idleBases') exitWith {
 				{
-				{
-				server setVariable [(_x select 0),(_x select 1),true];
+					server setVariable [(_x select 0),(_x select 1),true];
 				} forEach _varValue;
-				};
-			if(_varName == 'posHQ') exitWith
+			};
+
+			// HQ
+			if(_varName == 'posHQ') exitWith {
 				{
-				{if (getMarkerPos _x distance _varvalue < 1000) exitWith
-					{
-					mrkAAF = mrkAAF - [_x];
-					mrkFIA = mrkFIA + [_x];
+					if (getMarkerPos _x distance _varvalue < 1000) then {
+						mrkAAF = mrkAAF - [_x];
+						mrkFIA = mrkFIA + [_x];
 					};
 				} forEach controles;
+
+				"FIA_HQ" setMarkerPos _varValue;
+				posHQ = _varValue;
 				guer_respawn setMarkerPos _varValue;
-				petros setPos _varvalue;
-				[] spawn buildHQ;
-				};
-			if(_varname == 'estaticas') exitWith
+				guer_respawn setMarkerAlpha 1;
+				server setVariable ["posHQ", _varValue, true];
+			};
+			if(_varName == 'objectsHQ') exitWith {
 				{
-				for "_i" from 0 to (count _varvalue) - 1 do
-					{
+					_type = _x select 0;
+					switch (_type) do {
+						case "bandera": {
+							bandera setDir (_x select 2);
+							bandera setPosATL (_x select 1);
+						};
+						case "caja": {
+							caja setDir (_x select 2);
+							caja setPosATL (_x select 1);
+						};
+						case "cajaveh": {
+							cajaveh setDir (_x select 2);
+							cajaveh setPosATL (_x select 1);
+						};
+						case "fuego": {
+							fuego setDir (_x select 2);
+							fuego setPosATL (_x select 1);
+							fuego inflame true
+						};
+						case "mapa": {
+							mapa setDir (_x select 2);
+							mapa setPosATL (_x select 1);
+						};
+						case "petros": {
+							petros setDir (_x select 2);
+							petros setPosATL (_x select 1);
+						};
+					};
+				} forEach _varvalue;
+			};
+			if(_varName == 'addObjectsHQ') exitWith {
+				if (count _varvalue == 0) exitWith {};
+				{
+					diag_log _x;
+					_obj = (_x select 0) createVehicle [0,0,0];
+					_obj setDir (_x select 2);
+					_obj setPosATL (_x select 1);
+
+					if ((_x select 0) == "Land_JumpTarget_F") then {
+						obj_vehiclePad = _obj;
+						[obj_vehiclePad,"removeObj"] remoteExec ["AS_fnc_addActionMP"];
+						server setVariable ["obj_vehiclePad",getPosATL obj_vehiclePad,true];
+					} else {
+						[_obj,"moveObject"] remoteExec ["AS_fnc_addActionMP"];
+						[_obj,"removeObj"] remoteExec ["AS_fnc_addActionMP"];
+					};
+				} forEach _varvalue;
+			};
+			//
+
+			if(_varname == 'vehicles') exitWith {
+				for "_i" from 0 to (count _varvalue) - 1 do {
 					_tipoVeh = _varvalue select _i select 0;
 					_posVeh = _varvalue select _i select 1;
 					_dirVeh = _varvalue select _i select 2;
 
-					_veh = _tipoVeh createVehicle _posVeh;
+					_veh = _tipoVeh createVehicle [0,0,0];
 					_veh setDir _dirVeh;
+					_veh setPosATL _posVeh;
+
 					if (_tipoVeh in (statics_allMGs + statics_allATs + statics_allAAs + statics_allMortars)) then {
 						staticsToSave pushBack _veh;
 					};
 					[_veh] spawn VEHinit;
-					};
-				publicVariable "staticsToSave";
 				};
-			if(_varname == 'tasks') exitWith
+			};
+			if(_varname == 'tasks') exitWith {
 				{
-				{
-				if (_x == "AtaqueAAF") then
-					{
-					[] spawn AS_fnc_spawnAttack;
-					}
-				else
-					{
-					if (_x == "DEF_HQ") then
-						{
-						[] spawn ataqueHQ;
-						}
-					else
-						{
-						[_x,true] call missionRequest;
+					if (_x == "AtaqueAAF") then {
+						[] spawn AS_fnc_spawnAttack;
+					} else {
+						if (_x == "DEF_HQ") then {
+							[] spawn ataqueHQ;
+						} else {
+							[_x,true] call missionRequest;
 						};
 					};
 				} forEach _varvalue;
-				};
+			};
 		};
-	}
-	else
-	{
+	} else {
 		call compile format ["%1 = %2",_varName,_varValue];
 	};
 };

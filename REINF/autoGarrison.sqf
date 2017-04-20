@@ -87,6 +87,10 @@ while {(_size > 0)} do
 	hint "Supreme Commander Petros sent in the cavalry.";
 	};
 
+{
+	_x setVariable ["generated",true,true];
+} forEach _soldados;
+
 waitUntil {sleep 1;((not(_marcador in smallCAmrk)) or (_marcador in mrkAAF))};
 
 {_vehiculo = _x;

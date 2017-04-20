@@ -65,6 +65,7 @@ class CfgFunctions {
 			class findRoadSpot {};
 			class clearForest {};
 			class initPlayerEH {};
+			class switchUniformTexture {};
 		};
 		class server {
 			file = "Functions";

@@ -338,6 +338,6 @@ if (_isMarker) then {
 	waitUntil {sleep 1; !([distanciaSPWN,1,_markerPos,"BLUFORSpawn"] call distanceUnits)};
 	smallCApos = smallCApos - [_marker];
 	publicVariable "smallCApos";
-	};
+};
 
 [_allGroups + _redGroups, _allSoldiers + _redSoldiers, _allVehicles + _redVehicles] spawn AS_fnc_despawnUnits;

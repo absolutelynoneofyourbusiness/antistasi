@@ -24,7 +24,6 @@ if(typeName (_remove select 0) isEqualTo "STRING")then{_remove = [_remove]};
 
 _remove = +_remove;
 
-
 //remove empty
 {
     _listName = _x select 0;

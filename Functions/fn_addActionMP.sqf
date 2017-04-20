@@ -40,4 +40,5 @@ switch _type do {
 	case "deploy" : {_object addAction [localize "STR_ACT_BUILDPAD", {[_this select 0, _this select 1] remoteExec ["AS_fnc_deployPad", 2]},nil,0,false,true,"","(_this == Slowhand)"]};
 	case "heal": {if (player != _object) then {_object addAction ["Revive", "Revive\actionRevive.sqf",nil,0,false,true,"","(isPlayer _this) and (_this == _this getVariable ['owner',objNull])"]}};
 	case "removeObj" : {_object addAction [localize "STR_ACT_REMOVEASSET", {deleteVehicle (_this select 0)},nil,0,false,true,"","(_this == Slowhand)"]};
+	case "Capture_HVT": {_object addAction [localize "STR_ACT_CAPTURE_HVT", "AI\CaptureHVT.sqf",nil,0,false,true]};
 };

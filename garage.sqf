@@ -132,7 +132,7 @@ garageKeys = (findDisplay 46) displayAddEventHandler ["KeyDown", {
 				garageVeh setVariable ["duenyo",getPlayerUID player,true];
 			};
 
-			if (garageVeh isKindOf "StaticWeapon") then {staticsToSave = staticsToSave + [garageVeh]; publicVariable "staticsToSave"};
+			if (garageVeh isKindOf "StaticWeapon") then {[garageVeh, {_this setOwner 2; staticsToSave pushBackUnique _this; publicVariable "staticsToSave"}] remoteExec ["call", 2]};
 			clearMagazineCargoGlobal garageVeh;
 			clearWeaponCargoGlobal garageVeh;
 			clearItemCargoGlobal garageVeh;

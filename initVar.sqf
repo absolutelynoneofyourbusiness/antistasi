@@ -24,10 +24,10 @@ planesAAFcurrent = 0;
 helisAAFcurrent = 0;
 APCAAFcurrent = 0;
 tanksAAFcurrent= 0;
-savingClient = false;
+flag_savingClient = false;
 incomeRep = false;
 closeMarkersUpdating = 0;
-altVersion = "";
+static_playerSide = "B";
 enableRestart = true;
 status_templatesLoaded = false;
 activeJNA = (("AS_param_useJNA" call BIS_fnc_getParamValue) == 1);
@@ -158,6 +158,7 @@ server setVariable ["hardMode",false,true];
 server setVariable ["testMode",false,true];
 
 staticsToSave = []; publicVariable "staticsToSave";
+staticsData = []; publicVariable "staticsData";
 prestigeOPFOR = 50;//Initial % support for AAF on each city
 if (not cadetMode) then {prestigeOPFOR = 75};//if you play on vet, this is the number
 prestigeBLUFOR = 0;//Initial % FIA support on each city
@@ -169,7 +170,8 @@ cuentaCA = 600;//600
 prestigeIsChanging = false;
 cityIsSupportChanging = false;
 resourcesIsChanging = false;
-savingServer = false;
+flag_savingServer = false;
+flag_chopForest = false;
 misiones = [];
 revelar = false;
 
@@ -227,6 +229,6 @@ publicVariable "FIA_WP_list";
 publicVariable "FIA_RB_list";
 publicVariable "reducedGarrisons";
 publicVariable "replaceFIA";
-publicVariable "altVersion";
+publicVariable "static_playerSide";
 
 if (isMultiplayer) then {[[petros,"hint","Variables Init Completed"],"commsMP"] call BIS_fnc_MP;};

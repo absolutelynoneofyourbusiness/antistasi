@@ -1,7 +1,7 @@
 if (!isServer and hasInterface) exitWith {};
 
 params ["_marker"];
-private ["_allVehicles","_allGroups","_allSoldiers","_markerPos","_position","_size","_reduced","_buildings","_groupGunners","_building","_type","_vehicle","_unit","_flag","_crate","_isFrontline","_vehicleData","_vehCrew","_base","_roads","_data","_strength","_currentStrength","_groupType","_group","_patrolParams","_observer"];
+private ["_allVehicles","_allGroups","_allSoldiers","_markerPos","_position","_size","_reduced","_buildings","_groupGunners","_building","_type","_vehicle","_unit","_flag","_crate","_isFrontline","_vehicleData","_vehCrew","_base","_roads","_data","_strength","_currentStrength","_groupType","_group","_patrolParams","_observer","_radioTower"];
 
 _allVehicles = [];
 _allGroups = [];
@@ -60,6 +60,8 @@ for "_i" from 0 to (count _buildings) - 1 do {
 	};
 };
 
+
+
 _flag = createVehicle [cFlag, _markerPos, [],0, "CAN_COLLIDE"];
 _flag allowDamage false;
 [_flag,"take"] remoteExec ["AS_fnc_addActionMP"];
@@ -99,6 +101,29 @@ if (_marker in puertos) then {
 	_allVehicles pushBack _vehicle;
 	sleep 1;
 } else {
+	_buildings = nearestObjects [_markerPos,["Land_TTowerBig_1_F","Land_TTowerBig_2_F","Land_Communication_F"], _size];
+	if (count _buildings > 0) then {
+		_radioTower = _buildings select 0;
+
+		if ((typeOf _radioTower == "Land_TTowerBig_1_F") OR (typeOf _radioTower == "Land_TTowerBig_2_F")) then {
+			private ["_pos","_pos2","_dir"];
+			_group = createGroup side_green;
+			_pos = getPosATL _radioTower;
+			_dir = getDir _radioTower;
+			_pos2 = _pos getPos [2,_dir];
+			_pos2 set [2,23.1];
+			if (typeOf _radioTower == "Land_TTowerBig_2_F") then {
+				_pos2 = _pos getPos [1,_dir];
+				_pos2 set [2,24.3];
+			};
+			_unit = _group createUnit [sol_SN, _markerPos, [], _dir, "NONE"];
+			_unit setPosATL _pos2;
+			_unit forceSpeed 0;
+			_unit setUnitPos "UP";
+			_allGroups pushBack _group;
+		};
+	};
+
 	if (_isFrontline) then {
 		_base = [bases,_markerPos] call BIS_fnc_nearestPosition;
 		if ((_base in mrkFIA) or ((getMarkerPos _base) distance _markerPos > 1000)) then {

@@ -37,7 +37,7 @@ opArtilleryAmmoHE = "32Rnd_155mm_Mo_shells";
 // infantry classes, to allow for class-specific skill adjustments and pricing
 opI_OFF = 	"rhsusf_usmc_marpat_wd_officer"; // officer/official
 opI_PIL = 	"rhsusf_usmc_marpat_wd_helipilot"; // pilot
-opI_OFF2 = 	"rhsusf_usmc_marpat_wd_officer"; // officer/traitor
+opI_OFF2 = 	"B_G_Soldier_unarmed_F"; // officer/traitor
 opI_CREW = 	"rhsusf_usmc_marpat_wd_crewman"; // crew
 opI_MK = 	"rhsusf_usmc_recon_marpat_wd_marksman_lite";
 opI_MED =	"rhsusf_usmc_recon_marpat_wd_rifleman_lite";

@@ -12,7 +12,7 @@ _size = [_marker] call sizeMarker;
 _isFrontline = [_marker] call AS_fnc_isFrontline;
 
 _buildings = nearestObjects [_markerPos, listMilBld, _size*1.5];
-_statics = staticsToSave select {_x distance _markerPos < _size};
+_statics = staticsToSave select {_x distance _markerPos < (_size max 50)};
 
 _groupGunners = createGroup side_green;
 _allGroups pushBack _groupGunners;

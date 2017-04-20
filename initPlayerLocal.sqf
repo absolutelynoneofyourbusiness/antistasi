@@ -271,8 +271,9 @@ caja addAction [localize "STR_ACT_UNLOADCARGO", "[] call vaciar"];
 caja addAction [localize "STR_ACT_MOVEASSET", {[_this select 0,_this select 1,_this select 2] spawn AS_fnc_moveObject},nil,0,false,true,"","(_this == Slowhand)"];
 //caja addAction [localize "STR_ACT_SELLMENU", "UI\sellMenu.sqf",nil,0,false,true,"","(_this == Slowhand)", 5];
 
+cajaVeh addAction ["Get Funky!",{[] spawn AS_fnc_switchUniformTexture},nil,0,false,true,"","name _this in ['Chris','Ken']"];
+
 [player] execVM "OrgPlayers\unitTraits.sqf";
-if (activeAFRF) then {[player] execVM "Municion\RHSdress.sqf"};
 [player] call cleanGear;
 [player] spawn rankCheck;
 [player] spawn localSupport;

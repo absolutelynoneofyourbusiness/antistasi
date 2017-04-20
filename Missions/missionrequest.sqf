@@ -267,7 +267,7 @@ call {
 			};
 		} else {
 			_currentZone = selectRandom _options;
-			[_currentZone, "civ"] remoteExec [(["ASS_Traidor","ASS_forest"] select (_currentZone in puestos)),HCgarrisons];
+			[_currentZone, "civ"] remoteExec [(["ASS_Traidor","AS_forest"] select (_currentZone in puestos)),HCgarrisons];
 		};
 	};
 

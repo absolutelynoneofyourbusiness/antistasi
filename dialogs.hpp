@@ -955,7 +955,7 @@ AS_FRAME_D(FRAME_H_10, "Game Options");
 BTN_BACK(A_CLOSE);
 
 #define STR_GO_GAR "closeDialog 0; [[], ""garbageCleaner.sqf""] remoteExec [""execVM"", 2];"
-#define STR_GO_PSS "closeDialog 0; [""statSave\saveLoop.sqf"",""BIS_fnc_execVM""] call BIS_fnc_MP;"
+#define STR_GO_PSS "closeDialog 0; [""statSave\saveGame.sqf"",""BIS_fnc_execVM""] call BIS_fnc_MP;"
 #define STR_GO_RSA "closeDialog 0; if (player == Slowhand) then {[true] remoteExec [""AS_fnc_MAINT_arsenal"", 2];};"
 
 BTN_L1(-1, "Civ Config", "", "closeDialog 0; createDialog ""civ_config"";");
@@ -984,7 +984,7 @@ AS_BOX_D(BOX_H_4);
 AS_FRAME_D(FRAME_H_4, "Game Options");
 BTN_BACK(A_CLOSE);
 
-#define STR_GO_PSS "closeDialog 0; [] execVM ""statSave\saveLoop.sqf""; hint ""Personal Stats Saved"";"
+#define STR_GO_PSS "closeDialog 0; [] execVM ""statSave\saveGame.sqf""; hint ""Personal Stats Saved"";"
 
 BTN_L1(-1, "Music ON/OFF", "", "closedialog 0; if (musicON) then {musicON = false; hint ""Music turned OFF"";} else {musicON = true; execVM ""musica.sqf""; hint ""Music turned ON""};");
 

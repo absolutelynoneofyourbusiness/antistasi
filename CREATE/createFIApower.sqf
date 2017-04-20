@@ -7,10 +7,11 @@ _allVehicles = [];
 _allGroups = [];
 _allSoldiers = [];
 _workers = [];
-_statics = [];
 
 _markerPos = getMarkerPos (_marker);
 _size = [_marker] call sizeMarker;
+
+_statics = staticsToSave select {_x distance _markerPos < (_size max 50)};
 
 if (_marker != "FIA_HQ") then {
 	_flag = createVehicle [guer_flag, _markerPos, [],0, "CAN_COLLIDE"];

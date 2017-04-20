@@ -4,6 +4,7 @@ private ["_hostilesMain", "_hostilesSupport", "_friendlySupport"];
 activeAFRF = false;
 activeUSAF = false;
 activeGREF = false;
+activeBW = false;
 
 // Initial side definitions, which might be overwritten by the templates
 side_blue = west;
@@ -20,12 +21,15 @@ if ("rhs_weap_m4a1_d" in gear_allWeapons) then {
 if ("rhs_weap_m92" in gear_allWeapons) then {
 	activeGREF = true;
 };
+if ("BWA3_P8" in gear_allWeapons) then {
+	activeBW = true;
+};
 
 // Check if a GUER FIA is being used instead of a BLUFOR FIA
 replaceFIA = false;
 if (((side petros) == independent) OR ("respawn_guer" in allMapMarkers)) then {
 	replaceFIA = true;
-	altVersion = "GREEN";
+	static_playerSide = "G";
 };
 
 // Setup civilians, with Altis civilians as the default
@@ -45,26 +49,38 @@ call {
 	if (replaceFIA) exitWith {
 		call compile preprocessFileLineNumbers "Templates\PLAYER_IND_FIA.sqf";
 
-		if (activeUSAF) then {
-			// Hostiles: USMC supported by SOCOM
-			call compile preprocessFileLineNumbers "Templates\IND_USMC.sqf";
-			call compile preprocessFileLineNumbers "Templates\RED_SOC.sqf";
-			_hostilesMain = "USMC"; _hostilesSupport = "SOCOM";
-		} else {
-			// Hostiles: NATO supported by NATO Special Forces
-			call compile preprocessFileLineNumbers "Templates\IND_NATO.sqf";
-			call compile preprocessFileLineNumbers "Templates\RED_NATO_SF.sqf";
-			_hostilesMain = "NATO"; _hostilesSupport = "NATO SF";
-		};
+		call {
+			if (activeBW) exitWith {
+				// Hostiles: Heer supported by KSK
+				call compile preprocessFileLineNumbers "Templates\IND_BW.sqf";
+				call compile preprocessFileLineNumbers "Templates\RED_KSK.sqf";
+				_hostilesMain = "Heer"; _hostilesSupport = "KSK";
 
-		if (activeAFRF) then {
-			// Friendly support: VMF
-			call compile preprocessFileLineNumbers "Templates\BLUE_VMF.sqf";
-			_friendlySupport = "VMF";
-		} else {
-			// Friendly support: CSAT
-			call compile preprocessFileLineNumbers "Templates\BLUE_CSAT.sqf";
-			_friendlySupport = "CSAT";
+				// Friendly support: VMF
+				call compile preprocessFileLineNumbers "Templates\BLUE_VMF.sqf";
+				_friendlySupport = "VMF";
+			};
+			if (activeUSAF) exitWith {
+				// Hostiles: USMC supported by SOCOM
+				call compile preprocessFileLineNumbers "Templates\IND_USMC.sqf";
+				call compile preprocessFileLineNumbers "Templates\RED_SOC.sqf";
+				_hostilesMain = "USMC"; _hostilesSupport = "SOCOM";
+			} else {
+				// Hostiles: NATO supported by NATO Special Forces
+				call compile preprocessFileLineNumbers "Templates\IND_NATO.sqf";
+				call compile preprocessFileLineNumbers "Templates\RED_NATO_SF.sqf";
+				_hostilesMain = "NATO"; _hostilesSupport = "NATO SF";
+			};
+
+			if (activeAFRF) exitWith {
+				// Friendly support: VMF
+				call compile preprocessFileLineNumbers "Templates\BLUE_VMF.sqf";
+				_friendlySupport = "VMF";
+			} else {
+				// Friendly support: CSAT
+				call compile preprocessFileLineNumbers "Templates\BLUE_CSAT.sqf";
+				_friendlySupport = "CSAT";
+			};
 		};
 	};
 

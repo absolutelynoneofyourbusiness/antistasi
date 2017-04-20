@@ -15,11 +15,10 @@ _markerPos = getMarkerPos (_marker);
 _size = [_marker] call sizeMarker;
 
 _support = (server getVariable "prestigeNATO")/100;
-_statics = staticsToSave select {_x distance _markerPos < _size};
+_statics = staticsToSave select {_x distance _markerPos < (_size max 50)};
 
 
 _buildings = nearestObjects [_markerPos, listMilBld, _size*1.5];
-_statics = staticsToSave select {_x distance _markerPos < _size};
 _group = createGroup side_blue;
 _allGroups pushBack _group;
 for "_i" from 0 to (count _buildings) - 1 do {

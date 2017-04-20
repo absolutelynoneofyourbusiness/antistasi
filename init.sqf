@@ -64,7 +64,7 @@ if(isServer) then {
         enableRestart = [true, false] select (("AS_enableCampaignReset" call BIS_fnc_getParamValue) == 0);
         publicVariable "enableRestart";
         [] execVM "orgPlayers\mList.sqf";
-        ["miembros"] call fn_LoadStat;
+        ["miembros"] call fn_loadData;
         {
             if (([_x] call isMember) AND (isNull Slowhand)) then {
                 Slowhand = _x;

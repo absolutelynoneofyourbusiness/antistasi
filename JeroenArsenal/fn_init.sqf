@@ -71,7 +71,7 @@ if(isServer)then{
 
         //update arsenal
         _array = (caja call jna_fnc_cargoToArray);
-        _array remoteExecCall ["jna_fnc_addItems_Arsanal",server getVariable ["jna_playersInArsenal",[]]];
+        [_array,true] remoteExecCall ["jna_fnc_addItems_Arsanal",server getVariable ["jna_playersInArsenal",[]]];
         [] spawn {
             sleep 3;
             [unlockedWeapons,true] call AS_fnc_weaponsCheck;

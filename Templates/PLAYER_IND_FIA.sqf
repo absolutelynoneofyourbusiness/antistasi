@@ -64,6 +64,24 @@ if !(activeGREF) then {
 	0-2: civilian vehicles
 	3-10: military vehicles and statics
 	*/
+
+if (worldname == "Tanoa") then {
+	vfs = [
+		"C_Offroad_02_unarmed_F_green",
+		"C_Van_01_transport_F",
+		"C_Heli_Light_01_civil_F",
+		"I_G_Quadbike_01_F",
+		"I_C_Offroad_02_unarmed_F",
+		"I_C_Van_01_transport_F",
+		"I_G_Offroad_01_armed_F",
+		"I_HMG_01_high_F",
+		"I_G_Mortar_01_F",
+		"I_static_AT_F",
+		"I_static_AA_F"
+		];
+
+		} else {
+
 	vfs = [
 		"C_Offroad_01_F",
 		"C_Van_01_transport_F",
@@ -77,6 +95,7 @@ if !(activeGREF) then {
 		"I_static_AT_F",
 		"I_static_AA_F"
 	];
+};
 
 	guer_gear_vestAdv = "V_PlateCarrierIAGL_oli";
 	guer_gear_vestMedic = "";

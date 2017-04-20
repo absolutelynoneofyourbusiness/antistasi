@@ -35,3 +35,5 @@ if (count _array == 0) exitWith {diag_log "Error in JNA_setupGear: empty input a
 		(jna_dataList select _index) pushBack [_className,-1];
 	};
 } forEach _array;
+
+publicVariable "jna_dataList";

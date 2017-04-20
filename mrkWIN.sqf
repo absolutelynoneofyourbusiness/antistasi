@@ -52,7 +52,7 @@ sleep 5;
 
 _antenna = [antenas,_posicion] call BIS_fnc_nearestPosition;
 if (getPos _antenna distance _posicion < 100) then {
-	[_flag,"jam"] remoteExec ["AS_fnc_addActionMP"];
+	[_bandera,"jam"] remoteExec ["AS_fnc_addActionMP"];
 };
 
 mrkAAF = mrkAAF - [_marcador];

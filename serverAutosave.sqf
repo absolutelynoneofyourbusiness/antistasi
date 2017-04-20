@@ -3,7 +3,7 @@ if (!isServer) exitWith {};
 while {true} do
 	{
 	sleep 3600; // 3600
-	[] execVM "statSave\saveLoop.sqf";
+	[] execVM "statSave\saveGame.sqf";
 	_found = false;
 	{
 	if (_x select 0 == "resourcecheck") then

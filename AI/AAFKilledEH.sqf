@@ -14,7 +14,7 @@ if ((side _killer == side_blue) || (captive _killer)) then {
 	if (activeBE) then {["kill"] remoteExec ["fnc_BE_XP", 2]};
 	_grupo = group _muerto;
 	if (isPlayer _killer) then {
-		[2,_killer,false] call playerScoreAdd;
+		[2,_killer,true] call playerScoreAdd;
 
 		if ((captive _killer) && (_killer distance _muerto < 300)) then {
 			[_killer,false] remoteExec ["setCaptive",_killer];

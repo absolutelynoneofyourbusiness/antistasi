@@ -1,121 +1,122 @@
-// session ID, needs to be loaded prior to the personal data
 if (isServer) then {
-	["AS_session_server"] call fn_LoadID;
+	["campaign_playerList"] call fn_loadData;
+	["miembros"] call fn_loadData; publicVariable "miembros";
+	flag_playerList = true;
+	publicVariable "flag_playerList";
 };
-if (!isDedicated) then {
-	["AS_session_client"] call fn_LoadStat;
-	{player removeMagazine _x} forEach magazines player;
-	{player removeWeaponGlobal _x} forEach weapons player;
-	removeBackpackGlobal player;
-	if ("ItemGPS" in (assignedItems player)) then {player unlinkItem "ItemGPS"};
-	if ((!activeTFAR) and ("ItemRadio" in (assignedItems player))) then {player unlinkItem "ItemRadio"};
-	player setPos (server getVariable ["posHQ", getMarkerPos guer_respawn]);
 
-	waitUntil {!isNil "sessionIDloaded"};
-	[format ["server ID: %1; player ID: %2", (server getVariable ["AS_session_server", -2]), (player getVariable ["AS_session_client", -1])]] remoteExec ["AS_fnc_logOutput", 2];
+if (!isDedicated) then {
+	/*{player removeMagazine _x} forEach magazines player;
+	{player removeWeaponGlobal _x} forEach weapons player;
+	removeBackpackGlobal player;*/
+	if ("ItemGPS" in (assignedItems player)) then {player unlinkItem "ItemGPS"};
+	if ((!activeTFAR) AND ("ItemRadio" in (assignedItems player))) then {player unlinkItem "ItemRadio"};
+
+	waitUntil {sleep 0.5; !isNil "flag_playerList"};
 
 	if (isMultiplayer) then {
-		if ((player getVariable ["AS_session_client", -1]) == (server getVariable ["AS_session_server", -2])) then {
-			["gogglesPlayer"] call fn_LoadStat;
-			["vestPlayer"] call fn_LoadStat;
-			["outfit"] call fn_LoadStat;
-			["hat"] call fn_LoadStat;
-
+		_UID = getPlayerUID player;
+		diag_log (server getVariable ["campaign_playerList",[]]);
+		if (_UID in (server getVariable ["campaign_playerList",[]])) then {
+			["gear_goggles",_UID] call fn_loadPlayerData;
+			["gear_vest",_UID] call fn_loadPlayerData;
+			["gear_uniform",_UID] call fn_loadPlayerData;
+			["gear_head",_UID] call fn_loadPlayerData;
+			diag_log "Antistasi MP: player previously participated in the current campaign";
 			if ([player] call isMember) then {
-				["scorePlayer"] call fn_LoadStat;
-				["rankPlayer"] call fn_LoadStat;
+				["stat_score",_UID] call fn_loadPlayerData;
+				["stat_rank",_UID] call fn_loadPlayerData;
 			};
-			["dinero"] call fn_LoadStat;
-			["personalGarage"] call fn_LoadStat;
-			diag_log "Antistasi MP: Personal player stats loaded";
+			["pers_funds",_UID] call fn_loadPlayerData;
+			["pers_garage",_UID] call fn_loadPlayerData;
+			diag_log "Antistasi MP: personal player stats loaded";
 		} else {
 			[player] call cleanGear;
-			diag_log "Antistasi MP: new campaign";
+			diag_log "Antistasi MP: player has not participated in this campaign yet";
 		};
 	} else {
-		["gogglesPlayer"] call fn_LoadStat;
-		["vestPlayer"] call fn_LoadStat;
-		["outfit"] call fn_LoadStat;
-		["hat"] call fn_LoadStat;
-		diag_log "Antistasi: SP Personal player stats loaded";
+		["gear_goggles",_UID] call fn_loadPlayerData;
+		["gear_vest",_UID] call fn_loadPlayerData;
+		["gear_uniform",_UID] call fn_loadPlayerData;
+		["gear_head",_UID] call fn_loadPlayerData;
+		diag_log "Antistasi: SP personal player stats loaded";
 	};
 };
+
+
 
 if (!isServer) exitWith {};
 statsLoaded = 0; publicVariable "statsLoaded";
 //ADD STATS THAT NEED TO BE LOADED HERE.
 petros allowdamage false;
 
-["enableMemAcc"] call fn_LoadStat;
-["enableFTold"] call fn_LoadStat;
-["campList"] call fn_LoadStat; publicVariable "campList";
-["campsFIA"] call fn_LoadStat; publicVariable "campsFIA";
-["puestosFIA"] call fn_LoadStat; publicVariable "puestosFIA";
-["mrkFIA"] call fn_LoadStat; mrkFIA = mrkFIA + puestosFIA; publicVariable "mrkFIA"; if (isMultiplayer) then {sleep 5};
-["mrkAAF"] call fn_LoadStat;
-["destroyedCities"] call fn_LoadStat;
-["minas"] call fn_LoadStat;
-["cuentaCA"] call fn_LoadStat;
-["antenas"] call fn_LoadStat;
-["prestigeNATO"] call fn_LoadStat;
-["prestigeCSAT"] call fn_LoadStat;
-["hr"] call fn_LoadStat;
-["planesAAFcurrent"] call fn_LoadStat;
-["helisAAFcurrent"] call fn_LoadStat;
-["APCAAFcurrent"] call fn_LoadStat;
-["tanksAAFcurrent"] call fn_LoadStat;
-["armas"] call fn_LoadStat;
-["municion"] call fn_LoadStat;
-["items"] call fn_LoadStat;
-["mochis"] call fn_LoadStat;
-["fecha"] call fn_LoadStat;
-["prestigeOPFOR"] call fn_LoadStat;
-["prestigeBLUFOR"] call fn_LoadStat;
-["resourcesAAF"] call fn_LoadStat;
-["resourcesFIA"] call fn_LoadStat;
-["garrison"] call fn_LoadStat;
-["skillFIA"] call fn_LoadStat;
-["skillAAF"] call fn_LoadStat;
-["distanciaSPWN"] call fn_LoadStat;
-["civPerc"] call fn_LoadStat;
-["minimoFPS"] call fn_LoadStat;
-["smallCAmrk"] call fn_LoadStat;
-["miembros"] call fn_LoadStat;
-["unlockedItems"] call fn_LoadStat;
-["unlockedMagazines"] call fn_LoadStat;
-["unlockedWeapons"] call fn_LoadStat;
-["unlockedBackpacks"] call fn_LoadStat;
-["vehInGarage"] call fn_LoadStat;
-["destroyedBuildings"] call fn_LoadStat;
-["idleBases"] call fn_LoadStat;
-["AS_destroyedZones"] call fn_LoadStat;
-["jna_dataList"] call fn_LoadStat;
-//===========================================================================
+["enableMemAcc"] call fn_loadData;
+["enableOldFT"] call fn_loadData;
+["campList"] call fn_loadData; publicVariable "campList"; publicVariable "campsFIA";
+["emplacements"] call fn_loadData; publicVariable "puestosFIA"; publicVariable "FIA_RB_list"; publicVariable "FIA_WP_list";
+["mrkFIA"] call fn_loadData; mrkFIA = mrkFIA + puestosFIA; publicVariable "mrkFIA"; if (isMultiplayer) then {sleep 5};
+["mrkAAF"] call fn_loadData;
+["destroyedCities"] call fn_loadData; publicVariable "destroyedCities";
+["mines"] call fn_loadData;
+["cuentaCA"] call fn_loadData; publicVariable "cuentaCA";
+["antenas"] call fn_loadData; publicVariable "antenas";
+["prestigeNATO"] call fn_loadData;
+["prestigeCSAT"] call fn_loadData;
+["hr"] call fn_loadData;
+["planesAAFcurrent"] call fn_loadData; publicVariable "planesAAFcurrent";
+["helisAAFcurrent"] call fn_loadData; publicVariable "helisAAFcurrent";
+["APCAAFcurrent"] call fn_loadData; publicVariable "APCAAFcurrent";
+["tanksAAFcurrent"] call fn_loadData; publicVariable "tanksAAFcurrent";
+["weapons"] call fn_loadData;
+["magazines"] call fn_loadData;
+["items"] call fn_loadData;
+["backpacks"] call fn_loadData;
+["time"] call fn_loadData;
+["supportOPFOR"] call fn_loadData;
+["supportBLUFOR"] call fn_loadData;
+["resourcesAAF"] call fn_loadData;
+["resourcesFIA"] call fn_loadData;
+["garrison"] call fn_loadData;
+["skillFIA"] call fn_loadData;
+["skillAAF"] call fn_loadData; publicVariable "skillAAF";
+["distanciaSPWN"] call fn_loadData; publicVariable "distanciaSPWN";
+["civPerc"] call fn_loadData; publicVariable "civPerc";
+["minimoFPS"] call fn_loadData; publicVariable "minimoFPS";
+["smallCAmrk"] call fn_loadData;
+["vehInGarage"] call fn_loadData; publicVariable "vehInGarage";
+["destroyedBuildings"] call fn_loadData;
+["idleBases"] call fn_loadData;
+["AS_destroyedZones"] call fn_loadData; publicVariable "AS_destroyedZones";
+["jna_dataList"] call fn_loadData; publicVariable "jna_dataList";
 
+["unlockedItems"] call fn_loadData; publicVariable "unlockedOptics";
+["unlockedMagazines"] call fn_loadData; publicVariable "unlockedMagazines";
+["unlockedWeapons"] call fn_loadData; publicVariable "unlockedWeapons";
+["unlockedBackpacks"] call fn_loadData; publicVariable "unlockedBackpacks";
 unlockedRifles = unlockedweapons - gear_sidearms - gear_missileLaunchers - gear_rocketLaunchers - gear_sniperRifles - gear_machineGuns; publicVariable "unlockedRifles";
 
-_marcadores = mrkFIA + mrkAAF + campsFIA;
+//===========================================================================
+
+
+
+_markers = mrkFIA + mrkAAF + campsFIA;
 
 {
-_posicion = getMarkerPos _x;
-_cercano = [_marcadores,_posicion] call BIS_fnc_nearestPosition;
-if (_cercano in mrkFIA) then
-	{
-	mrkAAF = mrkAAF - [_x];
-	mrkFIA = mrkFIA + [_x];
-	}
-else
-	{
-	mrkAAF = mrkAAF + [_x];
+	_position = getMarkerPos _x;
+	_nearestZone = [_markers,_position] call BIS_fnc_nearestPosition;
+	if (_nearestZone in mrkFIA) then {
+		mrkAAF = mrkAAF - [_x];
+		mrkFIA = mrkFIA + [_x];
+	} else {
+		mrkAAF = mrkAAF + [_x];
 	};
 } forEach controles;
 
 {
-if ((not(_x in mrkAAF)) and (not(_x in mrkFIA)) and (_x != "FIA_HQ")) then {mrkAAF pushBack _x};
+	if (!(_x in mrkAAF) AND !(_x in mrkFIA) AND (_x != "FIA_HQ")) then {mrkAAF pushBackUnique _x};
 } forEach marcadores;
 
-_marcadores = _marcadores + controles;
-
+_markers = _markers + controles;
 {
 
 	if (_x in mrkFIA) then {
@@ -146,16 +147,16 @@ _marcadores = _marcadores + controles;
 
 			if (_x in ciudades) exitWith {
 				_power = [power, getMarkerPos _x] call BIS_fnc_nearestPosition;
-				if ((not (_power in mrkFIA)) or (_power in destroyedCities)) then {
+				if (!(_power in mrkFIA) OR (_power in destroyedCities)) then {
 					[_x,false] spawn AS_fnc_adjustLamps;
 				};
 				if (_x in destroyedCities) then {[_x] call AS_fnc_destroyCity};
 			};
 
-			if ((_x in recursos) or (_x in fabricas)) exitWith {
+			if ((_x in recursos) OR (_x in fabricas)) exitWith {
 				if (_x in recursos) then {_mrkD setMarkerText format ["Resource: %1",count (garrison getVariable _x)]} else {_mrkD setMarkerText format ["Factory: %1",count (garrison getVariable _x)]};
 				_power = [power, getMarkerPos _x] call BIS_fnc_nearestPosition;
-				if ((not (_power in mrkFIA))  or (_power in destroyedCities)) then {
+				if (!(_power in mrkFIA) OR (_power in destroyedCities)) then {
 					[_x,false] spawn AS_fnc_adjustLamps;
 				};
 				if (_x in destroyedCities) then {[_x] call AS_fnc_destroyCity};
@@ -176,59 +177,72 @@ _marcadores = _marcadores + controles;
 		call {
 			if (_x in ciudades) exitWith {
 				_power = [power, getMarkerPos _x] call BIS_fnc_nearestPosition;
-				if ((not (_power in mrkAAF))  or (_power in destroyedCities)) then {
+				if (!(_power in mrkAAF) OR (_power in destroyedCities)) then {
 					[_x,false] spawn AS_fnc_adjustLamps;
 				};
 				if (_x in destroyedCities) then {[_x] call AS_fnc_destroyCity};
 			};
 
-			if ((_x in recursos) or (_x in fabricas)) exitWith {
+			if ((_x in recursos) OR (_x in fabricas)) exitWith {
 				_power = [power, getMarkerPos _x] call BIS_fnc_nearestPosition;
-				if ((not (_power in mrkAAF))  or (_power in destroyedCities)) then {
+				if (!(_power in mrkAAF) OR (_power in destroyedCities)) then {
 					[_x,false] spawn AS_fnc_adjustLamps;
 				};
 				if (_x in destroyedCities) then {[_x] call AS_fnc_destroyCity};
 			};
 
-			if ((_x in power) and (_x in destroyedCities)) exitWith {[_x] call AS_fnc_destroyCity};
+			if ((_x in power) AND (_x in destroyedCities)) exitWith {[_x] call AS_fnc_destroyCity};
 		};
 	};
-} forEach _marcadores;
+} forEach _markers;
 
-{if (not (_x in _marcadores)) then {if (_x != "FIA_HQ") then {_marcadores pushBack _x; mrkAAF pushback _x} else {mrkAAF = mrkAAF - ["FIA_HQ"]; if (not("FIA_HQ" in mrkFIA)) then {mrkFIA = mrkFIA + ["FIA_HQ"]}}}} forEach marcadores;//por si actualizo zonas.
+{
+	if !(_x in _markers) then {
+		if (_x != "FIA_HQ") then {
+			_markers pushBack _x;
+			mrkAAF pushback _x;
+		} else {
+			mrkAAF = mrkAAF - ["FIA_HQ"];
+			if !("FIA_HQ" in mrkFIA) then {
+				mrkFIA = mrkFIA + ["FIA_HQ"];
+			};
+		};
+	};
+} forEach marcadores;
 
-marcadores = _marcadores;
+marcadores = _markers;
 publicVariable "marcadores";
 publicVariable "mrkAAF";
 publicVariable "mrkFIA";
 
-["posHQ"] call fn_LoadStat;
-["flag_chopForest"] call fn_LoadStat;
-["estaticas"] call fn_LoadStat;//tiene que ser el último para que el sleep del borrado del contenido no haga que despawneen
+["posHQ"] call fn_loadData; publicVariable "posHQ";
+["flag_chopForest"] call fn_loadData; publicVariable "flag_chopForest";
+["objectsHQ"] call fn_loadData;
+["addObjectsHQ"] call fn_loadData;
+["vehicles"] call fn_loadData; publicVariable "staticsToSave";
 
-sleep 1;
-if (isMultiplayer) then
+sleep 2;
+if (isMultiplayer) then {
 	{
-	{
-	_jugador = _x;
-	if ([_jugador] call isMember) then
-		{
-		{_jugador removeMagazine _x} forEach magazines _jugador;
-		{_jugador removeWeaponGlobal _x} forEach weapons _jugador;
-		removeBackpackGlobal _jugador;
-		};
-	_jugador setPos (getMarkerPos guer_respawn);
+		_player = _x;
+		{_player removeMagazine _x} forEach magazines _player;
+		{_player removeWeaponGlobal _x} forEach weapons _player;
+		removeBackpackGlobal _player;
+		_player setPos (fuego getPos [8,random 360]);
+		_player setdir (_player getdir petros);
 	} forEach playableUnits;
-	}
-else
-	{
+} else {
 	{player removeMagazine _x} forEach magazines player;
 	{player removeWeaponGlobal _x} forEach weapons player;
 	removeBackpackGlobal player;
-	player setPos (getMarkerPos guer_respawn);
-	};
+	player setPos (fuego getPos [8,random 360]);
+	player setdir (player getdir petros);
+};
 
-[] call AS_fnc_updateArsenal;
+if !(activeJNA) then {
+	[] call AS_fnc_updateArsenal;
+};
+
 server setVariable ["genLMGlocked",true,true];
 server setVariable ["genGLlocked",true,true];
 server setVariable ["genSNPRlocked",true,true];
@@ -236,36 +250,31 @@ server setVariable ["genATlocked",true,true];
 server setVariable ["genAAlocked",true,true];
 [unlockedWeapons] spawn AS_fnc_weaponsCheck;
 
-["BE_data"] call fn_LoadStat;
+["BE_data"] call fn_loadData;
 if !(activeJNA) then {
 	[false] call AS_fnc_MAINT_arsenal;
 };
 
-// [[petros,"hintCS","Persistent Savegame Loaded"],"commsMP"] call BIS_fnc_MP;
 ASA3_saveLoaded = true;
 placementDone = true; publicVariable 'placementDone';
 diag_log "Antistasi: Server sided Persistent Load done";
 
 sleep 25;
-["tasks"] call fn_LoadStat;
+["tasks"] call fn_loadData;
 
 _tmpCAmrk = + smallCAmrk;
 smallCAmrk = [];
 
 {
-_base = [_x] call AS_fnc_findBaseForCA;
-//if (_x == "puesto_13") then {_base = ""};
-_radio = [_x] call AS_fnc_radioCheck;
-if ((_base != "") and (_radio) and (_x in mrkFIA) and (not(_x in smallCAmrk))) then
-	{
-	[_x] remoteExec ["patrolCA",HCattack];
-	sleep 5;
-	smallCAmrk pushBackUnique _x;
-	[_x] remoteExec ["autoGarrison",HCattack];
+	_base = [_x] call AS_fnc_findBaseForCA;
+	_radio = [_x] call AS_fnc_radioCheck;
+	if ((_base != "") AND (_radio) AND (_x in mrkFIA) AND !(_x in smallCAmrk)) then {
+		[_x] remoteExec ["patrolCA",HCattack];
+		sleep 5;
+		smallCAmrk pushBackUnique _x;
+		[_x] remoteExec ["autoGarrison",HCattack];
 	};
 } forEach _tmpCAmrk;
 publicVariable "smallCAmrk";
 
 petros allowdamage true;
-//END
-//hint "Stats loaded";

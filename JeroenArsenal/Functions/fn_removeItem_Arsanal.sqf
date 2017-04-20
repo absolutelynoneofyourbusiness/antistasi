@@ -24,6 +24,12 @@ if(_index == -1)exitWith{"ERROR in removeitemarsenal:"+str _this};
 _indexFix = _index;
 if(_indexFix == IDC_RSCDISPLAYARSENAL_TAB_CARGOMAG)then{_indexFix = IDC_RSCDISPLAYARSENAL_TAB_CARGOMAGALL};
 
+_break = false;
+{
+	if (((_x select 0) isEqualTo _item) AND ((_x select 1) == -1)) exitWith {_break = true};
+} forEach (jna_dataList select _indexFix);
+if (_break) exitWith {};
+
 jna_dataList set [_indexFix, [jna_dataList select _indexFix, [_item, _amount]] call jna_fnc_removeFromArray];
 
 ["UpdateItemRemove",[_index,_item, _amount]] call jna_fnc_arsenal;

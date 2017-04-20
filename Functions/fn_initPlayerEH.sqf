@@ -58,12 +58,12 @@ player addEventHandler ["HandleHeal", {
 // If you assemble a static weapon, you'll be able to move it around, and it will be added to the list of statics to save
 player addEventHandler ["WeaponAssembled",{
 	params ["_EHunit", "_EHobj"];
-	if (_EHunit isKindOf "StaticWeapon") then {
+	if (_EHobj isKindOf "StaticWeapon") then {
 		_EHobj addAction [localize "STR_ACT_MOVEASSET", {[_this select 0,_this select 1,_this select 2,"static"] spawn AS_fnc_moveObject},nil,0,false,true,"","(_this == Slowhand)"];
-		if !(_EHunit in staticsToSave) then {
-			staticsToSave pushBack _EHunit;
+		if !(_EHobj in staticsToSave) then {
+			staticsToSave pushBackUnique _EHobj;
 			publicVariable "staticsToSave";
-			[_EHunit] spawn VEHinit;
+			[_EHobj] spawn VEHinit;
 		};
 	} else {
 		_EHobj addEventHandler ["Killed",{[_this select 0] remoteExec ["postmortem",2]}];
@@ -72,7 +72,9 @@ player addEventHandler ["WeaponAssembled",{
 
 // Despawn bags of disassembled statics
 player addEventHandler ["WeaponDisassembled", {
-	params ["object","_bagOne","_bagTwo"];
+	params ["_object","_bagOne","_bagTwo"];
+	staticsToSave = staticsToSave - [cursorTarget];
+	publicVariable "staticsToSave";
 	[_bagOne] spawn VEHinit;
 	[_bagTwo] spawn VEHinit;
 }];

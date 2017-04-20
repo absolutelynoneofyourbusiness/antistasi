@@ -249,6 +249,15 @@ class CfgIdentities
     speaker = "Male08ENG";
     pitch = 1.0;
     };
+
+            class Dusty
+    {
+        name = "Mayor Dusty";
+        face="WhiteHead_08";
+    glasses = "None";
+    speaker = "Male08ENG";
+    pitch = 1.0;
+    };
 };
 
 class CfgDebriefing

@@ -9,6 +9,9 @@ _allGroups = [];
 _allVehicles = [];
 
 _size = [_marker] call sizeMarker;
+_markerPos = getMarkerPos (_marker);
+
+_statics = staticsToSave select {_x distance _markerPos < (_size max 50)};
 
 _flag = createVehicle [guer_flag, _markerPos, [],0, "CAN_COLLIDE"];
 _flag allowDamage false;

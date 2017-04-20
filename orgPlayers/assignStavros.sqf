@@ -40,6 +40,8 @@ if ((isNull _commander) OR switchCom) then {
 	};
 };
 
+if (!_proceed) exitWith {};
+
 _selectable = objNull;
 {
 	_data = [_x] call AS_fnc_getRank;

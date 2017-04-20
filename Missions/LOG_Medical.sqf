@@ -65,6 +65,8 @@ _grupos = [];
 _sTruck = createVehicle [_tipoVeh, _poscrash, [], 0, "CAN_COLLIDE"];
 [_sTruck,"Mission Vehicle"] spawn inmuneConvoy;
 reportedVehs pushBack _sTruck; publicVariable "reportedVehs";
+_sTruck lockCargo true;
+{_sTruck lockCargo [_x, false];} forEach [0 ,1];
 //_sTruck setFuel 0;
 
 _crate1 = "Box_IND_Support_F" createVehicle _poscrash;

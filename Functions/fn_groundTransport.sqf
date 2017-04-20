@@ -1,5 +1,5 @@
-params ["_vehicleType","_groupType",["_groupCounter",1],"_originPosition","_targetMarker"];
-private ["_isArmed","_targetPosition","_spawnpositionData","_spawnPosition","_direction","_allVehicles","_allGroups","_allSoldiers","_vehicle","_vehicleGroup","_dismountPosition","_threatEvaluationLand","_group","_wpV1_1","_wpV1_2","_wpInf1_1","_wpInf2_1","_infGroupOne","_infGroupTwo","_tempInfo"];
+params ["_vehicleType","_groupType",["_groupCounter",1],"_originPosition","_targetMarker",["_forceThreatVal",1,[1]]];
+private ["_isArmed","_targetPosition","_spawnpositionData","_spawnPosition","_direction","_allVehicles","_allGroups","_allSoldiers","_vehicle","_vehicleGroup","_dismountPosition","_threatEvaluationLand","_group","_wpV1_1","_wpV1_2","_wpInf1_1","_wpInf2_1","_wpInf1_2","_wpInf2_2","_infGroupOne","_infGroupTwo","_tempInfo"];
 
 _targetPosition = _targetMarker;
 if (typeName _targetMarker == "STRING") then {
@@ -21,9 +21,14 @@ _vehicleGroup = (_initData select 3) select 1;
 _vehicle allowDamage true;
 
 _threatEvaluationLand = 1;
-if (typeName _targetMarker == "STRING") then {
-	_threatEvaluationLand = [_targetMarker] call landThreatEval;
+if (_forceThreatVal != 1) then {
+	_threatEvaluationLand = _forceThreatVal;
+} else {
+	if (typeName _targetMarker == "STRING") then {
+		_threatEvaluationLand = [_targetMarker] call landThreatEval;
+	};
 };
+
 _dismountPosition = [_targetPosition, _spawnPosition, _threatEvaluationLand] call findSafeRoadToUnload;
 
 for "_i" from 1 to _groupCounter do {
@@ -67,10 +72,21 @@ if (_groupCounter > 1) then {
 	_wpInf2_1 synchronizeWaypoint [_wpV1_1];
 };
 
+_wpInf1_2 = _infGroupOne addWaypoint [_targetPosition, 0];
+_wpInf1_2 setWaypointType "SAD";
+_wpInf1_2 setWaypointBehaviour "AWARE";
+
+if (_groupCounter > 1) then {
+	_wpInf2_2 = _infGroupTwo addWaypoint [_targetPosition, 0];
+	_wpInf2_2 setWaypointFormation "LINE";
+	_wpInf2_2 setWaypointType "SAD";
+	_wpInf2_2 setWaypointBehaviour "AWARE";
+};
+
 if !(_isArmed) then {
 	[_vehicleGroup, _infGroupOne, _targetPosition, _originPosition, _vehicle] spawn {
 		params ["_vg","_ig","_tp","_op","_veh"];
-		waitUntil {sleep 5; (((units _ig select 0) distance _tp < 100) AND (count assignedCargo _veh < 1)) OR ({alive _x} count units _vg == 0)};
+		waitUntil {sleep 5; (((units _ig select 0) distance _veh > 50) AND (count assignedCargo _veh < 1)) OR ({alive _x} count units _vg == 0)};
 		[_vg, _op] spawn AS_fnc_QRF_RTB;
 	};
 };

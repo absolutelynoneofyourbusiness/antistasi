@@ -21,6 +21,8 @@ private ["_category","_data"];
 	_category = _x;
 	{
 		_data =+ _x;
-		_x set [1, round ((_data select 1) / 2) max 0];
+		if ((_data select 1) != -1) then {
+			_x set [1, round ((_data select 1) / 2) max 0];
+		};
 	} forEach _category;
 } forEach jna_dataList;
