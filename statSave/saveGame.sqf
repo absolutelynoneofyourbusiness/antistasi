@@ -237,8 +237,6 @@ _vehiclesToSave = [];
 	};
 } forEach vehicles - [caja,bandera,fuego,cajaveh,mapa];
 
-diag_log _vehiclesToSave;
-
 ["vehicles",_vehiclesToSave] call fn_saveData;
 ["weapons",_weapons] call fn_saveData;
 ["magazines",_magazines] call fn_saveData;

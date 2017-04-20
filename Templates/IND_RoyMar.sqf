@@ -66,7 +66,7 @@ infList_crew = 		[sol_UN, sol_CREW, sol_CREW2, sol_CREW3, sol_CREW4, sol_DRV, so
 infList_pilots = 	[sol_HPIL, sol_HPIL2, sol_PIL];
 
 // Vehicles
-vehTrucks = 		["B_Truck_01_covered_F","UK3CB_BAF_Coyote_Logistics_L111A1_W_MTP_RM"]; // trucks that spawn at outposts, etc
+vehTrucks = 		["CUP_B_Mastiff_LMG_GB_W","CUP_B_Mastiff_LMG_GB_W"]; // trucks that spawn at outposts, etc
 vehPatrol =			["UK3CB_BAF_LandRover_WMIK_GMG_FFR_Green_A_MTP_RM","UK3CB_BAF_LandRover_WMIK_HMG_FFR_Green_A_MTP_RM","UK3CB_BAF_Jackal2_L2A1_W_MTP_RM"]; // vehicles used for road patrols;
 vehAPC = 			["CUP_B_FV432_Bulldog_GB_W","CUP_B_FV432_Bulldog_GB_W_RWS"]; // APCs
 vehIFV = 			["CUP_B_MCV80_GB_W_SLAT","CUP_B_FV510_GB_W"]; // IFVs
@@ -95,9 +95,9 @@ heli_transport = 	"UK3CB_BAF_Merlin_HC3_CSAR_MTP_RM";
 indUAV_large = 		"BW_Euro_Hawk"; // large UAV, unarmed
 
 // Initial motorpool/airforce
-enemyMotorpoolDef = "B_Truck_01_covered_F"; // fallback vehicle in case of an empty motorpool -- NOT AN ARRAY!
-enemyMotorpool = 	["BW_LKW_Transport_Fleck","BWA3_Eagle_FLW100_Fleck"]; // starting/current motorpool
-indAirForce = 		["UK3CB_BAF_Coyote_Passenger_L134A1_W_MTP_RM","UK3CB_BAF_Merlin_HC3_CSAR_MTP_RM"]; // starting/current airforce
+enemyMotorpoolDef = "CUP_B_Mastiff_LMG_GB_W"; // fallback vehicle in case of an empty motorpool -- NOT AN ARRAY!
+enemyMotorpool = 	["CUP_B_Mastiff_LMG_GB_W","UK3CB_BAF_LandRover_WMIK_HMG_FFR_Green_A_MTP_RM"]; // starting/current motorpool
+indAirForce = 		["UK3CB_BAF_Wildcat_AH1_CAS_6C_MTP_RM","UK3CB_BAF_Merlin_HC3_CSAR_MTP_RM"]; // starting/current airforce
 
 // Config paths for pre-defined groups -- required if group names are used
 cfgInf = (configfile >> "CfgGroups" >> "West" >> "UK3CB_BAF_Faction_Navy_MTP" >> "Infantry");
@@ -106,7 +106,7 @@ cfgInf = (configfile >> "CfgGroups" >> "West" >> "UK3CB_BAF_Faction_Navy_MTP" >>
 
 // standard group arrays of individuals
 BWGroup_Team = 		[sol_TL, sol_A_AR, sol_MED, sol_LAT]; // sniper team
-BWGroup_AA = 		[sol_SL, sol_A_AA, sol_MED, sol_A_AA, sol_R_L, sol_A_AA]; // spec opcs
+BWGroup_AA = 		[sol_SL, sol_AA, sol_MED, sol_AA, sol_R_L, sol_AA]; // spec opcs
 BWGroup_WeapSquad = 		[sol_SL, sol_AR, sol_A_AR, sol_MK, sol_SP, sol_MED, sol_GL, sol_LAT]; // squad
 BWGroup_SniperTeam = 	[sol_SL, sol_MK, sol_MK, sol_MED];
 
@@ -126,7 +126,7 @@ if (AS_customGroups) then {
 
 // Statics to be used
 statMG = 			"UK3CB_BAF_Static_L7A2_Deployed_High_DPMT";
-statAT = 			"RHS_TOW_TriPod_WD"; // alternatives: rhs_Kornet_9M133_2_vdv, rhs_SPG9M_VDV, rhs_Metis_9k115_2_vdv
+statAT = 			"CUP_B_TOW_TriPod_US"; // alternatives: rhs_Kornet_9M133_2_vdv, rhs_SPG9M_VDV, rhs_Metis_9k115_2_vdv
 statAA = 			"RHS_Stinger_AA_pod_WD"; // alternatively: "rhs_Igla_AA_pod_vdv"
 statAA2 = 			"RHS_Stinger_AA_pod_WD";
 statMortar = 		"UK3CB_BAF_Static_L16_Deployed_DPMT";

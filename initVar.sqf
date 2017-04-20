@@ -8,7 +8,7 @@ private ["_allVehicles","_vehicle"];
 //Don't touch them.
 antistasiVersion = "v 1.7 -- modded";
 
-servidoresOficiales = ["Antistasi Official: Main","Antistasi Official: DLC", "Antistasi Official: USA"];//this is for author's fine tune the official servers. If I get you including your server in this variable, I will create a special variable for your server. Understand?
+servidoresOficiales = ["Antistasi Official: Main","Antistasi Official: Hardcore", "Antistasi Official: USA"];//this is for author's fine tune the official servers. If I get you including your server in this variable, I will create a special variable for your server. Understand?
 
 debug = false;//debug variable, not useful for everything..
 
