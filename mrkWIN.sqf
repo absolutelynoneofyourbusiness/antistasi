@@ -37,6 +37,8 @@ if (!isServer) exitWith {};
 	}
 } forEach ([_size,0,_markerPos,"BLUFORSpawn"] call distanceUnits);
 
+spawner setVariable [_marker,false,true];
+
 [_flag,"remove"] remoteExec ["AS_fnc_addActionMP"];
 _flag setFlagTexture guer_flag_texture;
 
@@ -125,6 +127,8 @@ sleep 15;
 [_marker] remoteExec ["autoGarrison",HCattack];
 
 waitUntil {sleep 3; (({_x distance _markerPos < distanciaSPWN} count (allPlayers - hcArray) == 0) AND ({(alive _x)} count ([_size,0,_markerPos,"OPFORSpawn"] call distanceUnits) == 0)) OR (({!(vehicle _x isKindOf "Air") AND (alive _x) AND (!fleeing _x)} count ([_size,0,_markerPos,"OPFORSpawn"] call distanceUnits)) > 3*({(alive _x)} count ([_size,0,_markerPos,"BLUFORSpawn"] call distanceUnits)))};
+
+diag_log format ["mrkWIN triggered at %1", _marker];
 
 call {
 	// Clear to respawn zone

@@ -83,7 +83,8 @@ if ( _vehicleCount > 0 ) then {
 	_spawnPos = [_markerPos, random (_size / 2),random 360] call BIS_fnc_relPos;
 	_currentCount = 0;
 	while {(spawner getVariable _marker) AND (_currentCount < _vehicleCount)} do {
-		_spawnPos = [_markerPos] call mortarPos;
+		//_spawnPos = [_markerPos] call mortarPos;
+		_spawnPos = _spawnPos findEmptyPosition [1,50,typeOf (vehicle _unit)];
 		_vehicle = statMortar createVehicle _spawnPos;
 		_vehicle enableDynamicSimulation true;
 		[_vehicle] execVM "scripts\UPSMON\MON_artillery_add.sqf";
@@ -181,6 +182,16 @@ while {(spawner getVariable _marker) AND (_currentCount < _vehicleCount)} do {
 
 ([_marker,_allGroups] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
 
+{
+	_group = _x;
+	{
+		if (alive _x) then {
+			[_x] spawn genInitBASES;
+			_allSoldiers pushBackUnique _x;
+		};
+	} forEach units _group;
+} forEach _allGroups;
+
 _observer = objNull;
 if ((random 100 < (((server getVariable "prestigeNATO") + (server getVariable "prestigeCSAT"))/10)) AND (spawner getVariable _marker)) then {
 	_spawnPos = [];
@@ -212,7 +223,7 @@ while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength)
 
 sleep 5;
 
-diag_log "Strength check triggered.";
+diag_log format ["Reduced garrison at %1", _marker];
 if (spawner getVariable _marker) then {
 	garrison setVariable [format ["%1_reduced", _marker],true,true];
 };

@@ -93,6 +93,8 @@ sleep 3;
 	[_x] spawn genVEHinit
 } forEach _allVehicles;
 
+([_marker,_allGroups] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
+
 if !(_marker in destroyedCities) then {
 	if ((daytime > 8) AND (daytime < 18)) then {
 		_group = createGroup civilian;
@@ -109,8 +111,6 @@ if !(_marker in destroyedCities) then {
 };
 
 // Dynamic Simulation
-([_marker,_allGroups] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
-
 sleep 10;
 {
 	_x enableDynamicSimulation true;
@@ -126,7 +126,7 @@ while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength)
 
 sleep 5;
 
-diag_log "Strength check triggered.";
+diag_log format ["Reduced garrison at %1", _marker];
 if (spawner getVariable _marker) then {
 	garrison setVariable [format ["%1_reduced", _marker],true,true];
 };

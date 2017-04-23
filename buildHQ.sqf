@@ -50,7 +50,7 @@ _pos = [getPos fuego, 3, _rnd] call BIS_Fnc_relPos;
 cajaVeh setPos _pos;
 if (_movido) then {[] call vaciar};
 placementDone = true; publicVariable "placementDone";
-[] spawn fn_setupZones;
+[] remoteExec ["AS_fnc_setupZones",2];
 sleep 5;
 [[Petros,"mission"],"AS_fnc_addActionMP"] call BIS_fnc_MP;
 //[] remoteExec ["petrosAnimation", 2];

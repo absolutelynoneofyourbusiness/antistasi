@@ -42,6 +42,7 @@ _groupPOW = createGroup side_blue;
 for "_i" from 0 to _count do
 	{
 	_unit = _groupPOW createUnit [guer_POW, (_housePositions select _i), [], 0, "NONE"];
+	_unit triggerDynamicSimulation false;
 	_unit allowDamage false;
 	_unit setCaptive true;
 	_unit disableAI "MOVE";
@@ -56,6 +57,8 @@ for "_i" from 0 to _count do
 	_POWS pushBack _unit;
 	[_unit,"prisionero"] remoteExec ["AS_fnc_addActionMP"];
 };
+
+_groupPOW enableDynamicSimulation true;
 
 sleep 5;
 

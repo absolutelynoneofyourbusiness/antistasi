@@ -120,7 +120,7 @@ if (visiblemap) then {
 posHQ = getMarkerPos guer_respawn; publicVariable "posHQ";
 server setVariable ["posHQ", getMarkerPos guer_respawn, true];
 
-[] spawn fn_setupZones;
+[] remoteExec ["AS_fnc_setupZones",2];
 
 if (isNil "placementDone") then {
 	placementDone = true;

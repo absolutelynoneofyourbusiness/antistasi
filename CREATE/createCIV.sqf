@@ -18,7 +18,6 @@ _data = server getVariable _marker;
 _countCiv = _data select 0;
 _countVehicles = _data select 1;
 
-
 if (_marker in destroyedCities) then {
 	_countCiv = _countCiv / 10;
 	_countVehicles = _countVehicles / 10;
@@ -63,6 +62,7 @@ while {(spawner getVariable _marker) AND (_counter < _countCiv)} do {
 					_vehicle setDir _orientation;
 					_allVehicles pushBack _vehicle;
 					[_vehicle] spawn civVEHinit;
+					_vehicle enableDynamicSimulation true;
 				};
 			};
 		};
@@ -82,64 +82,9 @@ if ((random 100 < ((server getVariable ["prestigeNATO",0]) + (server getVariable
 	_allCivilians pushBack _unit;
 };
 
+_group enableDynamicSimulation true;
+
 [leader _group, _marker, "SAFE", "SPAWNED","NOFOLLOW", "NOVEH2","NOSHARE","DoRelax"] execVM "scripts\UPSMON.sqf";
 
-/*_patrolCities = [_marker] call AS_fnc_getNearbyCities;
-
-_counter = 0;
-_patrolCounter = (round (_countCiv / 50)) max 1;
-for "_i" from 1 to _patrolCounter do {
-	while {(spawner getVariable _marker) AND (_counter < (count _patrolCities - 1))} do {
-		_p1 = selectRandom _roads;
-		_road = (_p1 nearRoads 5) select 0;
-		if !(isNil "_road") then {
-			_connectedRoads = roadsConnectedto _road;
-			_p2 = getPos (_connectedRoads select 0);
-			_orientation = [_p1,_p2] call BIS_fnc_DirTo;
-
-			_group = createGroup civilian;
-			_allGroups pushBack _group;
-
-			_vehicleType = selectRandom CIV_vehicles;
-			_vehicle = _vehicleType createVehicle _p1;
-			_vehicle setDir _orientation;
-			_vehicle addEventHandler ["HandleDamage",{if (((_this select 1) find "wheel" != -1) and (_this select 4=="") and (!isPlayer driver (_this select 0))) then {0;} else {(_this select 2);};}];
-			_allVehicles pushBack _vehicle;
-			[_vehicle] spawn AS_fnc_protectVehicle;
-			_civType = selectRandom CIV_units;
-			_unit = _group createUnit [_civType, _p1, [],0, "NONE"];
-			[_unit] spawn CIVinit;
-			_allCivilians pushBack _unit;
-			_unit moveInDriver _vehicle;
-			_group addVehicle _vehicle;
-			_group setBehaviour "CARELESS";
-
-			_wp_civ_1 = _group addWaypoint [getMarkerPos (_patrolCities select _counter),0];
-			_wp_civ_1 setWaypointType "MOVE";
-			_wp_civ_1 setWaypointSpeed "LIMITED";
-			_wp_civ_1 setWaypointTimeout [30, 45, 60];
-			_wp_civ_1 = _group addWaypoint [_markerPos,1];
-			_wp_civ_1 setWaypointType "MOVE";
-			_wp_civ_1 setWaypointTimeout [30, 45, 60];
-			_wp_civ_2 = _group addWaypoint [_markerPos,0];
-			_wp_civ_2 setWaypointType "CYCLE";
-			_wp_civ_2 synchronizeWaypoint [_wp_civ_1];
-		};
-		_counter = _counter + 1;
-		sleep 5;
-	};
-};*/
-
-{
-	_x enableDynamicSimulation true;
-	[_x] spawn civVEHinit;
-} forEach _allVehicles;
-
-sleep 10;
-{
-	_x enableDynamicSimulation true;
-} forEach _allGroups;
-
-waitUntil {sleep 1; !(spawner getVariable _marker)};
-
+waitUntil {sleep 3; !(spawner getVariable _marker)};
 [_allGroups, _allCivilians, _allVehicles] spawn AS_fnc_despawnUnits;

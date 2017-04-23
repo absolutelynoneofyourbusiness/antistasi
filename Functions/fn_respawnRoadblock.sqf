@@ -9,9 +9,14 @@ _respawnTime = dateToNumber _respawnTime;
 
 waitUntil {sleep 60; (dateToNumber date > _respawnTime)};
 _nearestLocation = [marcadores,_markerPos] call BIS_fnc_nearestPosition;
+
 if (_nearestLocation in mrkAAF) then {
 	mrkAAF = mrkAAF + [_marker];
 	mrkFIA = mrkFIA - [_marker];
 	publicVariable "mrkAAF";
 	publicVariable "mrkFIA";
+
+	waitUntil {sleep 3; !([distanciaSPWN,1,_markerPos,"BLUFORSpawn"] call distanceUnits)};
+
+	[_marker] call AS_fnc_respawnZone;
 };

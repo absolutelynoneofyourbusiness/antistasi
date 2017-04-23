@@ -1,5 +1,5 @@
 private ["_hr","_resourcesFIA","_tipo","_coste","_marcador","_garrison","_posicion","_unit","_grupo","_veh","_pos","_salir"];
-
+//todo adjust for dynamicSimulation -- (spawner getVariable [format ["%1_respawning", _marker],false])
 _hr = server getVariable "hr";
 
 if (_hr < 1) exitWith {hint "You lack of HR to make a new recruitment"};
@@ -33,8 +33,10 @@ _garrison = _garrison + [_tipo];
 garrison setVariable [_marcador,_garrison,true];
 [_marcador] call AS_fnc_markerUpdate;
 hint format ["Soldier recruited.%1",[_marcador] call AS_fnc_getGarrisonInfo];
+spawner setVariable [format ["%1_respawning", _marcador],true,true];
+spawner setVariable [_marcador,false,true];
 
-if (spawner getVariable _marcador) then
+/*if (spawner getVariable _marcador) then
 	{
 	closeMarkersUpdating = 10;
 	_forzado = false;
@@ -54,4 +56,4 @@ if (spawner getVariable _marcador) then
 		closeMarkersUpdating = 0;
 		};
 	if (_forzado) then {forcedSpawn pushBackUnique _marcador; publicVariable "forcedSpawn"};
-	};
+	};*/

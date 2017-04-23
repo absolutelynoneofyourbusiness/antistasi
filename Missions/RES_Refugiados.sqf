@@ -44,6 +44,8 @@ for "_i" from 1 to (_count - 1) do {
 	[_unit,"refugiado"] remoteExec ["AS_fnc_addActionMP"];
 };
 
+_groupPOW enableDynamicSimulation true;
+
 sleep 5;
 
 {_x allowDamage true} forEach _POWs;

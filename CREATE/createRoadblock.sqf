@@ -91,36 +91,71 @@ if (random 10 < 2.5) then {
 {[_x] spawn genInitBASES; _allSoldiers pushBack _x} forEach units _group;
 _allGroups pushBack _group;
 
-([_marker,_allGroups] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
-
 {
 	[_x] spawn genVEHinit;
 } forEach _allVehicles;
 
+([_marker,_allGroups] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
+
+// Dynamic Simulation
 sleep 10;
 {
 	_x enableDynamicSimulation true;
 } forEach _allGroups;
 
-waitUntil {sleep 1; !(spawner getVariable _marker) or (count (allUnits select {((side _x == side_green) or (side _x == side_red)) and (_x distance _markerPos <= (_size max 200)) AND !(captive _x)}) <= _reinfStrength)};
 
-diag_log "Strength check triggered.";
-//_marker remoteExec ["INT_Replenishment", HCattack];
+while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength) AND (spawner getVariable _marker)} do {
+	while {(count ((_markerPos nearEntities ["Man", 1500]) select {side _x == side_blue}) < 1) AND (spawner getVariable _marker)} do {
+		sleep 10;
+	};
 
-
-waitUntil {sleep 1; !(spawner getVariable _marker) or (count (allUnits select {((side _x == side_green) or (side _x == side_red)) and (_x distance _markerPos <= _size) AND !(captive _x)}) < 1)};
-
-if (count (allUnits select {((side _x == side_green) or (side _x == side_red)) and (_x distance _markerPos <= _size)}) < 1) then {
-	[-5,0,_markerPos] remoteExec ["AS_fnc_changeCitySupport",2];
-	[["TaskSucceeded", ["", localize "STR_TSK_RB_DESTROYED"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
-	[_markerPos] remoteExec ["patrolCA",HCattack];
-	mrkAAF = mrkAAF - [_marker];
-	mrkFIA = mrkFIA + [_marker];
-	publicVariable "mrkAAF";
-	publicVariable "mrkFIA";
-	if (activeBE) then {["cl_loc"] remoteExec ["fnc_BE_XP", 2]};
-	[_marker] spawn AS_fnc_respawnRoadblock;
+	sleep 5;
 };
 
-waitUntil {sleep 1; !(spawner getVariable _marker)};
-[_allGroups, _allSoldiers, _allVehicles] spawn AS_fnc_despawnUnits;
+sleep 5;
+
+diag_log format ["Reduced garrison at %1", _marker];
+if (spawner getVariable _marker) then {
+	garrison setVariable [format ["%1_reduced", _marker],true,true];
+};
+
+//_marker remoteExec ["INT_Replenishment", HCattack];
+
+waitUntil {sleep 3; !(spawner getVariable _marker) OR (count (_allSoldiers select {alive _x AND !captive _x}) < 1) OR !(garrison getVariable [format ["%1_reduced", _marker],false])};
+
+call {
+	// Garrison was overwhelmed
+	if (count (_allSoldiers select {alive _x AND !captive _x}) < 1) exitWith {
+		[-5,0,_markerPos] remoteExec ["AS_fnc_changeCitySupport",2];
+		[["TaskSucceeded", ["", localize "STR_TSK_RB_DESTROYED"]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
+		[_markerPos] remoteExec ["patrolCA",HCattack];
+		mrkAAF = mrkAAF - [_marker];
+		mrkFIA = mrkFIA + [_marker];
+		publicVariable "mrkAAF";
+		publicVariable "mrkFIA";
+		if (activeBE) then {["cl_loc"] remoteExec ["fnc_BE_XP", 2]};
+		[_marker] spawn AS_fnc_respawnRoadblock;
+	};
+
+	// Zone was despawned
+	if !(spawner getVariable _marker) exitWith {
+
+	};
+
+	// Garrison was replenished
+	if !(garrison getVariable [format ["%1_reduced", _marker],false]) exitWith {
+		spawer setVariable [format ["%1_respawning", _marker],true,true];
+	};
+};
+
+spawner setVariable [_marker,false,true];
+waitUntil {sleep 3; !([distanciaSPWN,1,_markerPos,"BLUFORSpawn"] call distanceUnits)};
+
+[_allGroups, _allSoldiers, _allVehicles + (_markerPos nearObjects ["Box_IND_Wps_F", (_size max 200)])] spawn AS_fnc_despawnUnits;
+
+if (spawner getVariable [format ["%1_respawning", _marker],false]) then {
+	sleep 15;
+	waitUntil {sleep 3; !([distanciaSPWN,1,_markerPos,"BLUFORSpawn"] call distanceUnits)};
+
+	[_marker] call AS_fnc_respawnZone;
+};

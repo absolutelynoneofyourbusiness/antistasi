@@ -5,15 +5,16 @@ spawner setVariable [format ["%1_respawning", _marker],nil,true];
 
 if (_marker in mrkFIA) then {
 	call {
-		if (_marker in ciudades) then {[_marker] remoteExec ["createCity",HCGarrisons]};
+		if (_marker in ciudades) then {[_marker] remoteExec ["createCity",HCGarrisons];[_marker] remoteExec ["createCIV",HCciviles];};
 		if ((_marker in recursos) OR (_marker in fabricas)) exitWith {[_marker] remoteExec ["createFIArecursos",HCGarrisons]};
-		if ((_marker in power) OR (_marker == "FIA_HQ")) exitWith {[_marker] remoteExec ["createFIApower",HCGarrisons]};
+		if (_marker in power) exitWith {[_marker] remoteExec ["createFIApower",HCGarrisons]};
 		if (_marker in aeropuertos) exitWith {[_marker] remoteExec ["createNATOaerop",HCGarrisons]};
 		if (_marker in bases) exitWith {[_marker] remoteExec ["createNATObases",HCGarrisons]};
 		if (_marker in puestosFIA) exitWith {[_marker] remoteExec ["createFIAEmplacement",HCGarrisons]};
 		if ((_marker in puestos) OR (_marker in puertos)) exitWith {[_marker] remoteExec ["createFIAOutpost",HCGarrisons]};
 		if (_marker in campsFIA) exitWith {[_marker] remoteExec ["createCampFIA",HCGarrisons]};
 		if (_marker in puestosNATO) exitWith {[_marker] remoteExec ["createNATOpuesto",HCGarrisons]};
+		if (_marker == "FIA_HQ") exitWith {[_marker] remoteExec ["createFIAHQ",HCGarrisons]};
 	};
 } else {
 	call {

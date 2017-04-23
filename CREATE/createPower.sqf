@@ -1,7 +1,7 @@
 if (!isServer and hasInterface) exitWith {};
 
 params ["_marker"];
-private ["_markerPos","_size","_isFrontline","_reduced","_allVehicles","_allGroups","_allSoldiers","_workers","_patrolMarker","_currentStrength","_spawnPos","_groupType","_group","_dog","_flag","_truck","_maxStrength","_patrolParams","_observer","_unit"];
+private ["_markerPos","_size","_isFrontline","_allVehicles","_allGroups","_allSoldiers","_workers","_patrolMarker","_currentStrength","_spawnPos","_groupType","_group","_dog","_flag","_truck","_maxStrength","_patrolParams","_observer","_unit"];
 
 _allVehicles = [];
 _allGroups = [];
@@ -10,7 +10,6 @@ _allSoldiers = [];
 _markerPos = getMarkerPos (_marker);
 _size = [_marker] call sizeMarker;
 _isFrontline = [_marker] call AS_fnc_isFrontline;
-_reduced = [false, true] select (_marker in reducedGarrisons);
 _patrolMarker = [_marker] call AS_fnc_createPatrolMarker;
 
 _workers = [];
@@ -23,7 +22,6 @@ while {(spawner getVariable _marker) AND (_currentStrength < 2)} do {
 	};
 	_groupType = [infPatrol, side_green] call AS_fnc_pickGroup;
 	_group = [_spawnPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
-	if (_reduced) then {[_group] call AS_fnc_adjustGroupSize};
 	sleep 1;
 	if (random 10 < 2.5) then {
 		_dog = _group createUnit ["Fin_random_F",_spawnPos,[],0,"FORM"];
@@ -54,7 +52,6 @@ while {(spawner getVariable _marker) AND (_currentStrength < _maxStrength)} do {
 	if ((diag_fps > minimoFPS) OR (_currentStrength == 0)) then {
 		_groupType = [infTeam, side_green] call AS_fnc_pickGroup;
 		_group = [_markerPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
-		if (_reduced) then {[_group] call AS_fnc_adjustGroupSize};
 		_patrolParams = [leader _group, _marker, "SAFE","SPAWNED","NOVEH2","NOFOLLOW"];
 		if (_currentStrength == 0) then {_patrolParams pushBack "FORTIFY"};
 		_patrolParams execVM "scripts\UPSMON.sqf";
@@ -81,7 +78,6 @@ sleep 3;
 
 {
 	_group = _x;
-	if (_reduced) then {[_group] call AS_fnc_adjustGroupSize};
 	{
 		if (alive _x) then {
 			[_x] spawn genInitBASES;
@@ -95,6 +91,7 @@ sleep 3;
 	[_x] spawn genVEHinit;
 } forEach _allVehicles;
 
+([_marker,_allGroups] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
 
 if !(_marker in destroyedCities) then {
 	if ((daytime > 8) AND (daytime < 18)) then {
@@ -111,19 +108,58 @@ if !(_marker in destroyedCities) then {
 	};
 };
 
+// Dynamic Simulation
 sleep 10;
 {
 	_x enableDynamicSimulation true;
 } forEach _allGroups;
 
-waitUntil {sleep 1; !(spawner getVariable _marker) OR (({!(vehicle _x isKindOf "Air")} count ([_size,0,_markerPos,"BLUFORSpawn"] call distanceUnits)) > 3*count (allUnits select {((side _x == side_green) OR (side _x == side_red)) AND (_x distance _markerPos <= (_size max 200)) AND !(captive _x)}))};
+while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength) AND (spawner getVariable _marker)} do {
+	while {(count ((_markerPos nearEntities ["Man", 1500]) select {side _x == side_blue}) < 1) AND (spawner getVariable _marker)} do {
+		sleep 10;
+	};
 
-if ((spawner getVariable _marker) AND !(_marker in mrkFIA)) then {
-	[_flag] remoteExec ["mrkWIN",2];
+	sleep 5;
 };
 
-waitUntil {sleep 1; !(spawner getVariable _marker)};
+sleep 5;
+
+diag_log format ["Reduced garrison at %1", _marker];
+if (spawner getVariable _marker) then {
+	garrison setVariable [format ["%1_reduced", _marker],true,true];
+};
+
+//_marker remoteExec ["INT_Replenishment", HCattack];
+
+waitUntil {sleep 3; !(spawner getVariable _marker) OR ((count ((_markerPos nearEntities ["Man", (_size max 200)]) select {side _x == side_blue})) > (3*count (_allSoldiers select {alive _x AND !captive _x}))) OR !(garrison getVariable [format ["%1_reduced", _marker],false])};
+
+call {
+	// Garrison was overwhelmed
+	if ((spawner getVariable _marker) AND !(_marker in mrkFIA)) exitWith {
+		[_flag] remoteExec ["mrkWIN",2];
+	};
+
+	// Zone was despawned
+	if !(spawner getVariable _marker) exitWith {
+
+	};
+
+	// Garrison was replenished
+	if !(garrison getVariable [format ["%1_reduced", _marker],false]) exitWith {
+		spawer setVariable [format ["%1_respawning", _marker],true,true];
+	};
+};
+
+spawner setVariable [_marker,false,true];
+waitUntil {sleep 3; !([distanciaSPWN,1,_markerPos,"BLUFORSpawn"] call distanceUnits)};
 
 deleteMarker _patrolMarker;
-[_allGroups, _allSoldiers + _workers, _allVehicles] spawn AS_fnc_despawnUnits;
+[_allGroups, _allSoldiers + _workers, _allVehicles + (_markerPos nearObjects ["Box_IND_Wps_F", (_size max 200)])] spawn AS_fnc_despawnUnits;
 if (!isNull _observer) then {deleteVehicle _observer};
+
+if (spawner getVariable [format ["%1_respawning", _marker],false]) then {
+	sleep 15;
+	waitUntil {sleep 3; !([distanciaSPWN,1,_markerPos,"BLUFORSpawn"] call distanceUnits)};
+
+	[_marker] call AS_fnc_respawnZone;
+};

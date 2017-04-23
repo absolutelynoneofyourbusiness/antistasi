@@ -3,6 +3,7 @@ private ["_unit","_EHkilledIdx"];
 
 _unit setSkill 0;
 _unit setSpeedMode "LIMITED";
+_unit triggerDynamicSimulation false;
 
 _EHkilledIdx = _unit addEventHandler ["killed", {
 	params ["_victim","_killer"];

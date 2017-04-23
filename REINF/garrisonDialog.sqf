@@ -2,7 +2,7 @@ private ["_tipo","_posicionTel","_cercano","_garrison","_coste","_hr","_size"];
 _tipo = _this select 0;
 
 if (_tipo == "add") then {hint "Select a zone to add garrisoned troops"} else {hint "Select a zone to remove it's Garrison"};
-
+//todo adjust for dynamicSimulation -- (spawner getVariable [format ["%1_respawning", _marker],false])
 openMap true;
 posicionTel = [];
 

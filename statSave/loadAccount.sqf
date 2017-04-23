@@ -6,9 +6,6 @@ if (isServer) then {
 };
 
 if (!isDedicated) then {
-	/*{player removeMagazine _x} forEach magazines player;
-	{player removeWeaponGlobal _x} forEach weapons player;
-	removeBackpackGlobal player;*/
 	if ("ItemGPS" in (assignedItems player)) then {player unlinkItem "ItemGPS"};
 	if ((!activeTFAR) AND ("ItemRadio" in (assignedItems player))) then {player unlinkItem "ItemRadio"};
 
@@ -258,6 +255,10 @@ if !(activeJNA) then {
 ASA3_saveLoaded = true;
 placementDone = true; publicVariable 'placementDone';
 diag_log "Antistasi: Server sided Persistent Load done";
+
+[] remoteExec ["AS_fnc_setupZones",2];
+
+sleep 120;
 
 sleep 25;
 ["tasks"] call fn_loadData;

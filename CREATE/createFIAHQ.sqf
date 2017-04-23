@@ -3,22 +3,16 @@ if (!isServer and hasInterface) exitWith {};
 params ["_marker"];
 private ["_allVehicles","_allGroups","_allSoldiers","_workers","_markerPos","_flag","_size","_group","_unit","_garrison","_statics","_strength","_counter","_gunnerGroup","_unitType","_spawnPos","_vehicle","_static","_observer"];
 
-_workers = [];
-_allSoldiers = [];
-_allGroups = [];
+#define _size 50
+
 _allVehicles = [];
+_allGroups = [];
+_allSoldiers = [];
 
 _markerPos = getMarkerPos (_marker);
-_size = [_marker] call sizeMarker;
+_size = 50;
 
-_statics = staticsToSave select {_x distance _markerPos < (_size max 50)};
-
-_flag = createVehicle [guer_flag, _markerPos, [],0, "CAN_COLLIDE"];
-_flag allowDamage false;
-_allVehicles pushBack _flag;
-[_flag,"unit"] remoteExec ["AS_fnc_addActionMP"];
-[_flag,"vehicle"] remoteExec ["AS_fnc_addActionMP"];
-[_flag,"garage"] remoteExec ["AS_fnc_addActionMP"];
+_statics = staticsToSave select {_x distance _markerPos < _size};
 
 _gunnerGroup = createGroup side_blue;
 _allGroups pushBack _gunnerGroup;
@@ -74,6 +68,7 @@ while {(spawner getVariable _marker) AND (_counter < _strength)} do {
 
 for "_i" from 0 to (count _allGroups) - 1 do {
 	_group = _allGroups select _i;
+	_group enableDynamicSimulation true;
 	if (_i == 0) then {
 		[leader _group, _marker, "SAFE","SPAWNED","RANDOMUP","NOVEH2","NOFOLLOW"] execVM "scripts\UPSMON.sqf";
 	} else {
@@ -93,20 +88,6 @@ for "_i" from 0 to (count _allGroups) - 1 do {
 	} forEach units _group;
 } forEach _allGroups;
 
-if !(_marker in destroyedCities) then {
-	if ((daytime > 8) AND (daytime < 18)) then {
-		_group = createGroup civilian;
-		_allGroups pushBack _group;
-		for "_i" from 1 to 8 do {
-			_unit = _group createUnit [selectRandom CIV_workers, _markerPos, [],0, "NONE"];
-			[_unit] spawn CIVinit;
-			_workers pushBack _unit;
-			sleep 0.5;
-		};
-		[_marker,_workers] spawn destroyCheck;
-		[leader _group, _marker, "SAFE", "SPAWNED","NOFOLLOW", "NOSHARE","DORELAX","NOVEH2"] execVM "scripts\UPSMON.sqf";
-	};
-};
 
 _observer = objNull;
 if ((random 100 < (((server getVariable "prestigeNATO") + (server getVariable "prestigeCSAT"))/10)) AND (spawner getVariable _marker)) then {
@@ -122,54 +103,25 @@ if ((random 100 < (((server getVariable "prestigeNATO") + (server getVariable "p
 	[_observer, _marker, "SAFE", "SPAWNED","NOFOLLOW", "NOVEH2","NOSHARE","DoRelax"] execVM "scripts\UPSMON.sqf";
 };
 
-// Dynamic Simulation
-sleep 10;
-{
-	_x enableDynamicSimulation true;
-} forEach (_allGroups + _workers);
+waitUntil {sleep 3; !(spawner getVariable _marker) OR (spawner getVariable [format ["%1_respawning", _marker],false])};
 
-while {(count (_allSoldiers select {alive _x AND !captive _x}) > 0) AND (spawner getVariable _marker)} do {
-	while {(count ((_markerPos nearEntities ["Man", 1000]) select {_x getVariable ["OPFORSpawn",true]}) < 1) AND (spawner getVariable _marker)} do {
-		sleep 10;
-	};
-
-	sleep 5;
-};
-
-sleep 5;
-
-waitUntil {sleep 3; !(spawner getVariable _marker) OR ((count ((_markerPos nearEntities ["Man", (_size max 200)]) select {_x getVariable ["OPFORSpawn",true]})) > (3*count (_allSoldiers select {alive _x AND !captive _x})))};
-
-call {
-	// Garrison was overwhelmed
-	if ((count ((_markerPos nearEntities ["Man", (_size max 200)]) select {_x getVariable ["OPFORSpawn",true]})) > (3*count (_allSoldiers select {alive _x AND !captive _x}))) exitWith {
-		[_marker] remoteExec ["mrkLOOSE",2];
-	};
-
-	// Zone was despawned or modified
-	if !(spawner getVariable _marker) exitWith {
-
-	};
-};
-
-spawner setVariable [_marker,false,true];
+diag_log "Respawning HQ";
 
 if (spawner getVariable [format ["%1_respawning", _marker],false]) exitWith {
 	sleep 1;
 
 	{
 		deleteVehicle _x;
-	} forEach (_allSoldiers + _workers + _allVehicles + (_markerPos nearObjects ["Box_IND_Wps_F", (_size max 200)]));
+	} forEach _allSoldiers;
 	{
 		_x deleteGroupWhenEmpty true;
 	} forEach _allGroups;
-	if (!isNull _observer) then {deleteVehicle _observer};
 
 	sleep 2;
 	[_marker] call AS_fnc_respawnZone;
 };
 
-waitUntil {sleep 3; !([distanciaSPWN,1,_markerPos,"BLUFORSpawn"] call distanceUnits)};
+waitUntil {sleep 1; !(spawner getVariable _marker)};
 
-[_allGroups, _allSoldiers + _workers, _allVehicles + (_markerPos nearObjects ["Box_IND_Wps_F", (_size max 200)])] spawn AS_fnc_despawnUnits;
-if (!isNull _observer) then {deleteVehicle _observer};
+[_allGroups, _allSoldiers, _allVehicles] spawn AS_fnc_despawnUnits;
+if !(isNull _observer) then {deleteVehicle _observer};

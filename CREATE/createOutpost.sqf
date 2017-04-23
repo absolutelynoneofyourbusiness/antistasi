@@ -1,7 +1,7 @@
 if (!isServer and hasInterface) exitWith {};
 
 params ["_marker"];
-private ["_allVehicles","_allGroups","_allSoldiers","_markerPos","_position","_size","_reduced","_buildings","_groupGunners","_building","_type","_vehicle","_unit","_flag","_crate","_isFrontline","_vehicleData","_vehCrew","_base","_roads","_data","_strength","_currentStrength","_groupType","_group","_patrolParams","_observer","_radioTower"];
+private ["_allVehicles","_allGroups","_allSoldiers","_markerPos","_position","_size","_buildings","_groupGunners","_building","_type","_vehicle","_unit","_flag","_crate","_isFrontline","_vehicleData","_vehCrew","_base","_roads","_data","_strength","_currentStrength","_groupType","_group","_patrolParams","_observer","_radioTower"];
 
 _allVehicles = [];
 _allGroups = [];
@@ -10,7 +10,6 @@ _allSoldiers = [];
 _markerPos = getMarkerPos (_marker);
 _size = [_marker] call sizeMarker;
 _isFrontline = [_marker] call AS_fnc_isFrontline;
-_reduced = [false, true] select (_marker in reducedGarrisons);
 
 _buildings = nearestObjects [_markerPos, listMilBld, _size*1.5];
 
@@ -51,7 +50,7 @@ for "_i" from 0 to (count _buildings) - 1 do {
 			_vehicle enableDynamicSimulation true;
 			_unit = ([_markerPos, 0, infGunner, _groupGunners] call bis_fnc_spawnvehicle) select 0;
 			_unit moveInGunner _vehicle;
-			_allSoldiers = _allSoldiers + [_unit];
+			_allSoldiers pushBack _unit;
 			sleep 1;
 			_allVehicles = _allVehicles + [_vehicle];
 			_vehicle = createVehicle [statMGtower, (_building buildingPos 17), [], 0, "CAN_COLLIDE"];
@@ -98,10 +97,6 @@ if (_marker in puertos) then {
 	_pWP1 setWaypointBehaviour "AWARE";
 	_pWP1 setWaypointSpeed "LIMITED";
 
-	{
-		[_x] spawn genInitBASES;
-		_allSoldiers pushBack _x;
-	} forEach _vehCrew;
 	_allGroups pushBack _groupVehicle;
 	_allVehicles pushBack _vehicle;
 	sleep 1;
@@ -201,7 +196,6 @@ sleep 3;
 
 {
 	_group = _x;
-	if (_reduced) then {[_group] call AS_fnc_adjustGroupSize};
 	{
 		if (alive _x) then {
 			[_x] spawn genInitBASES;
@@ -209,6 +203,8 @@ sleep 3;
 		};
 	} forEach units _group;
 } forEach _allGroups;
+
+([_marker,_allGroups] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
 
 _observer = objNull;
 if ((random 100 < (((server getVariable "prestigeNATO") + (server getVariable "prestigeCSAT"))/10)) AND (spawner getVariable _marker)) then {
@@ -229,25 +225,57 @@ if ((random 100 < (((server getVariable "prestigeNATO") + (server getVariable "p
 	[_x] spawn genVEHinit;
 } forEach _allVehicles;
 
+// Dynamic Simulation
 sleep 10;
 {
 	_x enableDynamicSimulation true;
 } forEach _allGroups;
 
-waitUntil {sleep 1; !(spawner getVariable _marker) OR (({!(vehicle _x isKindOf "Air")} count ([_size,0,_markerPos,"BLUFORSpawn"] call distanceUnits)) > 3*count (allUnits select {((side _x == side_green) OR (side _x == side_red)) AND (_x distance _markerPos <= (_size max 200)) AND !(captive _x)}))};
+while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength) AND (spawner getVariable _marker)} do {
+	while {(count ((_markerPos nearEntities ["Man", 1500]) select {side _x == side_blue}) < 1) AND (spawner getVariable _marker)} do {
+		sleep 10;
+	};
 
-if ((spawner getVariable _marker) AND !(_marker in mrkFIA)) then {
-	[_flag] remoteExec ["mrkWIN",2];
+	sleep 5;
 };
 
-waitUntil {sleep 1; !(spawner getVariable _marker)};
+sleep 5;
 
-{
-	if ((!alive _x) AND !(_x in destroyedBuildings)) then {
-		destroyedBuildings = destroyedBuildings + [position _x];
-		publicVariableServer "destroyedBuildings";
+diag_log format ["Reduced garrison at %1", _marker];
+if (spawner getVariable _marker) then {
+	garrison setVariable [format ["%1_reduced", _marker],true,true];
+};
+
+//_marker remoteExec ["INT_Replenishment", HCattack];
+
+waitUntil {sleep 3; !(spawner getVariable _marker) OR ((count ((_markerPos nearEntities ["Man", (_size max 200)]) select {side _x == side_blue})) > (3*count (_allSoldiers select {alive _x AND !captive _x}))) OR !(garrison getVariable [format ["%1_reduced", _marker],false])};
+
+call {
+	// Garrison was overwhelmed
+	if ((spawner getVariable _marker) AND !(_marker in mrkFIA)) exitWith {
+		[_flag] remoteExec ["mrkWIN",2];
 	};
-} forEach _buildings;
 
-[_allGroups, _allSoldiers, _allVehicles] spawn AS_fnc_despawnUnits;
-if !(isNull _observer) then {deleteVehicle _observer};
+	// Zone was despawned
+	if !(spawner getVariable _marker) exitWith {
+
+	};
+
+	// Garrison was replenished
+	if !(garrison getVariable [format ["%1_reduced", _marker],false]) exitWith {
+		spawer setVariable [format ["%1_respawning", _marker],true,true];
+	};
+};
+
+spawner setVariable [_marker,false,true];
+waitUntil {sleep 3; !([distanciaSPWN,1,_markerPos,"BLUFORSpawn"] call distanceUnits)};
+
+[_allGroups, _allSoldiers, _allVehicles + (_markerPos nearObjects ["Box_IND_Wps_F", (_size max 200)])] spawn AS_fnc_despawnUnits;
+if (!isNull _observer) then {deleteVehicle _observer};
+
+if (spawner getVariable [format ["%1_respawning", _marker],false]) then {
+	sleep 15;
+	waitUntil {sleep 3; !([distanciaSPWN,1,_markerPos,"BLUFORSpawn"] call distanceUnits)};
+
+	[_marker] call AS_fnc_respawnZone;
+};

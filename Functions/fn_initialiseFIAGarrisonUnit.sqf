@@ -3,6 +3,7 @@ private ["_skill","_skillFIA","_aiming","_spotD","_spotT","_cour","_comm","_aimi
 
 if !(_marker == "") then {_unit setVariable ["marcador", _marker]};
 [_unit] call initRevive;
+_unit triggerDynamicSimulation false;
 
 _skillFIA = server getVariable ["skillFIA", 1];
 

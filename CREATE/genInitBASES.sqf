@@ -2,6 +2,7 @@ params ["_unit"];
 private ["_skill","_aiming","_spotD","_spotT","_cour","_comm","_aimingSh","_aimingSp","_reload","_skillSet","_unitType","_resourcesAAF"];
 
 if (typeOf _unit == "Fin_random_F") exitWith {};
+_unit triggerDynamicSimulation false;
 
 _skill = (0.2 + (skillAAF * 0.025));
 _unit setSkill _skill;

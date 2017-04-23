@@ -112,6 +112,6 @@ call {
 
 	// Zone lost
 	if (({!(vehicle _x isKindOf "Air") AND (alive _x) AND (!fleeing _x)} count ([_size,0,_markerPos,"BLUFORSpawn"] call distanceUnits)) > 3*({(alive _x)} count ([_size,0,_markerPos,"OPFORSpawn"] call distanceUnits))) then {
-		[_marker] spawn mrkWIN;
+		[_flag] spawn mrkWIN;
 	};
 };

@@ -69,11 +69,10 @@ HCciviles = 2;
 HCgarrisons = 2;
 HCattack = 2;
 if (count hcArray > 0) then {
-    HCciviles = hcArray select 0;
     HCattack = hcArray select 0;
     diag_log "Antistasi MP Server. Headless Client 1 detected";
     if (count hcArray > 1) then {
-        HCattack = hcArray select 1;
+        HCciviles = hcArray select 1;
         diag_log "Antistasi MP Server. Headless Client 2 detected";
         if (count hcArray > 2) then {
             HCgarrisons = hcArray select 2;

@@ -4,6 +4,13 @@ if (settingUpZones) exitWith {};
 settingUpZones = true;
 allZonesSetup = false;
 
+spawnDistanceOne = 1500;
+spawnDistanceTwo = 3000;
+spawnDistanceThree = 4500;
+spawnDistanceFour = 6000;
+spawnDistancePlayer = 2000;
+frontierDistance = 9000;
+
 frontierZones = [];
 spawnedZones = [];
 tempSpawnedZones = [];

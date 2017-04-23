@@ -2,14 +2,9 @@ if !(isServer) exitWith {};
 
 private ["_blueUnits", "_opforUnits", "_marker", "_markerPos","_lastPosHQ"];
 
-spawnDistanceOne = 1500;
-spawnDistanceTwo = 3000;
-spawnDistanceThree = 4500;
-spawnDistanceFour = 6000;
-spawnDistancePlayer = 2000;
-frontierDistance = 9000;
-
-"Group" setDynamicSimulationDistance 600;
+"Group" setDynamicSimulationDistance distanciaSPWN;
+"Vehicle" setDynamicSimulationDistance distanciaSPWN;
+"IsMoving" setDynamicSimulationDistanceCoef 1;
 
 waitUntil {allZonesSetup};
 

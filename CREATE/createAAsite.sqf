@@ -115,7 +115,8 @@ while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength)
 
 sleep 5;
 
-diag_log "Strength check triggered.";
+diag_log format ["Reduced garrison at %1", _marker];
+
 if (spawner getVariable _marker) then {
 	garrison setVariable [format ["%1_reduced", _marker],true,true];
 };
