@@ -5,50 +5,50 @@ If you wish to add more soldiers beyond the available variables, you also need t
 Note: all classes marked as "extra" do not have a unique class in this template. They are, however, part of other templates and are therfore included in all templates.
 */
 sol_A_AA = 	"CUP_B_BAF_Soldier_AAA_MTP"; // Assistant AA (extra)
-sol_A_AR = 	"UK3CB_BAF_Rifleman_762_MTP_RM"; // Assistant autorifle
-sol_A_AT = 	"UK3CB_BAF_MATC_MTP_RM"; // Assistant AT
+sol_A_AR = 	"UK3CB_BAF_FT_762_MTP"; // Assistant autorifle
+sol_A_AT = 	"UK3CB_BAF_MATC_MTP"; // Assistant AT
 sol_AA = 	"CUP_B_BAF_Soldier_AA_MTP"; // AA
-sol_AR = 	"UK3CB_BAF_MGLMG_MTP_RM"; // Autorifle
-sol_AT = 	"UK3CB_BAF_MATC_MTP_RM"; // AT
-sol_AMMO = 	"UK3CB_BAF_FT_762_MTP_RM"; // Ammo bearer (extra)
-sol_GL = 	"UK3CB_BAF_Grenadier_MTP_RM"; // Grenade launcher
-sol_GL2 = 	"UK3CB_BAF_Grenadier_762_MTP_RM"; // Grenade launcher
-sol_LAT = 	"UK3CB_BAF_LAT_ILAW_MTP_RM"; // Light AT
-sol_LAT2 = 	"UK3CB_BAF_LAT_MTP_RM"; // Light AT
-sol_MG = 	"UK3CB_BAF_MGGPMG_MTP_RM"; // Machinegunner
-sol_MK = 	"UK3CB_BAF_Marksman_MTP_RM"; // Marksman
-sol_SL = 	"UK3CB_BAF_SC_MTP_RM"; // Squad leader
-sol_TL = 	"UK3CB_BAF_FT_MTP_RM"; // Team leader
-sol_TL2 = 	"UK3CB_BAF_RO_MTP_RM"; // Team leader
-sol_EXP = 	"UK3CB_BAF_Explosive_MTP_RM"; // Explosives (extra)
-sol_R_L = 	"UK3CB_BAF_Rifleman_MTP_RM"; // Rifleman, light
-sol_REP = 	"UK3CB_BAF_Repair_MTP_RM"; // Repair (extra)
-sol_UN = 	"UK3CB_BAF_Recruit_MTP_RM_H"; // Unarmed (extra)
-sol_RFL = 	"UK3CB_BAF_Pointman_MTP_RM"; // Rifleman
-sol_SN = 	"UK3CB_BAF_Marksman_MTP_RM_H"; // Sniper
-sol_SP = 	"UK3CB_BAF_Sharpshooter_MTP_RM"; // Spotter
-sol_MED = 	"UK3CB_BAF_Medic_MTP_RM"; // Medic
-sol_ENG = 	"UK3CB_BAF_Engineer_MTP_RM"; // Engineer
-sol_OFF = 	"UK3CB_BAF_Officer_MTP_RM"; // Officer
-sol_OFF2 = 	"UK3CB_BAF_Officer_MTP_RM_H"; // Officer
+sol_AR = 	"UK3CB_BAF_MGGPMG_MTP"; // Autorifle
+sol_AT = 	"UK3CB_BAF_MAT_MTP"; // AT
+sol_AMMO = 	"UK3CB_BAF_LAT_ILAW_762_MTP"; // Ammo bearer (extra)
+sol_GL = 	"UK3CB_BAF_FAC_MTP"; // Grenade launcher
+sol_GL2 = 	"UK3CB_BAF_Grenadier_MTP"; // Grenade launcher
+sol_LAT = 	"UK3CB_BAF_LAT_ILAW_MTP"; // Light AT
+sol_LAT2 = 	"UK3CB_BAF_LAT_MTP"; // Light AT
+sol_MG = 	"UK3CB_BAF_MGLMG_MTP"; // Machinegunner
+sol_MK = 	"UK3CB_BAF_Sharpshooter_MTP"; // Marksman
+sol_SL = 	"UK3CB_BAF_SC_MTP"; // Squad leader
+sol_TL = 	"UK3CB_BAF_FT_MTP"; // Team leader
+sol_TL2 = 	"UK3CB_BAF_RO_MTP"; // Team leader
+sol_EXP = 	"UK3CB_BAF_Explosive_MTP"; // Explosives (extra)
+sol_R_L = 	"UK3CB_BAF_Pointman_MTP"; // Rifleman, light
+sol_REP = 	"UK3CB_BAF_Repair_MTP"; // Repair (extra)
+sol_UN = 	"UK3CB_BAF_Recruit_MTP"; // Unarmed (extra)
+sol_RFL = 	"UK3CB_BAF_Rifleman_MTP"; // Rifleman
+sol_SN = 	"UK3CB_BAF_Marksman_MTP"; // Sniper
+sol_SP = 	"UK3CB_BAF_Sharpshooter_MTP_H"; // Spotter
+sol_MED = 	"UK3CB_BAF_Medic_MTP"; // Medic
+sol_ENG = 	"UK3CB_BAF_Engineer_MTP"; // Engineer
+sol_OFF = 	"UK3CB_BAF_Officer_MTP"; // Officer
+sol_OFF2 = 	"UK3CB_BAF_Officer_MTP_H"; // Officer
 
-sol_CREW = 	"UK3CB_BAF_Crewman_MTP_RM"; // Crew
-sol_CREW2 = "UK3CB_BAF_Crewman_MTP_RM"; // Crew
-sol_CREW3 = "UK3CB_BAF_Crewman_MTP_RM"; // Crew
-sol_CREW4 = "UK3CB_BAF_Crewman_MTP_RM"; // Crew
-sol_DRV = 	"UK3CB_BAF_Crewman_MTP_RM"; // Driver
-sol_DRV2 = 	"UK3CB_BAF_Crewman_MTP_RM"; // Driver
-sol_HCREW = "UK3CB_BAF_HeliPilot_RN"; // Helicopter crew (extra)
-sol_HPIL = 	"UK3CB_BAF_HeliPilot_RN"; // helicopter pilot
-sol_HPIL2 = "UK3CB_BAF_HeliPilot_RN"; // helicopter pilot
-sol_PIL = 	"UK3CB_BAF_HeliPilot_RN"; // Pilot
-sol_UAV = 	"UK3CB_BAF_UAV_MTP"; // UAV controller (extra)
+sol_CREW = 	"UK3CB_BAF_Crewman_MTP"; // Crew
+sol_CREW2 = "UK3CB_BAF_Crewman_MTP"; // Crew
+sol_CREW3 = "UK3CB_BAF_Crewman_RTR_MTP"; // Crew
+sol_CREW4 = "UK3CB_BAF_Crewman_RTR_MTP"; // Crew
+sol_DRV = 	"UK3CB_BAF_Crewman_MTP"; // Driver
+sol_DRV2 = 	"UK3CB_BAF_Crewman_MTP"; // Driver
+sol_HCREW = "UK3CB_BAF_HeliCrew_MTP"; // Helicopter crew (extra)
+sol_HPIL = 	"UK3CB_BAF_HeliPilot_Army_MTP"; // helicopter pilot
+sol_HPIL2 = "UK3CB_BAF_HeliPilot_Army_MTP"; // helicopter pilot
+sol_PIL = 	"UK3CB_BAF_HeliPilot_Army_MTP"; // Pilot
+sol_UAV = 	"UK3CB_BAF_UAV_MTP_RM"; // UAV controller (extra)
 
-sol_SUP_AMG = 	"UK3CB_BAF_GunnerStatic_MTP_RM_H"; // Assistant HMG gunner (extra)
-sol_SUP_AMTR = 	"UK3CB_BAF_GunnerM6_MTP_RM"; // Assistant mortar gunner (extra)
-sol_SUP_GMG = 	"UK3CB_BAF_GunnerM6_MTP_RM_H"; // GMG gunner (extra)
-sol_SUP_MG = 	"UK3CB_BAF_GunnerStatic_MTP_RM"; // HMG gunner (extra)
-sol_SUP_MTR = 	"UK3CB_BAF_GunnerM6_MTP_RM"; // mortar gunner (extra)
+sol_SUP_AMG = 	"UK3CB_BAF_GunnerStatic_MTP"; // Assistant HMG gunner (extra)
+sol_SUP_AMTR = 	"UK3CB_BAF_GunnerM6_MTP"; // Assistant mortar gunner (extra)
+sol_SUP_GMG = 	"UK3CB_BAF_GunnerM6_MTP"; // GMG gunner (extra)
+sol_SUP_MG = 	"UK3CB_BAF_GunnerStatic_MTP"; // HMG gunner (extra)
+sol_SUP_MTR = 	"UK3CB_BAF_GunnerM6_MTP"; // mortar gunner (extra)
 
 // Standard roles for static gunner, crew, and unarmed helicopter pilot
 infGunner =	sol_SUP_MG;
@@ -66,15 +66,15 @@ infList_crew = 		[sol_UN, sol_CREW, sol_CREW2, sol_CREW3, sol_CREW4, sol_DRV, so
 infList_pilots = 	[sol_HPIL, sol_HPIL2, sol_PIL];
 
 // Vehicles
-vehTrucks = 		["B_Truck_01_covered_F","UK3CB_BAF_Coyote_Logistics_L111A1_W_MTP_RM"]; // trucks that spawn at outposts, etc
+vehTrucks = 		["CUP_B_Mastiff_LMG_GB_W","CUP_B_Mastiff_LMG_GB_W"]; // trucks that spawn at outposts, etc
 vehPatrol =			["UK3CB_BAF_LandRover_WMIK_GMG_FFR_Green_A_MTP_RM","UK3CB_BAF_LandRover_WMIK_HMG_FFR_Green_A_MTP_RM","UK3CB_BAF_Jackal2_L2A1_W_MTP_RM"]; // vehicles used for road patrols;
 vehAPC = 			["CUP_B_FV432_Bulldog_GB_W","CUP_B_FV432_Bulldog_GB_W_RWS"]; // APCs
-vehIFV = 			["CUP_B_MCV80_GB_W_SLAT","CUP_B_FV510_GB_W"]; // IFVs
+vehIFV = 			["CUP_B_FV510_GB_W_SLAT","CUP_B_FV510_GB_W"]; // IFVs
 vehTank = 			["CUP_B_Challenger2_2CW_BAF","CUP_B_Challenger2_Woodland_BAF"]; // MBTs
 vehSupply = 		["UK3CB_BAF_Coyote_Logistics_L111A1_W_MTP_RM","UK3CB_BAF_LandRover_Amb_FFR_Green_A_MTP_RM","UK3CB_BAF_LandRover_Hard_FFR_Green_A_MTP_RM","UK3CB_BAF_Coyote_Logistics_L134A1_W_MTP_RM"]; // supply vehicles (ammo, fuel, med)
 vehAmmo = 			"UK3CB_BAF_Coyote_Passenger_L134A1_W_MTP_RM"; // ammo truck, for special missions
 vehFuel = 			["UK3CB_BAF_Coyote_Logistics_L111A1_W_MTP_RM"];
-vehLead = 			["UK3CB_BAF_Jackal2_GMG_W_MTP_RM"]; // lead vehicle for convoys, preferably armed MRAP/car
+vehLead = 			["UK3CB_BAF_LandRover_WMIK_Milan_FFR_Green_A_MTP"]; // lead vehicle for convoys, preferably armed MRAP/car
 standardMRAP = 		["UK3CB_BAF_LandRover_WMIK_GMG_FFR_Green_A_MTP_RM","UK3CB_BAF_Jackal2_L2A1_W_MTP_RM","UK3CB_BAF_LandRover_WMIK_HMG_FFR_Green_A_MTP_RM"]; // default transport MRAP/car
 vehTruckBox = 		["UK3CB_BAF_LandRover_Hard_FFR_Green_A_MTP_RM"]; // repair truck or at least a prop
 vehPatrolBoat = 	["B_Boat_Armed_01_minigun_F"];
@@ -92,12 +92,12 @@ heli_escort = 		"UK3CB_BAF_Wildcat_AH1_CAS_6C_MTP_RM";
 planes = 			["CUP_B_F35B_CAS_BAF","CUP_B_F35B_AA_BAF"]; // attack planes
 heli_default = 		"UK3CB_BAF_Merlin_HC3_CSAR_MTP_RM";
 heli_transport = 	"UK3CB_BAF_Merlin_HC3_CSAR_MTP_RM";
-indUAV_large = 		"BW_Euro_Hawk"; // large UAV, unarmed
+indUAV_large = 		"B_UAV_02_F"; // large UAV, unarmed
 
 // Initial motorpool/airforce
-enemyMotorpoolDef = "B_Truck_01_covered_F"; // fallback vehicle in case of an empty motorpool -- NOT AN ARRAY!
-enemyMotorpool = 	["BW_LKW_Transport_Fleck","BWA3_Eagle_FLW100_Fleck"]; // starting/current motorpool
-indAirForce = 		["UK3CB_BAF_Coyote_Passenger_L134A1_W_MTP_RM","UK3CB_BAF_Merlin_HC3_CSAR_MTP_RM"]; // starting/current airforce
+enemyMotorpoolDef = "CUP_B_Mastiff_LMG_GB_W"; // fallback vehicle in case of an empty motorpool -- NOT AN ARRAY!
+enemyMotorpool = 	["CUP_B_Mastiff_LMG_GB_W","UK3CB_BAF_LandRover_WMIK_HMG_FFR_Green_A_MTP_RM"]; // starting/current motorpool
+indAirForce = 		["UK3CB_BAF_Wildcat_AH1_CAS_6C_MTP_RM","UK3CB_BAF_Merlin_HC3_CSAR_MTP_RM"]; // starting/current airforce
 
 // Config paths for pre-defined groups -- required if group names are used
 cfgInf = (configfile >> "CfgGroups" >> "West" >> "UK3CB_BAF_Faction_Navy_MTP" >> "Infantry");
@@ -106,18 +106,18 @@ cfgInf = (configfile >> "CfgGroups" >> "West" >> "UK3CB_BAF_Faction_Navy_MTP" >>
 
 // standard group arrays of individuals
 BWGroup_Team = 		[sol_TL, sol_A_AR, sol_MED, sol_LAT]; // sniper team
-BWGroup_AA = 		[sol_SL, sol_A_AA, sol_MED, sol_A_AA, sol_R_L, sol_A_AA]; // spec opcs
+BWGroup_AA = 		[sol_SL, sol_AA, sol_MED, sol_AA, sol_R_L, sol_AA]; // spec opcs
 BWGroup_WeapSquad = 		[sol_SL, sol_AR, sol_A_AR, sol_MK, sol_SP, sol_MED, sol_GL, sol_LAT]; // squad
 BWGroup_SniperTeam = 	[sol_SL, sol_MK, sol_MK, sol_MED];
 
 
-infPatrol = 		["UK3CB_BAF_Navy_MTP_Sentry_Day","UK3CB_BAF_Navy_MTP_Sentry_Overnight","UK3CB_BAF_Navy_MTP_FireTeam_C_Day"]; // 2-3 guys, incl sniper teams
-infGarrisonSmall = 	["UK3CB_BAF_Navy_MTP_FST_Day","UK3CB_BAF_Navy_MTP_MSS_Day"]; // 2-3 guys, to guard towns
-infTeamATAA =		["UK3CB_BAF_Navy_MTP_HWAT_Overnight", BWGroup_AA]; // missile teams, 4+ guys, for roadblocks and watchposts
-infTeam = 			["UK3CB_BAF_Navy_MTP_FireTeam_A_Day","UK3CB_BAF_Navy_MTP_FireTeam_B_Day","UK3CB_BAF_Navy_MTP_FireTeam_C_Day"]; // teams, 4+ guys
-infSquad = 			["UK3CB_BAF_Navy_MTP_Section_A_Day","UK3CB_BAF_Navy_MTP_Section_B_Day","UK3CB_BAF_Navy_MTP_Section_C_Day"]; // squads, 8+ guys, for outposts, etc
+infPatrol = 		["UK3CB_BAF_Army_MTP_Sentry_Day","UK3CB_BAF_Army_MTP_Sentry_Day","UK3CB_BAF_Army_MTP_FireTeam_C_Day"]; // 2-3 guys, incl sniper teams
+infGarrisonSmall = 	["UK3CB_BAF_Army_MTP_FireTeam_B_Day","UK3CB_BAF_Army_MTP_FireTeam_C_Day"]; // 2-3 guys, to guard towns
+infTeamATAA =		["UK3CB_BAF_Army_MTP_FireTeam_A_Day", BWGroup_AA]; // missile teams, 4+ guys, for roadblocks and watchposts
+infTeam = 			["UK3CB_BAF_Army_MTP_FireTeam_A_Day","UK3CB_BAF_Army_MTP_FireTeam_B_Day","UK3CB_BAF_Army_MTP_FireTeam_C_Day"]; // teams, 4+ guys
+infSquad = 			["UK3CB_BAF_Army_MTP_Section_A_Day","UK3CB_BAF_Army_MTP_Section_B_Day","UK3CB_BAF_Army_MTP_Section_C_Day"]; // squads, 8+ guys, for outposts, etc
 infAA =				[BWGroup_AA];
-infAT =				["UK3CB_BAF_Navy_MTP_HWAT_Overnight"];
+infAT =				["UK3CB_BAF_Army_MTP_HWAT_Day","UK3CB_BAF_Army_MTP_FireTeam_A_Day"];
 
 if (AS_customGroups) then {
 	IND_cfgPath = (configfile >> "CfgGroups" >> "West" >> "rhs_faction_usmc_wd" >> "rhs_group_nato_usmc_wd_infantry");
@@ -126,9 +126,9 @@ if (AS_customGroups) then {
 
 // Statics to be used
 statMG = 			"UK3CB_BAF_Static_L7A2_Deployed_High_DPMT";
-statAT = 			"RHS_TOW_TriPod_WD"; // alternatives: rhs_Kornet_9M133_2_vdv, rhs_SPG9M_VDV, rhs_Metis_9k115_2_vdv
-statAA = 			"RHS_Stinger_AA_pod_WD"; // alternatively: "rhs_Igla_AA_pod_vdv"
-statAA2 = 			"RHS_Stinger_AA_pod_WD";
+statAT = 			"CUP_B_TOW_TriPod_US"; // alternatives: rhs_Kornet_9M133_2_vdv, rhs_SPG9M_VDV, rhs_Metis_9k115_2_vdv
+statAA = 			"B_static_AA_F"; // alternatively: "rhs_Igla_AA_pod_vdv"
+statAA2 = 			"UK3CB_BAF_Static_L111A1_Deployed_High_Tropical_RM";
 statMortar = 		"UK3CB_BAF_Static_L16_Deployed_DPMT";
 
 statMGlow = 		"UK3CB_BAF_Static_L7A2_Deployed_Low_DPMT";
@@ -197,14 +197,14 @@ genAmmo = [
 ];
 
 genLaunchers = [
-	"BWA3_Pzf3",
-	"BWA3_Fliegerfaust",
-	"BWA3_RGW90"
+	"UK3CB_BAF_Javelin_Slung_Tube",
+	"UK3CB_BAF_NLAW_Launcher",
+	"UK3CB_BAF_AT4_CS_AP_Launcher"
 ];
 
 genMissiles = [
 
-	"BWA3_Fliegerfaust_Mag"
+	"CUP_Stinger_M"
 ];
 
 genMines = [
@@ -228,10 +228,10 @@ genItems = [
 ];
 
 genOptics = [
-	"BWA3_optic_ZO4x30",
-	"BWA3_optic_20x50",
-	"BWA3_optic_ZO4x30_Single",
-	"BWA3_optic_EOTech_Mag_Off"
+	"RKSL_optic_LDS",
+	"RKSL_optic_LDS",
+	"RKSL_optic_LDS",
+	"RKSL_optic_LDS"
 ];
 
 genBackpacks = [
@@ -428,19 +428,19 @@ basicGear = unlockedWeapons + unlockedMagazines + unlockedItems + unlockedBackpa
 startingWeapons =+ unlockedWeapons;
 
 // Default launchers
-genAALaunchers = ["BWA3_Fliegerfaust"];
-genATLaunchers = ["BWA3_RGW90","BWA3_Pzf3"];
+genAALaunchers = ["CUP_launch_FIM92Stinger"];
+genATLaunchers = ["UK3CB_BAF_NLAW_Launcher","UK3CB_BAF_Javelin_Slung_Tube"];
 
-IND_gear_heavyAT = "BWA3_Pzf3";
-IND_gear_lightAT = "BWA3_RGW90";
+IND_gear_heavyAT = "UK3CB_BAF_Javelin_Slung_Tube";
+IND_gear_lightAT = "UK3CB_BAF_AT4_CS_AP_Launcher";
 
-AAmissile = 	"BWA3_Fliegerfaust_Mag";
+AAmissile = 	"CUP_Stinger_M";
 
 // NVG, flashlight, laser, mine types
 indNVG = 		"rhsusf_ANPVS_14";
-indRF = 		"lerca_1200_black";
-indFL = 		"rhsusf_acc_anpeq15side";
-indLaser = 		"rhsusf_acc_anpeq15side";
+indRF = 		"Rangefinder";
+indFL = 		"UK3CB_BAF_LLM_IR_Black";
+indLaser = 		"UK3CB_BAF_LLM_IR_Black";
 atMine = 		"rhs_mine_M19_mag";
 atMine_placed = "rhsusf_mine_M19";
 atMine_type = 	"rhsusf_mine_m19_ammo";
@@ -449,7 +449,7 @@ apMine_placed = "rhs_mine_pmn2";
 apMine_type = 	"rhs_mine_pmn2_ammo";
 
 // The flag
-cFlag = "FlagCarrierBAF";
+cFlag = "Flag_UK_F";
 
 // Affiliation
 side_green = 	west;
@@ -458,7 +458,7 @@ side_green = 	west;
 lrRadio = "tf_mr3000_rhs";
 
 // Define the civilian helicopter that allows you to go undercover
-civHeli = "RHS_Mi8amt_civilian";
+civHeli = "C_Heli_Light_01_civil_F";
 
 // Define the ammo crate to be spawned at camps
 campCrate = "Box_NATO_Equip_F";
@@ -470,7 +470,7 @@ IND_marker_colour = "ColorWEST";
 IND_marker_type = "flag_UK";
 
 // Name of the faction
-A3_Str_INDEP = localize "STR_GENIDENT_RoyMar";
+A3_Str_INDEP = localize "STR_GENIDENT_BritArm";
 
 if (worldname == "Tanoa") then {
     unlockedItems = unlockedItems + [

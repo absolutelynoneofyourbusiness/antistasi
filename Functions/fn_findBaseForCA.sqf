@@ -12,7 +12,9 @@ _base = "";
 	_busy = [true, false] select (dateToNumber date >= server getVariable _base);
 	_radio = [[_base] call AS_fnc_radioCheck, true] select (_force);
 
-	if ((!_busy) and !(spawner getVariable _base)) then {//todo adjust for spawn zones
+	diag_log format ["base: %1; busy: %2; radio: %3; contact: %4; distance: %5",_base,_busy,_radio,(count ((_position nearEntities ["Man", 1500]) select {side _x == side_blue}) < 1),_position distance _posBase];
+
+	if ((!_busy) and (count ((_position nearEntities ["Man", 1500]) select {side _x == side_blue}) < 1)) then {
 		if (_isReinf) then {
 			if ((((_position distance _posBase < 7000) and (_radio)) or (_position distance _posBase < 2000)) AND (_position distance _posBase > 300)) then {
 				if (worldName == "Tanoa") then {

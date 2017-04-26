@@ -115,7 +115,7 @@ if (round random 13 > skillAAF) then {
 	_unit removePrimaryWeaponItem indLaser;
 	_unit addPrimaryWeaponItem indFL;
 
-	if (sunOrMoon < 1) then {
+/*	if (sunOrMoon < 1) then {
 		_unit enableGunLights "forceOn";
 		_spotD = ((_spotD - 0.2) max 0.2);
 		_spotT = ((_spotT - 0.2) max 0.2);
@@ -127,6 +127,39 @@ if (round random 13 > skillAAF) then {
 				_unit enableIRLasers true;
 			} else {
 				_unit enableIRLasers false;
+			};
+		};
+	};*/
+};
+
+// Reset the unit's inventory to avoid running out of ammo with persistent garrisons
+[_unit, [_unit, "default_inventory"]] call BIS_fnc_saveInventory;
+[_unit] spawn {
+	params ["_unit"];
+	while {alive _unit} do {
+		sleep 1800;
+		if (alive _unit) then {
+			[_unit, [_unit, "default_inventory"]] call BIS_fnc_loadInventory;
+			if (sunOrMoon < 1) then {
+				call {
+					if (indLaser in primaryWeaponItems _unit) exitWith {
+						_unit enableIRLasers true;
+					};
+
+					if (indFL in primaryWeaponItems _unit) exitWith {
+						_unit enableGunLights "forceOn";
+					};
+				};
+			} else {
+				call {
+					if (indLaser in primaryWeaponItems _unit) exitWith {
+						_unit enableIRLasers false;
+					};
+
+					if (indFL in primaryWeaponItems _unit) exitWith {
+						_unit enableGunLights "forceOff";
+					};
+				};
 			};
 		};
 	};

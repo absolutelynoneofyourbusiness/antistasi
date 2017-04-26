@@ -58,7 +58,7 @@ _patrolMarker = [_marker, [50, 50]] call AS_fnc_createPatrolMarker;
 _position = [_markerPos findEmptyPosition [15,50,enemyMotorpoolDef],_markerPos] select (worldName == "Tanoa");
 _groupType = [infTeamATAA, side_green] call AS_fnc_pickGroup;
 _group = [_position, side_green, _groupType] call BIS_Fnc_spawnGroup;
-[leader _group, _patrolMarker, "SAFE","SPAWNED","NOFOLLOW","NOVEH2"] execVM "scripts\UPSMON.sqf";
+[leader _group,_patrolMarker,"garrison"] spawn AS_fnc_addToUPSMON;
 _allGroups pushBack _group;
 _group allowFleeing 0;
 
@@ -95,6 +95,8 @@ sleep 5;
 diag_log format ["Reduced garrison at %1", _marker];
 if (spawner getVariable _marker) then {
 	garrison setVariable [format ["%1_reduced", _marker],true,true];
+	reducedGarrisons pushBackUnique _marker;
+	publicVariable "reducedGarrisons";
 };
 
 //_marker remoteExec ["INT_Replenishment", HCattack];
@@ -114,6 +116,7 @@ call {
 		publicVariable "mrkFIA";
 		[_markerPos] remoteExec ["patrolCA",HCattack];
 		if (activeBE) then {["cl_loc"] remoteExec ["fnc_BE_XP", 2]};
+		reducedGarrisons = reducedGarrisons - [_marker];
 	};
 
 	// Zone was despawned
@@ -124,6 +127,8 @@ call {
 	// Garrison was replenished
 	if !(garrison getVariable [format ["%1_reduced", _marker],false]) exitWith {
 		spawer setVariable [format ["%1_respawning", _marker],true,true];
+		reducedGarrisons = reducedGarrisons - [_marker];
+		publicVariable "reducedGarrisons";
 	};
 };
 

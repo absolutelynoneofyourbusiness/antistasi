@@ -92,7 +92,7 @@ _groupType = [bluSquad, side_blue] call AS_fnc_pickGroup;
 _group = [_markerPos, side_blue, _groupType] call BIS_Fnc_spawnGroup;
 [_group,"NATO"] call _fn_initGroup;
 sleep 1;
-[leader _group, _marker, "SAFE", "RANDOMUP","SPAWNED", "NOVEH2", "NOFOLLOW"] execVM "scripts\UPSMON.sqf";
+[leader _group,_marker,"guard"] spawn AS_fnc_addToUPSMON;
 
 _counter = 0;
 while {(spawner getVariable _marker) AND (_counter < _maxVehicles)} do {
@@ -101,15 +101,17 @@ while {(spawner getVariable _marker) AND (_counter < _maxVehicles)} do {
 			_spawnPos = [_markerPos, random _size,random 360] call BIS_fnc_relPos;
 			if (!surfaceIsWater _spawnPos) exitWith {};
 		};
-		_groupType = [bluSquad, side_blue] call AS_fnc_pickGroup;
+		_groupType = [bluTeam, side_blue] call AS_fnc_pickGroup;
 		_group = [_spawnPos,side_blue, _groupType] call BIS_Fnc_spawnGroup;
 		[_group,"NATO"] call _fn_initGroup;
+		[leader _group,_marker,"fortify"] spawn AS_fnc_addToUPSMON;
 		sleep 1;
-		if ((count _statics > 0) and (_counter == 0)) then {
-			[leader _group, _marker, "SAFE","SPAWNED","FORTIFY","NOVEH","NOFOLLOW"] execVM "scripts\UPSMON.sqf";
-		} else {
-			[leader _group, _marker, "SAFE","SPAWNED", "RANDOM","NOVEH", "NOFOLLOW"] execVM "scripts\UPSMON.sqf";
-		};
+
+		_groupType = [bluTeam, side_blue] call AS_fnc_pickGroup;
+		_group = [_spawnPos,side_blue, _groupType] call BIS_Fnc_spawnGroup;
+		[_group,"NATO"] call _fn_initGroup;
+		[leader _group,_marker,"fortify"] spawn AS_fnc_addToUPSMON;
+		sleep 1;
 	};
 
 	_counter = _counter + 1;
@@ -164,11 +166,10 @@ while {(spawner getVariable _marker) AND (_counter < _strength)} do {
 	};
 };
 
-for "_i" from 0 to (count _guerGroups) - 1 do {
-	_group = _guerGroups select _i;
-	[_group,"FIA"] call _fn_initGroup;
-	[leader _group, _marker, "SAFE","SPAWNED","RANDOM","NOVEH2","NOFOLLOW"] execVM "scripts\UPSMON.sqf";
-};
+{
+	[_x,"FIA"] call _fn_initGroup;
+	[leader _x,_marker,"garrison"] spawn AS_fnc_addToUPSMON;
+} forEach _guerGroups;
 
 {
 	[_x] spawn VEHinit;
@@ -197,7 +198,7 @@ if ((random 100 < (((server getVariable "prestigeNATO") + (server getVariable "p
 	[_observer] spawn CIVinit;
 	_group enableDynamicSimulation true;
 	_allGroups pushBack _group;
-	[_observer, _marker, "SAFE", "SPAWNED","NOFOLLOW", "NOVEH2","NOSHARE","DoRelax"] execVM "scripts\UPSMON.sqf";
+	[_observer,_marker,"observe"] spawn AS_fnc_addToUPSMON;
 };
 
 
@@ -211,11 +212,16 @@ while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength)
 
 sleep 5;
 
-diag_log format ["soldiers: %1; spawner: %2", count (_allSoldiers select {alive _x AND !captive _x}),(spawner getVariable _marker)];
+diag_log format ["Reduced garrison at %1", _marker];
+if (spawner getVariable _marker) then {
+	garrison setVariable [format ["%1_reduced", _marker],true,true];
+	reducedGarrisons pushBackUnique _marker;
+	publicVariable "reducedGarrisons";
+};
 
 _soldiers =+ (_allSoldiers + _guerSoldiers);
 
-waitUntil {sleep 3; !(spawner getVariable _marker) OR ((count ((_markerPos nearEntities ["Man", (_size max 200)]) select {_x getVariable ["OPFORSpawn",true]})) > (3*count (_soldiers select {alive _x AND !captive _x})))};
+waitUntil {sleep 3; !(spawner getVariable _marker) OR ((count ((_markerPos nearEntities ["Man", (_size max 200)]) select {_x getVariable ["OPFORSpawn",true]})) > (3*count (_soldiers select {alive _x AND !captive _x}))) OR !(garrison getVariable [format ["%1_reduced", _marker],false])};
 
 call {
 	// Garrison was overwhelmed
@@ -226,6 +232,13 @@ call {
 	// Zone was despawned or modified
 	if !(spawner getVariable _marker) exitWith {
 
+	};
+
+	// Garrison was replenished
+	if !(garrison getVariable [format ["%1_reduced", _marker],false]) exitWith {
+		spawer setVariable [format ["%1_respawning", _marker],true,true];
+		reducedGarrisons = reducedGarrisons - [_marker];
+		publicVariable "reducedGarrisons";
 	};
 };
 

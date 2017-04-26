@@ -131,14 +131,10 @@ while {(spawner getVariable _marker) AND (_counter < _strength)} do {
 	};
 };
 
-for "_i" from 0 to (count _allGroups) - 1 do {
-	_group = _allGroups select _i;
-	if (_i == 0) then {
-		[leader _group, _marker, "SAFE","SPAWNED","RANDOMUP","NOVEH2","NOFOLLOW"] execVM "scripts\UPSMON.sqf";
-	} else {
-		[leader _group, _marker, "SAFE","SPAWNED","RANDOM","NOVEH2","NOFOLLOW"] execVM "scripts\UPSMON.sqf";
-	};
-};
+{
+	_x enableDynamicSimulation true;
+	[leader _x,_marker,"fortify"] spawn AS_fnc_addToUPSMON;
+} forEach _allGroups;
 
 {
 	_x enableDynamicSimulation true;

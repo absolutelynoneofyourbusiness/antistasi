@@ -45,7 +45,7 @@ if (_corpse isKindOf "Man") then {
 	removeAllWeapons _corpse;
 	removeVest _corpse;
 	removeHeadgear _corpse;
-	removeBackpack _corpse;
+	removeBackpackGlobal _corpse;
 };
 
 if (typeOf _corpse == "Box_IND_Wps_F") then {

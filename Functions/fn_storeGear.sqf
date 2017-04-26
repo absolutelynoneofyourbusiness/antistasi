@@ -1,4 +1,4 @@
-params ["_unit", ["_container", ""], ["_combined", false]];
+params ["_unit", ["_container", ""], ["_combined", false],["_restoreGear",false]];
 private ["_timeOut"];
 
 #define DIS 50
@@ -28,13 +28,23 @@ _unit doMove (getPosATL _container);
 _unit groupChat format ["Storing my gear in %1", getText (configFile >> "CfgVehicles" >> typeOf _container >> "DisplayName")];
 _timeOut = time + 60;
 
-waitUntil {sleep 1; !(alive _unit) || !(alive _container) || (_unit distance _container < 6) || (_timeOut < time) || (unitReady _unit)};
-if ((_unit distance _container < 6) && (alive _unit)) then {
+waitUntil {sleep 1; !(alive _unit) OR !(alive _container) OR (_unit distance _container < 8) OR (_timeOut < time) OR (unitReady _unit)};
+if ((_unit distance _container < 8) && (alive _unit)) then {
 	_unit stop true;
-	[_unit, _container] call AS_fnc_dropAllGear;
-	sleep 2;
-	_unit stop false;
-	if (vest _unit == "") then {_unit groupChat "I have stored all my gear."} else {_unit groupChat "I couldn't store my gear."};
+	if (_restoreGear) then {
+		[_unit, [_unit, "scav_inventory"]] call BIS_fnc_loadInventory;
+		_unit setVariable ["gearStored",nil,true];
+		_unit groupChat "Got my gear back, boss man.";
+	} else {
+		if !(_unit getVariable ["gearStored",false]) then {
+			[_unit, _container, true] call AS_fnc_dropAllGear;
+		} else {
+			[_unit, _container] call AS_fnc_dropAllGear;
+		};
+		sleep 2;
+		_unit stop false;
+		if (vest _unit == "") then {_unit groupChat "I have stored all my gear."} else {_unit groupChat "I couldn't store my gear."};
+	};
 } else {
 	_unit groupChat "Unable to comply.";
 };

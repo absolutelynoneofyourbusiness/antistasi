@@ -93,5 +93,16 @@ sleep 30;
 	};
 } forEach deadZones;
 
+{
+	spawner setVariable [_x,false,true];
+} forEach deadZones;
+
 allZonesSetup = true;
 settingUpZones = false;
+
+if !(isNil "GarMon") then {
+	terminate GarMon;
+};
+GarMon = [] spawn garrisonMonitor;
+
+"Perimeter established. Good to go." remoteExec ["hint",[0,-2] select isDedicated,true];

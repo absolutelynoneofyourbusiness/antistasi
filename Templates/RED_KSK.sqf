@@ -37,7 +37,7 @@ opArtilleryAmmoHE = "32Rnd_155mm_Mo_shells";
 // infantry classes, to allow for class-specific skill adjustments and pricing
 opI_OFF = 	"BWA3_Officer_Fleck"; // officer/official
 opI_PIL = 	"BWA3_Helipilot"; // pilot
-opI_OFF2 = 	"BWA3_recon_Radioman_Fleck"; // officer/traitor
+opI_OFF2 = 	"B_G_Soldier_unarmed_F"; // officer/traitor
 opI_CREW = 	"BWA3_Crew_Fleck"; // crew
 opI_MK = 	"BWA3_recon_Marksman_Fleck";
 opI_MED =	"BWA3_recon_Medic_Fleck";

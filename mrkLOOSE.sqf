@@ -11,6 +11,9 @@ mrkFIA = mrkFIA - [_marker];
 publicVariable "mrkAAF";
 publicVariable "mrkFIA";
 
+reducedGarrisons = reducedGarrisons - [_marker];
+publicVariable "reducedGarrisons";
+
 // BE module
 if (activeBE) then {
 	["territory", -1] remoteExec ["fnc_BE_update", 2];

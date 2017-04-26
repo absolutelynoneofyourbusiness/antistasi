@@ -6,7 +6,7 @@ private ["_allVehicles","_vehicle"];
 //You do not have enough balls to make any modification and after making a Bug report because something is wrong. You don't wanna be there. Believe me.
 //Not commented lines cannot be changed.
 //Don't touch them.
-antistasiVersion = "v 1.7 -- modded";
+antistasiVersion = "Cheesecake";
 
 servidoresOficiales = ["Antistasi Official: Main","Antistasi Official: Hardcore", "Antistasi Official: USA"];//this is for author's fine tune the official servers. If I get you including your server in this variable, I will create a special variable for your server. Understand?
 
@@ -47,12 +47,12 @@ if (isClass (configFile >> "CfgPatches" >> "javelinTest")) then {
 [] call AS_fnc_setupGearDB;
 
 /*
- 	RHS detection/initialisation
+ 	Mod detection/initialisation
  	- SQM defines whether FIA is BLUFOR or GUER
  	- RHS USAF replaces NATO
  	- RHS AFRF replaces AAF/CSAT
 */
-[] call AS_fnc_detectRHS;
+[] call AS_fnc_detectMods;
 waitUntil {status_templatesLoaded};
 
 /*

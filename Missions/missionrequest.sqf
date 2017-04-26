@@ -1,6 +1,6 @@
 if (!isServer) exitWith {};
 
-#define gear_threshold [125,175]
+#define GEAR_THRESHOLD [125,175]
 
 params [["_type","LOG"],["_muted",false],["_manual",false]];
 [getMarkerPos guer_respawn,[],[],false] params ["_positionHQ","_options","_zones"];
@@ -68,7 +68,7 @@ call {
 					} else {
 						if (_currentZone in puestos) then {
 							_gearCount = (count unlockedWeapons) + (count unlockedMagazines) + (count unlockedItems) + (count unlockedBackpacks);
-							_threshold = gear_threshold select activeACE;
+							_threshold = GEAR_THRESHOLD select activeACE;
 							if (_gearCount < _threshold) then {_options pushBackUnique _currentZone};
 						} else {
 							_options pushBackUnique _currentZone;

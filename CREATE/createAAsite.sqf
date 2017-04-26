@@ -62,14 +62,14 @@ _markerPatrol setMarkerTypeLocal "hd_warning";
 _markerPatrol setMarkerColorLocal "ColorRed";
 _markerPatrol setMarkerBrushLocal "DiagGrid";
 
-[leader _groupGunners, _markerPatrol, "AWARE", "SPAWNED","NOVEH", "NOFOLLOW"] execVM "scripts\UPSMON.sqf";
+[leader _groupGunners,_markerPatrol,"gunner"] spawn AS_fnc_addToUPSMON;
 
 _UAV = createVehicle [opUAVsmall, _posCmp, [], 0, "FLY"];
 _allVehicles pushBack _UAV;
 createVehicleCrew _UAV;
 _UAV enableDynamicSimulation true;
 _groupUAV = group (crew _UAV select 1);
-[leader _groupUAV, _markerPatrol, "SAFE", "SPAWNED","NOVEH", "NOFOLLOW"] execVM "scripts\UPSMON.sqf";
+[leader _groupUAV,_markerPatrol,"garrison"] spawn AS_fnc_addToUPSMON;
 {[_x] spawn genInitBASES; _allSoldiers pushBack _x} forEach units _groupUAV;
 _allGroups pushBack _groupUAV;
 
@@ -82,7 +82,7 @@ _spawnGroup = {
 	_groupType = [_type, side_green] call AS_fnc_pickGroup;
 	_groupPatrol = [_spawnPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
 	sleep 1;
-	[leader _groupPatrol, _marker, "SAFE","SPAWNED","NOFOLLOW","NOVEH2"] execVM "scripts\UPSMON.sqf";
+	[leader _groupPatrol,_marker,"garrison"] spawn AS_fnc_addToUPSMON;
 	{[_x] spawn genInitBASES; _allSoldiers pushBack _x} forEach units _groupPatrol;
 	_allGroups pushBack _groupPatrol;
 };
@@ -119,6 +119,8 @@ diag_log format ["Reduced garrison at %1", _marker];
 
 if (spawner getVariable _marker) then {
 	garrison setVariable [format ["%1_reduced", _marker],true,true];
+	reducedGarrisons pushBackUnique _marker;
+	publicVariable "reducedGarrisons";
 };
 
 if (_hasSPAA) then {
@@ -168,6 +170,8 @@ if (_hasSPAA) then {
 			publicVariable "mrkFIA";
 			[_markerPos] remoteExec ["patrolCA",HCattack];
 			if (activeBE) then {["cl_loc"] remoteExec ["fnc_BE_XP", 2]};
+			reducedGarrisons = reducedGarrisons - [_marker];
+			publicVariable "reducedGarrisons";
 		};
 
 		// Zone was despawned
@@ -178,6 +182,8 @@ if (_hasSPAA) then {
 		// Garrison was replenished
 		if !(garrison getVariable [format ["%1_reduced", _marker],false]) exitWith {
 			spawer setVariable [format ["%1_respawning", _marker],true,true];
+			reducedGarrisons = reducedGarrisons - [_marker];
+			publicVariable "reducedGarrisons";
 		};
 	};
 };

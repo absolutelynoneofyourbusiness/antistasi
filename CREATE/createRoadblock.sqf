@@ -1,7 +1,7 @@
 if (!isServer and hasInterface) exitWith {};
 
 params ["_marker"];
-private ["_allVehicles","_allGroups","_allSoldiers","_markerPos","_size","_distance","_roads","_connectedRoads","_position","_bunker","_static","_group","_unit","_groupType","_tempGroup","_dog","_normalPos","_spawnPos"];
+private ["_allVehicles","_allGroups","_allSoldiers","_markerPos","_size","_distance","_roads","_connectedRoads","_position","_bunker","_static","_group","_unit","_groupType","_tempGroup","_dog","_normalPos","_spawnPos","_hidden"];
 
 _allVehicles = [];
 _allGroups = [];
@@ -21,49 +21,40 @@ while {true} do {
 _connectedRoads = roadsConnectedto (_roads select 0);
 
 _direction = [_roads select 0, _connectedRoads select 0] call BIS_fnc_DirTo;
-if ((isNull (_roads select 0)) OR (isNull (_connectedRoads select 0))) then {diag_log format ["Error in createRoadblock: no suitable roads found near %1",_marker]};
+if ((isNull (_roads select 0)) OR (isNull (_connectedRoads select 0))) exitWith {diag_log format ["Error in createRoadblock: no suitable roads found near %1",_marker]};
 
-_position = [(_roads select 0), 9, _direction + 270] call BIS_Fnc_relPos;
-_bunker = bld_smallBunker createVehicle _position;
-_allVehicles pushBack _bunker;
-_bunker setDir _direction;
-_normalPos = surfaceNormal (position _bunker);
-_bunker setVectorUp _normalPos;
-_position = getPosATL _bunker;
-_static = statMG createVehicle _markerPos;
-_allVehicles pushBack _static;
-_static setPosATL _position;
-_static setDir _direction;
-_normalPos = surfaceNormal (position _static);
-_static setVectorUp _normalPos;
-_static enableDynamicSimulation true;
-sleep 1;
+_fnc_createBunker = {
+	params ["_dist","_dir"];
 
-_unit = ([_markerPos, 0, infGunner, _tempGroup] call bis_fnc_spawnvehicle) select 0;
-_unit moveInGunner _static;
+	_position = [(_roads select 0), _dist, _dir] call BIS_Fnc_relPos;
+	_bunker = bld_smallBunker createVehicle _position;
+	_allVehicles pushBack _bunker;
+	_bunker setDir (_dir + 90);
+	_normalPos = surfaceNormal (position _bunker);
+	_bunker setVectorUp _normalPos;
+	_position = getPosATL _bunker;
+	_static = statMG createVehicle _markerPos;
+	_allVehicles pushBack _static;
+	_static setPosATL _position;
+	_static setDir (_dir - 90);
+	_normalPos = surfaceNormal (position _static);
+	_static setVectorUp _normalPos;
+	_static enableDynamicSimulation true;
+	_allVehicles pushBack _static;
+	[_static] spawn genVEHinit;
+	sleep 1;
 
-_position = [(_roads select 0), 7, _direction + 90] call BIS_Fnc_relPos;
-_bunker = bld_smallBunker createVehicle _position;
-_allVehicles pushBack _bunker;
-_bunker setDir _direction + 180;
-_normalPos = surfaceNormal (position _bunker);
-_bunker setVectorUp _normalPos;
-_position = getPosATL _bunker;
-_static = statMG createVehicle _markerPos;
-_allVehicles pushBack _static;
-_static setPosATL _position;
-_static setDir _direction;
-_normalPos = surfaceNormal (position _static);
-_static setVectorUp _normalPos;
-_static enableDynamicSimulation true;
-sleep 1;
+	_unit = ([_markerPos, 0, infGunner, _tempGroup] call bis_fnc_spawnvehicle) select 0;
+	_unit moveInGunner _static;
+};
 
-_unit = ([_markerPos, 0, infGunner, _tempGroup] call bis_fnc_spawnvehicle) select 0;
-_unit moveInGunner _static;
+[9, _direction + 270] call _fnc_createBunker;
+[7, _direction + 90] call _fnc_createBunker;
 
 _position = [getPos _bunker, 6, getDir _bunker] call BIS_fnc_relPos;
 _static = createVehicle [cFlag, _position, [],0, "CAN_COLLIDE"];
 _allVehicles pushBack _static;
+[_static] spawn genVEHinit;
 
 {
 	_x enableDynamicSimulation true;
@@ -87,13 +78,9 @@ if (random 10 < 2.5) then {
 	[_dog,_group] spawn guardDog;
 };
 
-[leader _group, _marker, "SAFE","SPAWNED","NOVEH2","NOFOLLOW"] execVM "scripts\UPSMON.sqf";
+[leader _group,_marker,"garrison"] spawn AS_fnc_addToUPSMON;
 {[_x] spawn genInitBASES; _allSoldiers pushBack _x} forEach units _group;
 _allGroups pushBack _group;
-
-{
-	[_x] spawn genVEHinit;
-} forEach _allVehicles;
 
 ([_marker,_allGroups] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
 
@@ -103,12 +90,27 @@ sleep 10;
 	_x enableDynamicSimulation true;
 } forEach _allGroups;
 
+// Hide the roadblock to avoid pathfinding issues with passing convoys & attacks
+{
+	_x hideObjectGlobal true;
+} forEach _allSoldiers + _allVehicles;
+_hidden = true;
 
 while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength) AND (spawner getVariable _marker)} do {
-	while {(count ((_markerPos nearEntities ["Man", 1500]) select {side _x == side_blue}) < 1) AND (spawner getVariable _marker)} do {
+	while {(count ((_markerPos nearEntities ["Man", 1500]) select {_x getVariable ["BLUFORSpawn",false]}) < 1) AND (count ((_markerPos nearEntities [["LandVehicle"], 1500]) select {(driver _x) getVariable ["BLUFORSpawn",false]}) < 1) AND (spawner getVariable _marker)} do {
+		if !(_hidden) then {
+			{
+				_x hideObjectGlobal true;
+			} forEach _allSoldiers + _allVehicles;
+			_hidden = true;
+		};
 		sleep 10;
 	};
 
+	{
+		_x hideObjectGlobal false;
+	} forEach _allSoldiers + _allVehicles;
+	_hidden = false;
 	sleep 5;
 };
 
@@ -117,6 +119,7 @@ sleep 5;
 diag_log format ["Reduced garrison at %1", _marker];
 if (spawner getVariable _marker) then {
 	garrison setVariable [format ["%1_reduced", _marker],true,true];
+	reducedGarrisons pushBackUnique _marker;
 };
 
 //_marker remoteExec ["INT_Replenishment", HCattack];
@@ -135,6 +138,8 @@ call {
 		publicVariable "mrkFIA";
 		if (activeBE) then {["cl_loc"] remoteExec ["fnc_BE_XP", 2]};
 		[_marker] spawn AS_fnc_respawnRoadblock;
+		reducedGarrisons = reducedGarrisons - [_marker];
+		publicVariable "reducedGarrisons";
 	};
 
 	// Zone was despawned
@@ -144,7 +149,9 @@ call {
 
 	// Garrison was replenished
 	if !(garrison getVariable [format ["%1_reduced", _marker],false]) exitWith {
-		spawer setVariable [format ["%1_respawning", _marker],true,true];
+		spawner setVariable [format ["%1_respawning", _marker],true,true];
+		reducedGarrisons = reducedGarrisons - [_marker];
+		publicVariable "reducedGarrisons";
 	};
 };
 

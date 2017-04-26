@@ -192,6 +192,8 @@ localSupport = compile preprocessFileLineNumbers "Scripts\localSupport.sqf";
 petrosAnimation = compile preprocessFileLineNumbers "Scripts\petrosAnimation.sqf";
 rankCheck = compile preprocessFileLineNumbers "Scripts\rankCheck.sqf";
 zoneSpawner = compile preprocessFileLineNumbers "Scripts\zoneSpawner.sqf";
+UPSMON = compile preprocessFileLineNumbers "Scripts\UPSMON.sqf";
+garrisonMonitor = compile preprocessFileLineNumbers "Scripts\garrisonMonitor.sqf";
 
 ACErespawn = compile preProcessFileLineNumbers "Revive\ACErespawn.sqf";
 

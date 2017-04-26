@@ -17,8 +17,9 @@ params ["_unit", "_targetContainer"];
 private ["_corpses", "_corpse", "_foundCorpse", "_params", "_timeOut", "_containers", "_container", "_timer", "_box", "_boxes", "_foundBox"];
 
 #define DIS 50
+#define DUR 30
 
-if ((!alive _unit) or (isPlayer _unit) or (vehicle _unit != _unit) or (player != leader group player) or (captive _unit)) exitWith {};
+if ((!alive _unit) OR (isPlayer _unit) OR (vehicle _unit != _unit) OR (player != leader group player) OR (captive _unit)) exitWith {};
 if (_unit getVariable "inconsciente") exitWith {};
 
 if (_unit getVariable ["ayudando", false]) exitWith {_unit groupChat "I cannot grab gear right now, I'm busy treating someone's wounds."};
@@ -71,22 +72,22 @@ while {true} do {
 		_unit setVariable ["AS_storingGear", true, true];
 		_params spawn AS_fnc_storeGear;
 
-		waitUntil {sleep 1; !(alive _unit) or !(_unit getVariable ["AS_storingGear", false]) or (isNull _corpse) or (_unit getVariable ["AS_cannotComply", false])};
+		waitUntil {sleep 1; !(alive _unit) OR !(_unit getVariable ["AS_storingGear", false]) OR (isNull _corpse) OR (_unit getVariable ["AS_cannotComply", false])};
 		if (_unit getVariable ["AS_cannotComply", false]) then {breakTo "main"};
 
 		_unit stop false;
 		_unit doMove (getPosATL _corpse);
 		_timeOut = time + 60;
 
-		waitUntil {sleep 1; !(alive _unit) or (isNull _corpse) or (_unit distance _corpse < 3) or (_timeOut < time)};
+		waitUntil {sleep 1; !(alive _unit) OR (isNull _corpse) OR (_unit distance _corpse < 3) OR (_timeOut < time)};
 
 		if (_unit distance _corpse < 3) then {
 			_unit stop true;
 			[_unit, _corpse] spawn AS_fnc_stripCorpse;
 			_unit setVariable ["AS_strippingCorpse", true, true];
 
-			waitUntil {sleep 1; !(alive _unit) or (isNull _corpse) or !(_unit getVariable ["AS_strippingCorpse", false])};
-			if (!(alive _unit) or (isNull _corpse)) then {breakTo "main"};
+			waitUntil {sleep 1; !(alive _unit) OR (isNull _corpse) OR !(_unit getVariable ["AS_strippingCorpse", false])};
+			if (!(alive _unit) OR (isNull _corpse)) then {breakTo "main"};
 			_unit stop false;
 			_unit doFollow player;
 		};
@@ -98,7 +99,7 @@ while {true} do {
 			_unit doMove (getPosATL _container);
 			_timeOut = time + 20;
 
-			waitUntil {sleep 1; !(alive _unit) or (isNull _container) or (_unit distance _container < 3) or (_timeOut < time)};
+			waitUntil {sleep 1; !(alive _unit) OR (isNull _container) OR (_unit distance _container < 3) OR (_timeOut < time)};
 			if (isNull _container) then {breakTo "outerLoop"};
 			_unit action ["rearm",_container];
 			sleep 1;
@@ -113,7 +114,7 @@ while {true} do {
 			_unit doMove (getPosATL _container);
 			_timeOut = time + 20;
 
-			waitUntil {sleep 1; !(alive _unit) or (isNull _container) or (_unit distance _container < 3) or (_timeOut < time)};
+			waitUntil {sleep 1; !(alive _unit) OR (isNull _container) OR (_unit distance _container < 3) OR (_timeOut < time)};
 			if (isNull _container) then {breakTo "outerLoop"};
 			_unit action ["rearm",_container];
 			sleep 1;
@@ -143,22 +144,22 @@ if (count _boxes > 0) then {
 			_unit setVariable ["AS_storingGear", true, true];
 			_params spawn AS_fnc_storeGear;
 
-			waitUntil {sleep 1; !(alive _unit) or !(_unit getVariable ["AS_storingGear", false]) or (isNull _box) or (_unit getVariable ["AS_cannotComply", false])};
+			waitUntil {sleep 1; !(alive _unit) OR !(_unit getVariable ["AS_storingGear", false]) OR (isNull _box) OR (_unit getVariable ["AS_cannotComply", false])};
 			if (_unit getVariable ["AS_cannotComply", false]) then {breakTo "main"};
 
 			_unit stop false;
 			_unit doMove (getPosATL _box);
-			_timeOut = time + 60;
+			_timeOut = time + DUR;
 
-			waitUntil {sleep 1; !(alive _unit) or (isNull _box) or (_unit distance _box < 5) or (_timeOut < time)};
+			waitUntil {sleep 1; !(alive _unit) OR (isNull _box) OR (_unit distance _box < 5) OR (_timeOut < time)};
 
 			if (_unit distance _box < 5) then {
 				_unit stop true;
 				[_unit, _box] spawn AS_fnc_stripCorpse;
 				_unit setVariable ["AS_strippingCorpse", true, true];
 
-				waitUntil {sleep 1; !(alive _unit) or (isNull _box) or !(_unit getVariable ["AS_strippingCorpse", false])};
-				if (!(alive _unit) or (isNull _box)) then {breakTo "main"};
+				waitUntil {sleep 1; !(alive _unit) OR (isNull _box) OR !(_unit getVariable ["AS_strippingCorpse", false])};
+				if (!(alive _unit) OR (isNull _box)) then {breakTo "main"};
 				_unit stop false;
 				_unit doFollow player;
 			};
@@ -168,6 +169,13 @@ if (count _boxes > 0) then {
 		sleep 1;
 	};
 };
+
+_unit setBehaviour "SAFE";
+_params = [[_unit, _targetContainer, true, true], [_unit, "", true, true]] select (typeName _targetContainer == "STRING");
+_unit setVariable ["AS_storingGear", true, true];
+_params spawn AS_fnc_storeGear;
+
+waitUntil {sleep 1; !(alive _unit) OR !(_unit getVariable ["AS_storingGear", false]) OR (_unit getVariable ["AS_cannotComply", false])};
 
 _unit setVariable ["AS_cannotComply", nil, true];
 _unit setVariable ["AS_lootingCorpses", nil, true];

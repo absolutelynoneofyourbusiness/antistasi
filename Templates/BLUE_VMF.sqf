@@ -132,7 +132,7 @@ bluAA = [
 ];
 
 bluVest = [
-	"rhsgref_6b23_khaki_medic",
+	"rhs_6b23_6sh116_vog_flora",
 	"rhsgref_6b23_khaki_rifleman"
 ];
 

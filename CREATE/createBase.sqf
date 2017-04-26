@@ -72,7 +72,7 @@ for "_i" from 0 to (count _buildings) - 1 do {
 
 _flag = createVehicle [cFlag, _markerPos, [],0, "CAN_COLLIDE"];
 _flag allowDamage false;
-[_flag,"take"] remoteExec ["AS_fnc_addActionMP"];
+[_flag,"take"] remoteExec ["AS_fnc_addActionMP",[0,-2] select isDedicated,_flag];
 _allVehicles pushBack _flag;
 
 _crate = "I_supplyCrate_F" createVehicle _markerPos;
@@ -84,7 +84,7 @@ if ( _vehicleCount > 0 ) then {
 	_currentCount = 0;
 	while {(spawner getVariable _marker) AND (_currentCount < _vehicleCount)} do {
 		//_spawnPos = [_markerPos] call mortarPos;
-		_spawnPos = _spawnPos findEmptyPosition [1,50,typeOf (vehicle _unit)];
+		_spawnPos = _spawnPos findEmptyPosition [1,50,statMortar];
 		_vehicle = statMortar createVehicle _spawnPos;
 		_vehicle enableDynamicSimulation true;
 		[_vehicle] execVM "scripts\UPSMON\MON_artillery_add.sqf";
@@ -114,7 +114,6 @@ _allGroups pushBack _groupGunners;
 if (!_busy) then {
 	_spawnpool = vehAPC + vehPatrol + enemyMotorpool - [heli_default];
 	_vehicleCount = 1 max (round (_size/50));
-	diag_log format ["base: %1; vehicle count: %2", _marker,_vehicleCount];
 	_spawnPos = _markerPos;
 	_currentCount = 0;
 	while {(spawner getVariable _marker) AND (_currentCount < _vehicleCount)} do {
@@ -148,7 +147,7 @@ while {(spawner getVariable _marker) AND (_currentCount < 4)} do {
 		_dog = _group createUnit ["Fin_random_F",_spawnPos,[],0,"FORM"];
 		[_dog] spawn guardDog;
 	};
-	[leader _group, _patrolMarker, "SAFE","SPAWNED", "NOVEH2"] execVM "scripts\UPSMON.sqf";
+	[leader _group,_patrolMarker,"patrol"] spawn AS_fnc_addToUPSMON;
 	_allGroups pushBack _group;
 	_currentCount = _currentCount +1;
 };
@@ -157,7 +156,7 @@ _groupType = [infSquad, side_green] call AS_fnc_pickGroup;
 _group = [_markerPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
 if (activeAFRF) then {_group = [_group, _markerPos] call AS_fnc_expandGroup};
 sleep 1;
-[leader _group, _marker, "SAFE", "RANDOMUP","SPAWNED", "NOVEH", "NOFOLLOW"] execVM "scripts\UPSMON.sqf";
+[leader _group,_marker,"guard"] spawn AS_fnc_addToUPSMON;
 _allGroups pushBack _group;
 {_x setUnitPos "MIDDLE";} forEach units _group;
 
@@ -169,11 +168,18 @@ while {(spawner getVariable _marker) AND (_currentCount < _vehicleCount)} do {
 			_spawnPos = [_markerPos, 15 + (random _size),random 360] call BIS_fnc_relPos;
 			if (!surfaceIsWater _spawnPos) exitWith {};
 		};
-		_groupType = [infSquad, side_green] call AS_fnc_pickGroup;
+		_groupType = [infTeam, side_green] call AS_fnc_pickGroup;
 		_group = [_spawnPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
 		if (activeAFRF) then {_group = [_group, _markerPos] call AS_fnc_expandGroup};
 		sleep 1;
-		[leader _group, _marker, "SAFE","SPAWNED", "NOVEH", "NOFOLLOW"] execVM "scripts\UPSMON.sqf";
+		[leader _group,_marker,"fortify"] spawn AS_fnc_addToUPSMON;
+		_allGroups pushBack _group;
+
+		_groupType = [infTeam, side_green] call AS_fnc_pickGroup;
+		_group = [_spawnPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
+		if (activeAFRF) then {_group = [_group, _markerPos] call AS_fnc_expandGroup};
+		sleep 1;
+		[leader _group,_marker,"fortify"] spawn AS_fnc_addToUPSMON;
 		_allGroups pushBack _group;
 	};
 	sleep 1;
@@ -203,7 +209,7 @@ if ((random 100 < (((server getVariable "prestigeNATO") + (server getVariable "p
 	_observer = _group createUnit [selectRandom CIV_journalists, _spawnPos, [],0, "NONE"];
 	[_observer] spawn CIVinit;
 	_allGroups pushBack _group;
-	[_observer, _marker, "SAFE", "SPAWNED","NOFOLLOW", "NOVEH2","NOSHARE","DoRelax"] execVM "scripts\UPSMON.sqf";
+	[_observer,_marker,"observe"] spawn AS_fnc_addToUPSMON;
 };
 
 // Dynamic Simulation
@@ -226,6 +232,8 @@ sleep 5;
 diag_log format ["Reduced garrison at %1", _marker];
 if (spawner getVariable _marker) then {
 	garrison setVariable [format ["%1_reduced", _marker],true,true];
+	reducedGarrisons pushBackUnique _marker;
+	publicVariable "reducedGarrisons";
 };
 
 //_marker remoteExec ["INT_Replenishment", HCattack];
@@ -246,6 +254,8 @@ call {
 	// Garrison was replenished
 	if !(garrison getVariable [format ["%1_reduced", _marker],false]) exitWith {
 		spawer setVariable [format ["%1_respawning", _marker],true,true];
+		reducedGarrisons = reducedGarrisons - [_marker];
+		publicVariable "reducedGarrisons";
 	};
 };
 

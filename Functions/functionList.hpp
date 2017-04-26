@@ -57,7 +57,7 @@ class CfgFunctions {
 			class deployMinefield {};
 			class getMarkerInfo {};
 			class setupGearDB {};
-			class detectRHS {};
+			class detectMods {};
 			class detectACE {};
 			class moveObject {};
 			class respawnPetros {};
@@ -112,9 +112,6 @@ class CfgFunctions {
 			class deleteRoadblock {};
 			class createRoadblocks {};
 			class enemyArtillerySupport {};
-			class garrisonMonitor {};
-			class reinforcementTimer {};
-			class adjustGroupSize {};
 			class protectCamoNet {};
 			class IslandCheck {};
 			class despawnUnits {};
@@ -131,6 +128,7 @@ class CfgFunctions {
 			class setGarrisonSize {};
 			class respawnZone {};
 			class setupZones {};
+			class addToUPSMON {};
 		};
 		class QRF {
 			file = "Functions";

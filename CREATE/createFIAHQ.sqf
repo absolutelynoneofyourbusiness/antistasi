@@ -1,18 +1,16 @@
 if (!isServer and hasInterface) exitWith {};
 
 params ["_marker"];
-private ["_allVehicles","_allGroups","_allSoldiers","_workers","_markerPos","_flag","_size","_group","_unit","_garrison","_statics","_strength","_counter","_gunnerGroup","_unitType","_spawnPos","_vehicle","_static","_observer"];
+private ["_allVehicles","_allGroups","_allSoldiers","_workers","_markerPos","_flag","_group","_unit","_garrison","_statics","_strength","_counter","_gunnerGroup","_unitType","_spawnPos","_vehicle","_static","_observer"];
 
-#define _size 50
+#define HQ_SIZE 50
 
 _allVehicles = [];
 _allGroups = [];
 _allSoldiers = [];
 
 _markerPos = getMarkerPos (_marker);
-_size = 50;
-
-_statics = staticsToSave select {_x distance _markerPos < _size};
+_statics = staticsToSave select {_x distance _markerPos < HQ_SIZE};
 
 _gunnerGroup = createGroup side_blue;
 _allGroups pushBack _gunnerGroup;
@@ -66,15 +64,10 @@ while {(spawner getVariable _marker) AND (_counter < _strength)} do {
 	};
 };
 
-for "_i" from 0 to (count _allGroups) - 1 do {
-	_group = _allGroups select _i;
-	_group enableDynamicSimulation true;
-	if (_i == 0) then {
-		[leader _group, _marker, "SAFE","SPAWNED","RANDOMUP","NOVEH2","NOFOLLOW"] execVM "scripts\UPSMON.sqf";
-	} else {
-		[leader _group, _marker, "SAFE","SPAWNED","RANDOM","NOVEH2","NOFOLLOW"] execVM "scripts\UPSMON.sqf";
-	};
-};
+{
+	_x enableDynamicSimulation true;
+	[leader _x,_marker,"garrison"] spawn AS_fnc_addToUPSMON;
+} forEach _allGroups;
 
 {
 	[_x] spawn VEHinit;
@@ -94,7 +87,7 @@ if ((random 100 < (((server getVariable "prestigeNATO") + (server getVariable "p
 	_spawnPos = [];
 	_group = createGroup civilian;
 	while {true} do {
-		_spawnPos = [_markerPos, round (random _size), random 360] call BIS_Fnc_relPos;
+		_spawnPos = [_markerPos, round (random HQ_SIZE), random 360] call BIS_Fnc_relPos;
 		if !(surfaceIsWater _spawnPos) exitWith {};
 	};
 	_observer = _group createUnit [selectRandom CIV_journalists, _spawnPos, [],0, "NONE"];

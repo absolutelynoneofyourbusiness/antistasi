@@ -19,7 +19,7 @@ if (typeName _infGroup == "STRING") then {
 	_wp300 setWaypointBehaviour "CARELESS";
 	_wp300 setWaypointType "SAD";
 
-	waitUntil {sleep 5; ((units _vehGroup select 0) distance _dest < 50) || ({alive _x} count units _vehGroup == 0)};
+	waitUntil {sleep 5; ((units _vehGroup select 0) distance _dest < 50) OR ({alive _x} count units _vehGroup == 0)};
 };
 
 0 = [leader _vehGroup, _mrk, "COMBAT", "SPAWNED", "NOFOLLOW"] execVM "scripts\UPSMON.sqf";

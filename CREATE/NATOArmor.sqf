@@ -5,15 +5,14 @@ private ["_originPos","_targetPosition","_originName","_targetName","_endTime","
 
 [[],[]] params ["_allVehicles","_allSoldiers"];
 
-#define duration 60
+#define DURATION 60
 
 _originPos = getMarkerPos _originMarker;
 _targetPosition = getMarkerPos _targetMarker;
 
 _targetName = [_targetMarker] call AS_fnc_localizar;
 _originName = [_originMarker] call AS_fnc_localizar;
-duration = 60;
-_endTime = [date select 0, date select 1, date select 2, date select 3, (date select 4) + duration];
+_endTime = [date select 0, date select 1, date select 2, date select 3, (date select 4) + DURATION];
 _endTime = dateToNumber _endTime;
 
 _tsk = ["NATOArmor",[side_blue,civilian],[format [localize "STR_TSK_NATO_ARMOR",_targetName,_originName,numberToDate [2035,_endTime] select 3,numberToDate [2035,_endTime] select 4, A3_Str_BLUE],format ["%1 Armor", A3_Str_BLUE],_targetMarker],_targetPosition,"CREATED",5,true,true,"Attack"] call BIS_fnc_setTask;

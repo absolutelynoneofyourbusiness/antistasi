@@ -188,4 +188,4 @@ BLUFOR_marker_colour = "ColorWEST";
 BLUFOR_marker_type = "flag_USA";
 
 // Name of the faction
-A3_Str_BLUE = localize "STR_GENIDENT_USAF";
+A3_Str_BLUE = localize "STR_GENIDENT_USMC";

@@ -5,12 +5,12 @@ If you wish to add more soldiers beyond the available variables, you also need t
 Note: all classes marked as "extra" do not have a unique class in this template. They are, however, part of other templates and are therfore included in all templates.
 */
 sol_A_AA = 	"rhsusf_usmc_marpat_wd_stinger"; // Assistant AA (extra)
-sol_A_AR = 	"rhsusf_army_ucp_autoriflemana"; // Assistant autorifle
+sol_A_AR = 	"rhsusf_usmc_marpat_wd_machinegunner_ass"; // Assistant autorifle
 sol_A_AT = 	"rhsusf_usmc_marpat_wd_javelin_assistant"; // Assistant AT
 sol_AA = 	"rhsusf_usmc_marpat_wd_stinger"; // AA
 sol_AR = 	"rhsusf_usmc_marpat_wd_autorifleman_m249"; // Autorifle
 sol_AT = 	"rhsusf_usmc_marpat_wd_javelin"; // AT
-sol_AMMO = 	"rhsusf_usmc_marpat_wd_autorifleman_m249_ass"; // Ammo bearer (extra)
+sol_AMMO = 	"rhsusf_usmc_marpat_wd_machinegunner_ass"; // Ammo bearer (extra)
 sol_GL = 	"rhsusf_usmc_marpat_wd_grenadier"; // Grenade launcher
 sol_GL2 = 	"rhsusf_usmc_marpat_wd_grenadier_m32"; // Grenade launcher
 sol_LAT = 	"rhsusf_usmc_marpat_wd_smaw"; // Light AT
@@ -27,7 +27,7 @@ sol_UN = 	"rhsusf_usmc_marpat_wd_helicrew"; // Unarmed (extra)
 sol_RFL = 	"rhsusf_usmc_marpat_wd_rifleman"; // Rifleman
 sol_SN = 	"rhsusf_usmc_marpat_wd_sniper"; // Sniper
 sol_SP = 	"rhsusf_usmc_marpat_wd_spotter"; // Spotter
-sol_MED = 	"rhsusf_navy_sarc_w"; // Medic
+sol_MED = 	"rhsusf_navy_marpat_wd_medic"; // Medic
 sol_ENG = 	"rhsusf_usmc_marpat_wd_engineer"; // Engineer
 sol_OFF = 	"rhsusf_usmc_marpat_wd_officer"; // Officer
 sol_OFF2 = 	"rhsusf_usmc_marpat_wd_officer"; // Officer
@@ -277,7 +277,29 @@ genHelmets = [
 ];
 
 // Equipment unlocked by default
-unlockedWeapons = [
+if (activeGREF) then {
+	unlockedWeapons = [
+	"rhs_weap_makarov_pm",
+	"rhs_weap_savz61",
+	"rhs_weap_kar98k",
+	"rhs_weap_m38"
+	];
+
+	unlockedRifles = [
+	"rhs_weap_savz61",
+	"rhs_weap_kar98k",
+	"rhs_weap_m38"
+	];
+
+	unlockedMagazines = [
+	"rhs_mag_9x18_8_57N181S",
+	"rhsgref_5Rnd_762x54_m38",
+	"rhsgref_5Rnd_792x57_kar98k",
+	"rhsgref_20rnd_765x17_vz61"
+
+	];
+} else {
+	unlockedWeapons = [
 	"rhs_weap_makarov_pm",
 	"rhs_weap_savz61",
 	"rhs_weap_kar98k",
@@ -295,51 +317,41 @@ unlockedMagazines = [
 	"rhs_mag_9x18_8_57N181S",
 	"rhsgref_5Rnd_762x54_m38",
 	"rhsgref_5Rnd_792x57_kar98k",
-	"rhsgref_20rnd_765x17_vz61",
-	"rhs_mag_rdg2_white"
+	"rhsgref_20rnd_765x17_vz61"
+
 ];
+};
 
 unlockedItems = [
 	"Binocular",
 	"ItemMap",
 	"ItemWatch",
 	"ItemCompass",
-	"ItemRadio",
 	"FirstAidKit",
 	"Medikit",
 	"ToolKit",
-	"rhs_acc_dtk", // << default AK74 muzzle attachment
 	"U_BG_Guerilla1_1",
 	"U_BG_Guerilla2_1",
 	"U_BG_Guerilla2_2",
 	"U_BG_Guerilla2_3",
 	"U_BG_Guerilla3_1",
-	"U_BG_Guerilla3_2",
 	"U_BG_leader",
 	"H_Booniehat_khk",
 	"H_Booniehat_oli",
-	"H_Booniehat_grn",
-	"H_Booniehat_dirty",
 	"H_Cap_oli",
 	"H_Cap_blk",
 	"H_MilCap_rucamo",
 	"H_MilCap_gry",
-	"H_BandMask_blk",
 	"H_Bandanna_khk",
 	"H_Bandanna_gry",
 	"H_Bandanna_camo",
-	"H_Shemag_khk",
-	"H_Shemag_tan",
-	"H_Shemag_olive",
+	"H_ShemagOpen_khk",
 	"H_ShemagOpen_tan",
-	"H_Beret_grn",
-	"H_Beret_grn_SF",
+	"H_Shemag_olive",
 	"H_Watchcap_camo",
-	"H_TurbanO_blk",
 	"H_Hat_camo",
 	"H_Hat_tan",
 	"H_Beret_blk",
-	"H_Beret_red",
 	"H_Beret_02",
 	"H_Watchcap_khk",
 	"G_Balaclava_blk",
@@ -349,6 +361,7 @@ unlockedItems = [
 	"G_Bandanna_beast",
 	"G_Tactical_Black",
 	"G_Aviator",
+	"G_Bandanna_aviator",
 	"G_Shades_Black",
 	"U_C_Poloshirt_blue",
 	"U_C_Poloshirt_burgundy",
@@ -357,9 +370,6 @@ unlockedItems = [
 	"U_C_Poor_1",
 	"U_Rangemaster",
 	"U_NikosBody",
-	"U_IG_Guerilla3_2",
-	"U_OG_Guerilla2_1",
-	"U_IG_Guerilla1_1",
 	"U_I_G_Story_Protagonist_F",
 	"U_I_G_resistanceLeader_F",
 	"U_C_Poloshirt_blue",
@@ -368,35 +378,18 @@ unlockedItems = [
 	"U_C_Poloshirt_tricolour",
 	"U_C_Poloshirt_salmon",
 	"U_C_Poloshirt_redwhite",
-	"U_C_Commoner1_1",
-	"U_C_Commoner1_2",
-	"U_C_Commoner1_3",
 	"U_Rangemaster",
 	"U_NikosBody",
 	"U_C_Poor_1",
-	"U_C_Poor_2",
 	"U_C_WorkerCoveralls",
-	"U_C_Poor_shorts_1",
-	"U_C_Commoner_shorts",
-	"U_C_ShirtSurfer_shorts",
-	"U_C_TeeSurfer_shorts_1",
-	"U_C_TeeSurfer_shorts_2",
 	"U_BG_Guerrilla_6_1",
 	"U_B_survival_uniform",
 	"U_OrestesBody",
-	"rhs_vest_pistol_holster",
-	"rhs_scarf",
+	"G_Bandanna_khk",
 	"V_BandollierB_khk",
-	"rhsgref_uniform_ttsko_forest",
-	"rhsgref_uniform_ttsko_mountain",
-	"rhsgref_uniform_ttsko_urban",
-	"rhsgref_uniform_vsr",
 	"rhsgref_uniform_para_ttsko_oxblood",
-	"rhsgref_uniform_para_ttsko_mountain",
-	"rhsgref_uniform_reed",
 	"rhsgref_uniform_flecktarn",
-	"rhsgref_uniform_tigerstripe",
-	"rhsgref_uniform_woodland_olive"
+	"rhsgref_uniform_tigerstripe"
 ];
 
 unlockedBackpacks = [
@@ -478,4 +471,9 @@ if (worldname == "Tanoa") then {
     "U_I_C_Soldier_Bandit_4_F",
     "U_I_C_Soldier_Bandit_5_F"
     ];
+
+	// infPatrol = infPatrol + [(configfile >> "CfgGroups" >> "West" >> "Gendarmerie" >> "Infantry" >> "GENDARME_Inf_Patrol")]
+
+	// vehPatrol = vehPatrol + ["B_GEN_Offroad_01_gen_F"]
+
 };

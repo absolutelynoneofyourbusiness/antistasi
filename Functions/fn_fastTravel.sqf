@@ -1,4 +1,4 @@
-[campsFIA + [guer_respawn],false,true,false,false,false,false] params ["_targetLocations","_isHC","_travelAlone","_enemiesNearGroup","_break","_playersInGroup","_forceSpawn"];
+[campsFIA + [guer_respawn],false,true,false,false,false] params ["_targetLocations","_isHC","_travelAlone","_enemiesNearGroup","_break","_playersInGroup"];
 
 private ["_group","_groupLeader","_enemy","_targetPosition","_position","_distance","_unit"];
 
@@ -118,13 +118,8 @@ if (count _targetPosition > 0) then {
 			sleep _distance;
 		};
 
-		_forceSpawn = false;
-		if !(isMultiplayer) then {
-			if !(_marker in forcedSpawn) then {
-				_forceSpawn = true;
-				forcedSpawn pushBack _marker;
-			};
-		};
+		tempSpawnedZones pushBackUnique _marker;
+		spawner setVariable [_marker,true,true];
 
 		if (!_isHC) then {
 			sleep _distance;
@@ -300,9 +295,7 @@ if (count _targetPosition > 0) then {
 			disableUserInput false;
 			cutText ["You arrived at your destination.","BLACK IN",3];
 		} else {
-			hint format ["Group %1 arrived at their destination.", groupID _group]};
-		if (_forceSpawn) then {
-			forcedSpawn = forcedSpawn - [_marker];
+			hint format ["Group %1 arrived at their destination.", groupID _group]
 		};
 		sleep 5;
 		{_x allowDamage true} forEach units _group;

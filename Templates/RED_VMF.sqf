@@ -37,7 +37,7 @@ opArtilleryAmmoHE = "rhs_mag_3of56_10";
 // infantry classes, to allow for class-specific skill adjustments and pricing
 opI_OFF = 	"rhs_vmf_recon_officer"; // officer/official
 opI_PIL = 	"rhs_pilot_combat_heli"; // pilot
-opI_OFF2 = 	"rhs_vmf_recon_officer_armored"; // officer/traitor
+opI_OFF2 = 	"I_G_Soldier_unarmed_F"; // officer/traitor
 opI_CREW = 	"rhs_vmf_recon_rifleman"; // crew
 opI_MK = 	"rhs_vmf_recon_marksman";
 opI_MED =	"rhs_vmf_recon_medic";
@@ -65,7 +65,7 @@ opGroup_Security = 		[opI_SL, opI_AR2, opI_RFL2, opI_MED]; // security detail
 // the affiliation
 side_red = 			east;
 
-opFlag = 			"Flag_CSAT_F";
+opFlag = 			"rhs_Flag_vmf_F";
 
 opIR = "rhs_acc_perst1ik";
 

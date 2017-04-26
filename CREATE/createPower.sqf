@@ -27,14 +27,14 @@ while {(spawner getVariable _marker) AND (_currentStrength < 2)} do {
 		_dog = _group createUnit ["Fin_random_F",_spawnPos,[],0,"FORM"];
 		[_dog] spawn guardDog;
 	};
-	[leader _group, _patrolMarker, "SAFE","SPAWNED", "NOVEH2"] execVM "scripts\UPSMON.sqf";
+	[leader _group,_patrolMarker,"patrol"] spawn AS_fnc_addToUPSMON;
 	_allGroups pushBack _group;
 	_currentStrength = _currentStrength +1;
 };
 
 _flag = createVehicle [cFlag, _markerPos, [],0, "CAN_COLLIDE"];
 _flag allowDamage false;
-[_flag,"take"] remoteExec ["AS_fnc_addActionMP"];
+[_flag,"take"] remoteExec ["AS_fnc_addActionMP",[0,-2] select isDedicated,_flag];
 _allVehicles pushBack _flag;
 
 _spawnPos = _markerPos findEmptyPosition [10,_size*1.5,enemyMotorpoolDef];
@@ -52,9 +52,7 @@ while {(spawner getVariable _marker) AND (_currentStrength < _maxStrength)} do {
 	if ((diag_fps > minimoFPS) OR (_currentStrength == 0)) then {
 		_groupType = [infTeam, side_green] call AS_fnc_pickGroup;
 		_group = [_markerPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
-		_patrolParams = [leader _group, _marker, "SAFE","SPAWNED","NOVEH2","NOFOLLOW"];
-		if (_currentStrength == 0) then {_patrolParams pushBack "FORTIFY"};
-		_patrolParams execVM "scripts\UPSMON.sqf";
+		[leader _group, _marker,"garrison"] spawn AS_fnc_addToUPSMON;
 		_allGroups pushBack _group;
 	};
 	_currentStrength = _currentStrength + 1;
@@ -71,7 +69,7 @@ if ((random 100 < (((server getVariable "prestigeNATO") + (server getVariable "p
 	_observer = _group createUnit [selectRandom CIV_journalists, _spawnPos, [],0, "NONE"];
 	[_observer] spawn CIVinit;
 	_allGroups pushBack _group;
-	[_observer, _marker, "SAFE", "SPAWNED","NOFOLLOW", "NOVEH2","NOSHARE","DoRelax"] execVM "scripts\UPSMON.sqf";
+	[_observer,_marker,"observe"] spawn AS_fnc_addToUPSMON;
 };
 
 sleep 3;
@@ -127,6 +125,8 @@ sleep 5;
 diag_log format ["Reduced garrison at %1", _marker];
 if (spawner getVariable _marker) then {
 	garrison setVariable [format ["%1_reduced", _marker],true,true];
+	reducedGarrisons pushBackUnique _marker;
+	publicVariable "reducedGarrisons";
 };
 
 //_marker remoteExec ["INT_Replenishment", HCattack];
@@ -147,6 +147,8 @@ call {
 	// Garrison was replenished
 	if !(garrison getVariable [format ["%1_reduced", _marker],false]) exitWith {
 		spawer setVariable [format ["%1_respawning", _marker],true,true];
+		reducedGarrisons = reducedGarrisons - [_marker];
+		publicVariable "reducedGarrisons";
 	};
 };
 

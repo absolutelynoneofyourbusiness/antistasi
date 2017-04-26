@@ -89,6 +89,11 @@ if (([_container] call AS_fnc_getSpareCapacity) < 100) exitWith {_unit groupChat
 		doGetOut _x;
 		sleep 1;
 	};
+
+	if (typeName (_x getVariable ["bis_fnc_saveInventory_data",""]) == "STRING") then {
+		[_x, [_x, "unit_inventory"]] call BIS_fnc_saveInventory;
+	};
+
 	[_x, _container] spawn AS_fnc_lootCorpses;
 	sleep 1;
 } forEach _units;
