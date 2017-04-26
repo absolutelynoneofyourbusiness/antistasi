@@ -154,7 +154,7 @@
 				<Original>Resistance</Original>
 			</Key>
 			<Key ID="STR_GENIDENT_SOC">
-				<Original>SOCOM</Original>
+				<Original>MARSOC</Original>
 			</Key>
 			<Key ID="STR_GENIDENT_SF">
 				<Original>NATO SF</Original>
@@ -165,11 +165,11 @@
 			<Key ID="STR_GENIDENT_BW">
 				<Original>Bundeswehr</Original>
 			</Key>
-			<Key ID="STR_GENIDENT_RoyMar">
-				<Original>Royal Marines</Original>
+			<Key ID="STR_GENIDENT_BritArm">
+				<Original>British Army</Original>
 			</Key>
-			<Key ID="STR_GENIDENT_SAS">
-				<Original>SAS</Original>
+			<Key ID="STR_GENIDENT_SBS">
+				<Original>SBS</Original>
 			</Key>
 		</Container>
 	</Package>

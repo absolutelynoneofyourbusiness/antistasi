@@ -17,7 +17,7 @@ if (!isPlayer _target) exitWith {hint localize "STR_HINTS_GEN_DONATE_PLAYER_FAIL
 
 [-100] call resourcesPlayer;
 _money = player getVariable ["dinero",0];
-["dinero",_money] call fn_SaveStat;
+["dinero",_money] call fn_savePlayerData;
 _dinero = _target getVariable ["dinero",0];
 _target setVariable ["dinero",_dinero + 100, true];
 hint format [localize "STR_HINTS_GEN_DONATE_PLAYER", name _target];

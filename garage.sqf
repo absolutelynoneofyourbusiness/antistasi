@@ -128,7 +128,7 @@ garageKeys = (findDisplay 46) displayAddEventHandler ["KeyDown", {
 					if ((_x != (vehInGarageShow select cuentaGarage)) or (_found)) then {_newArr pushBack _x} else {_found = true};
 				} forEach personalGarage;
 				personalGarage = _newArr;
-				["personalGarage",_newArr] call fn_SaveStat;
+				["personalGarage",_newArr] call fn_savePlayerData;
 				garageVeh setVariable ["duenyo",getPlayerUID player,true];
 			};
 

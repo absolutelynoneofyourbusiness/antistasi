@@ -51,7 +51,7 @@ _traitorGroup selectLeader _traitor;
 
 _posTsk = (position _house) getPos [random 100, random 360];
 
-_spawnData = [_initialPosition, [ciudades, _initialPosition] call BIS_fnc_nearestPosition] call AS_fnc_findRoadspot;
+_spawnData = [_traitorPosition, _posBase] call AS_fnc_findRoadspot;
 if (count _spawnData < 1) exitWith {diag_log format ["Error in traitor: no suitable roads found near %1",_initialMarker]};
 _roadPos = _spawnData select 0;
 _roadDir = _spawnData select 1;

@@ -20,21 +20,6 @@ if (_marker != "FIA_HQ") then {
 	[_flag,"unit"] remoteExec ["AS_fnc_addActionMP"];
 	[_flag,"vehicle"] remoteExec ["AS_fnc_addActionMP"];
 	[_flag,"garage"] remoteExec ["AS_fnc_addActionMP"];
-
-	if !(_marker in destroyedCities) then {
-		if ((daytime > 8) AND (daytime < 18)) then {
-			_group = createGroup civilian;
-			_allGroups pushBack _group;
-			for "_i" from 1 to 8 do {
-				_unit = _group createUnit [selectRandom CIV_workers, _markerPos, [],0, "NONE"];
-				[_unit] spawn CIVinit;
-				_workers pushBack _unit;
-				sleep 0.5;
-			};
-			[_marker,_workers] spawn destroyCheck;
-			[leader _group, _marker, "SAFE", "SPAWNED","NOFOLLOW", "NOSHARE","DORELAX","NOVEH2"] execVM "scripts\UPSMON.sqf";
-		};
-	};
 };
 
 _gunnerGroup = createGroup side_blue;
