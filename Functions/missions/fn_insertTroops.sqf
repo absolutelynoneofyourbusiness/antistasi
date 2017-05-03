@@ -1,5 +1,6 @@
 /*
  	Description:
+		Spawn a transport helicopter and troops to insert
 
 	Parameters:
 		0: STRING/ARRAY - Marker name or position of zone to spawn the helicopter at
