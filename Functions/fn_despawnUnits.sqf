@@ -27,5 +27,8 @@ if (count _soldiers > 0) then {
 if (count _groups > 0) then {
 	{
 		_x deleteGroupWhenEmpty true;
+		grps_VCOM = grps_VCOM - [(_x call BIS_fnc_netId)];
 	} forEach _groups;
 };
+
+publicVariable "grps_VCOM";

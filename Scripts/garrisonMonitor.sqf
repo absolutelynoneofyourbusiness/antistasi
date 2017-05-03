@@ -17,7 +17,7 @@ GarMonZones = [];
 
 private ["_targets","_weights","_marker","_target"];
 
-waitUntil {allZonesSetup};
+waitUntil {sleep 1; allZonesSetup};
 
 while {true} do {
 	_targets = [];

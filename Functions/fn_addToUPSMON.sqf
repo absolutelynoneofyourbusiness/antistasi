@@ -1,6 +1,8 @@
 params ["_leader","_marker",["_order","patrol",[""]]];
 private ["_parameters"];
 
+if (isServer) exitWith {};
+
 if (isNull _leader) exitWith {diag_log format ["Error in addToUPSMON: %1 is undefined near %2.",_leader,_marker]};
 if !(alive _leader) exitWith {diag_log format ["Error in addToUPSMON: %1 is dead near %2.",_leader,_marker]};
 

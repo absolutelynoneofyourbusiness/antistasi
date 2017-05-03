@@ -5,18 +5,18 @@ if (_muerto getVariable ["OPFORSpawn",false]) then {_muerto setVariable ["OPFORS
 [_muerto] spawn postmortem;
 
 if (activeACE) then {
-	if ((isNull _killer) || (_killer == _muerto)) then {
+	if ((isNull _killer) OR {(_killer == _muerto)}) then {
 		_killer = _muerto getVariable ["ace_medical_lastDamageSource", _killer];
 	};
 };
 
-if ((side _killer == side_blue) || (captive _killer)) then {
+if ((side _killer == side_blue) || {(captive _killer)}) then {
 	if (activeBE) then {["kill"] remoteExec ["fnc_BE_XP", 2]};
 	_grupo = group _muerto;
 	if (isPlayer _killer) then {
 		[2,_killer,true] call playerScoreAdd;
 
-		if ((captive _killer) && (_killer distance _muerto < 300)) then {
+		if ((captive _killer) && {(_killer distance _muerto < 300)}) then {
 			[_killer,false] remoteExec ["setCaptive",_killer];
 		};
 	} else {
@@ -26,10 +26,10 @@ if ((side _killer == side_blue) || (captive _killer)) then {
 	if (vehicle _killer isKindOf "StaticMortar") then {
 		if (isMultiplayer) then {
 			{
-				if ((_x distance _muerto < 300) and (captive _x)) then {[_x,false] remoteExec ["setCaptive",_x]};
+				if ((_x distance _muerto < 300) and {(captive _x)}) then {[_x,false] remoteExec ["setCaptive",_x]};
 			} forEach playableUnits;
 		} else {
-			if ((player distance _muerto < 300) and (captive player)) then {player setCaptive false};
+			if ((player distance _muerto < 300) and {(captive player)}) then {player setCaptive false};
 		};
 	};
 	if (count weapons _muerto < 1) then {
@@ -50,14 +50,14 @@ if ((side _killer == side_blue) || (captive _killer)) then {
 					if (([100,1,_x,"BLUFORSpawn"] call distanceUnits) and (vehicle _x == _x)) then {
 						[_x] spawn surrenderAction;
 					} else {
-						if (_x == leader group _x) then {
+						/*if (_x == leader group _x) then {
 							if (random 1 < 0.1) then {
 								_enemy = _x findNearestEnemy _x;
 								if (!isNull _enemy) then {
 									[position _enemy] remoteExec ["patrolCA",HCattack];
 								};
 							};
-						};
+						};*/
 					[_x,_x] spawn cubrirConHumo;
 					};
 				};
@@ -66,4 +66,11 @@ if ((side _killer == side_blue) || (captive _killer)) then {
 			};
 		};
 	} forEach units _grupo;
+};
+
+if ({alive _x} count (units (group _muerto)) < 1) then {
+	grps_VCOM = grps_VCOM - [((group _muerto) call BIS_fnc_netId)];
+	publicVariable "grps_VCOM";
+} else {
+	[getPos _muerto] call AS_fnc_signalDistress;
 };

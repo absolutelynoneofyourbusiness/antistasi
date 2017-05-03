@@ -1,5 +1,5 @@
 params ["_unit", "_container",["_ownEquipment",false]];
-private ["_weapons","_magazines"];
+private ["_weapons","_magazines","_items"];
 
 if !(_ownEquipment) then {
 	_weapons = weapons _unit;

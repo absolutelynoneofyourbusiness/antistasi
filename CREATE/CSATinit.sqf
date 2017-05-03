@@ -1,8 +1,11 @@
-params ["_unit"];
+params ["_unit",["_isGarrison",false]];
 private ["_unitType"];
 
-_unit setVariable ["OPFORSpawn",true,true];
-_unit triggerDynamicSimulation true;
+if !(_isGarrison) then {
+	_unit setVariable ["OPFORSpawn",true,true];
+	_unit triggerDynamicSimulation true;
+};
+
 _unit addEventHandler ["HandleDamage",handleDamageAAF];
 _unit addEventHandler ["killed",AAFKilledEH];
 
@@ -31,3 +34,5 @@ if ((activeAFRF) AND !(replaceFIA)) then {
 		case opI_SP: {[_unit, _unitType] call AS_fnc_gear_loadoutCSAT};
 	};
 };
+
+VcomAI_UnitQueue pushback _unit;

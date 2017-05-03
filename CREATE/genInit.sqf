@@ -145,3 +145,5 @@ _unit setskill ["reloadSpeed",_reload];
 
 _unit addEventHandler ["HandleDamage",handleDamageAAF];
 _unit addEventHandler ["killed", AAFKilledEH];
+
+VcomAI_UnitQueue pushback _unit;

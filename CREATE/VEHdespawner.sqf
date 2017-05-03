@@ -30,7 +30,7 @@ if ((typeOf _vehicle in CIV_vehicles) AND ({_x getVariable ["BLUFORSpawn",false]
 sleep 30;
 
 while {alive _vehicle} do {
-	if !(count (assignedCargo _vehicle) > 0) then {
+	if !(count ((assignedCargo _vehicle) + (crew _vehicle)) > 0) then {
 		if !(count (_vehicle nearEntities ["Man", 500]) > 0) then {
 			if !({_x distance2d _vehicle < distanciaSPWN} count (allPlayers - entities "HeadlessClient_F") > 0) then {
 				if (_vehicle distance getMarkerPos guer_respawn > 100) then {

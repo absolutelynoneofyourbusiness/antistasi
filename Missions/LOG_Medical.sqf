@@ -59,7 +59,7 @@ reportedVehs pushBack _truck; publicVariable "reportedVehs";
 _allVehicles pushBack _truck;
 _truck lockCargo true;
 {_truck lockCargo [_x, false];} forEach [0 ,1];
-[_truck, true] remoteExec ["AS_fnc_lockVehicle",0,true];
+[_truck, true] remoteExec ["AS_fnc_lockVehicle", [0,-2] select isDedicated, true];
 
 _crate = "Box_IND_Support_F" createVehicle _truckPos;
 _crate setPos ([getPos _truck, 6, 185] call BIS_Fnc_relPos);
@@ -226,7 +226,7 @@ if ((!alive _truck) OR (dateToNumber date > _endTime)) then {
 			(_allCrates select 2) attachTo [_truck,[0,-1.6,-0.4]];
 			(_allCrates select 3) attachTo [_truck,[0,-2.0,-0.4]];
 
-			[_truck, false] remoteExec ["AS_fnc_lockVehicle",0,true];
+			[_truck, false] remoteExec ["AS_fnc_lockVehicle", [0,-2] select isDedicated, true];
 		};
 		sleep 3;
 	};
@@ -270,7 +270,7 @@ if ((!alive _truck) OR (dateToNumber date > _endTime)) then {
 			_x action ["eject", _truck];
 		} forEach (crew (_truck));
 		sleep 1;
-		[_truck, true] remoteExec ["AS_fnc_lockVehicle",0,true];
+		[_truck, true] remoteExec ["AS_fnc_lockVehicle", [0,-2] select isDedicated, true];
 
 		if (alive _truck) then {
 			[[petros,"hint","Supplies Delivered"],"commsMP"] call BIS_fnc_MP;

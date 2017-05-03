@@ -8,90 +8,27 @@ spawnDistanceOne = 1500;
 spawnDistanceTwo = 3000;
 spawnDistanceThree = 4500;
 spawnDistanceFour = 6000;
-spawnDistancePlayer = 2000;
+spawnDistancePlayer = 1500;
 frontierDistance = 9000;
+bufferDistance = 6000;
 
-frontierZones = [];
-spawnedZones = [];
 tempSpawnedZones = [];
-deadZones =+ marcadores;
+spawnedZonesExtra = [];
 
-// Spawn first wave
-{
-	_marker = _x;
-	_markerPos = getMarkerPos (_marker);
+_zones = marcadores select {getMarkerPos _x distance2D posHQ < spawnDistanceTwo};
+spawnedZones = +_zones;
+bufferZones = (marcadores select {getMarkerPos _x distance2D posHQ < bufferDistance}) - spawnedZones;
+frontierZones = (marcadores select {getMarkerPos _x distance2D posHQ < frontierDistance}) - bufferZones;
+deadZones = marcadores - frontierZones - bufferZones - spawnedZones;
+_zones = _zones apply {[getMarkerPos _x distance2d posHQ,_x]};
+_zones sort true;
 
-	if ((server getVariable ["posHQ", getMarkerPos guer_respawn]) distance2D _markerPos < spawnDistanceOne) then {
-		spawnedZones pushBackUnique _marker;
-		spawner setVariable [_marker,true,true];
-		deadZones = deadZones - [_marker];
-
-		[_marker] call AS_fnc_respawnZone;
-		sleep 1;
-	};
-} forEach deadZones;
-
-sleep 30;
-
-// Spawn second wave
-{
-	_marker = _x;
-	_markerPos = getMarkerPos (_marker);
-
-	if ((server getVariable ["posHQ", getMarkerPos guer_respawn]) distance2D _markerPos < spawnDistanceTwo) then {
-		spawnedZones pushBackUnique _marker;
-		spawner setVariable [_marker,true,true];
-		deadZones = deadZones - [_marker];
-
-		[_marker] call AS_fnc_respawnZone;
-		sleep 1;
-	};
-} forEach deadZones;
-
-sleep 30;
-
-// Spawn third wave
-{
-	_marker = _x;
-	_markerPos = getMarkerPos (_marker);
-
-	if ((server getVariable ["posHQ", getMarkerPos guer_respawn]) distance2D _markerPos < spawnDistanceThree) then {
-		spawnedZones pushBackUnique _marker;
-		spawner setVariable [_marker,true,true];
-		deadZones = deadZones - [_marker];
-
-		[_marker] call AS_fnc_respawnZone;
-		sleep 1;
-	};
-} forEach deadZones;
-
-sleep 30;
-
-// Spawn fourth wave
-{
-	_marker = _x;
-	_markerPos = getMarkerPos (_marker);
-
-	if ((server getVariable ["posHQ", getMarkerPos guer_respawn]) distance2D _markerPos < spawnDistanceFour) then {
-		spawnedZones pushBackUnique _marker;
-		spawner setVariable [_marker,true,true];
-		deadZones = deadZones - [_marker];
-
-		[_marker] call AS_fnc_respawnZone;
-		sleep 1;
-	};
-} forEach deadZones;
-
-// Set frontier zones
-{
-	_marker = _x;
-	_markerPos = getMarkerPos (_marker);
-
-	if ((server getVariable ["posHQ", getMarkerPos guer_respawn]) distance2D _markerPos < frontierDistance) then {
-		frontierZones pushBackUnique _marker;
-		deadZones = deadZones - [_marker];
-	};
-} forEach deadZones;
+for "_i" from 0 to (count _zones - 1) do {
+	_marker = _zones select _i select 1;
+	spawner setVariable [_marker,true,true];
+	[_marker] call AS_fnc_respawnZone;
+	sleep 3;
+};
 
 {
 	spawner setVariable [_x,false,true];
@@ -103,6 +40,12 @@ settingUpZones = false;
 if !(isNil "GarMon") then {
 	terminate GarMon;
 };
-GarMon = [] spawn garrisonMonitor;
 
-"Perimeter established. Good to go." remoteExec ["hint",[0,-2] select isDedicated,true];
+if !(isNil "ReinfMon") then {
+	terminate ReinfMon;
+};
+
+//GarMon = [] spawn garrisonMonitor;
+ReinfMon = [] spawn reinforcementMonitor;
+
+"Perimeter established. Good to go." remoteExec ["hint", [0,-2] select isDedicated, true];

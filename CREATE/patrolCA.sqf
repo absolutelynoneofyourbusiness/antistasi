@@ -126,7 +126,7 @@ if !(_base == "") then {
 			};
 		};
 
-		_vehicleType = _vehicleArray call BIS_fnc_selectRandom;
+		_vehicleType = selectRandom _vehicleArray;
 	};
 
 	if !(_vehicleType in vehTank) then {
@@ -166,7 +166,7 @@ if !(_airport == "") then {
 	_vehicleArray = (indAirForce - planes);
 	_maxCounter = [1,2] select (_isMarker);
 	for "_i" from 1 to _maxCounter do {
-		_vehicleType = selectRandom heli_unarmed;
+		_vehicleType = heli_transport;
 		if (_i < _maxCounter) then {
 			_vehicleArray =+ indAirForce arrayIntersect (heli_armed + heli_unarmed);
 			call {
@@ -182,7 +182,7 @@ if !(_airport == "") then {
 				};
 			};
 
-			_vehicleType = _vehicleArray call BIS_fnc_selectRandom;
+			_vehicleType = selectRandom _vehicleArray;
 		};
 
 		_timeOut = 0;
@@ -195,7 +195,7 @@ if !(_airport == "") then {
 		};
 		if (count _spawnPosition == 0) then {_spawnPosition = _originPosition};
 
-		_vehicleData = [_spawnPosition, [_spawnPosition, _markerPos] call BIS_fnc_dirTo,_vehicleType, side_green] call bis_fnc_spawnvehicle;
+		_vehicleData = [_spawnPosition, [_spawnPosition, _markerPos] call BIS_fnc_dirTo, _vehicleType, side_green] call bis_fnc_spawnvehicle;
 		_vehicle = _vehicleData select 0;
 		_vehicleGroup = _vehicleData select 2;
 		_allGroups pushBack _vehicleGroup;

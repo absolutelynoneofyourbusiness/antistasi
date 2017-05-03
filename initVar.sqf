@@ -12,8 +12,8 @@ servidoresOficiales = ["Antistasi Official: Main","Antistasi Official: Hardcore"
 
 debug = false;//debug variable, not useful for everything..
 
-cleantime = 900;//time to delete dead bodies, vehicles etc..
-distanciaSPWN = 1200;//initial spawn distance. Less than 1Km makes parked vehicles spawn in your nose while you approach.
+cleantime = 1200;//time to delete dead bodies, vehicles etc..
+distanciaSPWN = 800;//initial spawn distance. Less than 1Km makes parked vehicles spawn in your nose while you approach.
 musicON = true;
 civPerc = 0.05;//initial % civ spawn rate
 minimoFPS = 15;//initial FPS minimum.
@@ -30,7 +30,7 @@ closeMarkersUpdating = 0;
 static_playerSide = "B";
 enableRestart = true;
 status_templatesLoaded = false;
-activeJNA = (("AS_param_useJNA" call BIS_fnc_getParamValue) == 1);
+activeJNA = ((["AS_param_useJNA", 0] call BIS_fnc_getParamValue) == 1);
 missionPath = [(str missionConfigFile), 0, -15] call BIS_fnc_trimString;
 
 AS_customGroups = false;
@@ -74,6 +74,10 @@ skillAAF = 0;
 smallCAmrk = [];
 smallCApos = [];
 reducedGarrisons = [];
+solCat = [["I_G_Soldier_base_F","SoldierWB"],["I_G_Soldier_base_F","SoldierEB"]] select replaceFIA;
+vehCat = ["LandVehicle","AirVehicle"];
+allCat = solCat + vehCat;
+enemyCat = [["I_Soldier_base_F","SoldierEB"],["I_Soldier_base_F","SoldierWB"]] select replaceFIA;
 
 // camps
 campsFIA = [];
@@ -153,8 +157,9 @@ server setVariable ["easyMode",false,true]; // higher income
 server setVariable ["hardMode",false,true];
 server setVariable ["testMode",false,true];
 
+
+grps_VCOM = []; // VCOM patrol groups
 staticsToSave = []; publicVariable "staticsToSave";
-staticsData = []; publicVariable "staticsData";
 prestigeOPFOR = 50;//Initial % support for AAF on each city
 if (not cadetMode) then {prestigeOPFOR = 75};//if you play on vet, this is the number
 prestigeBLUFOR = 0;//Initial % FIA support on each city
@@ -229,5 +234,6 @@ publicVariable "FIA_RB_list";
 publicVariable "reducedGarrisons";
 publicVariable "replaceFIA";
 publicVariable "static_playerSide";
+publicVariable "grps_VCOM";
 
 if (isMultiplayer) then {[[petros,"hint","Variables Init Completed"],"commsMP"] call BIS_fnc_MP;};

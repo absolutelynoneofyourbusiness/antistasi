@@ -7,10 +7,10 @@ _unit triggerDynamicSimulation false;
 _skill = (0.2 + (skillAAF * 0.025));
 _unit setSkill _skill;
 _aiming = _skill;
-_spotD = _skill;
-_spotT = _skill;
+_spotD = _skill + 0.3;
+_spotT = _skill + 0.3;
 _cour = _skill;
-_comm = _skill;
+_comm = _skill + 0.3;
 _aimingSh = _skill;
 _aimingSp = _skill;
 _reload = _skill;
@@ -176,3 +176,5 @@ _unit setskill ["reloadSpeed",_reload];
 
 _unit addEventHandler ["HandleDamage",handleDamageAAF];
 _unit addEventHandler ["killed", AAFKilledEH];
+
+VcomAI_UnitQueue pushback _unit;

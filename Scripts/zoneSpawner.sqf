@@ -6,7 +6,7 @@ private ["_blueUnits", "_opforUnits", "_marker", "_markerPos","_lastPosHQ"];
 "Vehicle" setDynamicSimulationDistance distanciaSPWN;
 "IsMoving" setDynamicSimulationDistanceCoef 1;
 
-waitUntil {allZonesSetup};
+waitUntil {sleep 1; allZonesSetup};
 
 _lastPosHQ = posHQ;
 // Checks of spawned-in zones and frontier zones
@@ -14,9 +14,27 @@ while {true} do {
 	//if (_lastPosHQ isEqualTo posHQ) then {
 		// ### HQ was not moved ###
 
+	// Player within spawn distance of buffer zones
+	if ({(_x distance poshq > (bufferDistance-spawnDistancePlayer))} count (allPlayers - entities "HeadlessClient_F") > 0) then {
+		// Check buffer zones for player presence
+		{
+			_marker = _x;
+			_markerPos = getMarkerPos (_marker);
+
+			if ({(_x distance _markerPos < spawnDistancePlayer)} count (allPlayers - entities "HeadlessClient_F") > 0) then {
+				spawnedZonesExtra pushBackUnique _marker;
+				spawner setVariable [_marker,true,true];
+				bufferZones = bufferZones - [_marker];
+				diag_log format ["################# Buffer zone spawned: %1 #################", _marker];
+
+				[_marker] call AS_fnc_respawnZone;
+			};
+		} forEach bufferZones;
+	};
+
 	// Player within spawn distance of frontier zones
-	if ({(_x distance poshq > (spawnDistanceFour-spawnDistancePlayer))} count (allPlayers - entities "HeadlessClient_F") > 0) then {
-		// Check frontier zones for player presence
+	if ({(_x distance poshq > (frontierDistance-spawnDistancePlayer))} count (allPlayers - entities "HeadlessClient_F") > 0) then {
+		// Check frontier zones for player proximity, spawn if neccessary
 		{
 			_marker = _x;
 			_markerPos = getMarkerPos (_marker);
@@ -25,11 +43,12 @@ while {true} do {
 				tempSpawnedZones pushBackUnique _marker;
 				spawner setVariable [_marker,true,true];
 				frontierZones = frontierZones - [_marker];
-				diag_log format ["################# Frontier zone spawned: %1 #################", _marker];
+				diag_log format ["################# Frontier zone temporarily spawned: %1 #################", _marker];
 
 				[_marker] call AS_fnc_respawnZone;
 			};
 		} forEach frontierZones;
+
 
 		// Player presence inside the frontier zones, check dead zones for player presence
 		if (count tempSpawnedZones > 0) then {
@@ -42,7 +61,7 @@ while {true} do {
 					tempSpawnedZones pushBackUnique _marker;
 					spawner setVariable [_marker,true,true];
 					deadZones = deadZones - [_marker];
-					diag_log format ["################# Dead zone spawned: %1 #################", _marker];
+					diag_log format ["################# Dead zone temporarily spawned: %1 #################", _marker];
 
 					[_marker] call AS_fnc_respawnZone;
 				};
@@ -68,7 +87,7 @@ while {true} do {
 		};
 	} forEach tempSpawnedZones;
 
-	sleep 10;
+	sleep 5;
 /*	} else {
 		// ### HQ was moved ###
 

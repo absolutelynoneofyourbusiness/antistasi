@@ -20,7 +20,7 @@ while {true} do
 
 			_areamarker = _Ucthis select 1;
 			_surrended = false;
-
+			
 			if (({alive _x && !(captive _x)} count units _grp) == 0 ||  _grp getvariable ["UPSMON_Removegroup",false]) exitwith
 			{
 				[_grp,_UCthis] call UPSMON_RESPAWN;
@@ -440,7 +440,7 @@ while {true} do
 //*********************************************************************************************************************
 // 											ORDERS
 //*********************************************************************************************************************
-
+		
 		switch (_grp getvariable "UPSMON_GrpMission") do
 		{
 			case "ASSAULT":
@@ -527,6 +527,10 @@ while {true} do
 						[_grp,(_grp getvariable "UPSMON_Attackpos"),_currpos] call UPSMON_GETINPATROLSRCH;
 					};
 				};
+				if (_stuck) then
+				{
+					[_grp,(_grp getvariable "UPSMON_Attackpos"),_currpos] call UPSMON_GETINPATROLSRCH;
+				};
 			};
 
 			case "DEFEND":
@@ -570,7 +574,7 @@ while {true} do
 							{
 								If ((_targetpos select 0 == (_grp getvariable "UPSMON_Alertpos") select 0 && _targetpos select 1 == (_grp getvariable "UPSMON_Alertpos") select 1)
 									|| _targetdist <= 5
-									//|| _stuck
+									|| _stuck//todo test
 									|| moveToFailed _npc
 									|| moveToCompleted _npc
 									|| (_grp getvariable ["UPSMON_TIMEONTARGET",0] < time && !("air" in _typeofgrp))

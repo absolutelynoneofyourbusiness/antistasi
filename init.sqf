@@ -43,7 +43,9 @@ if (!isMultiPlayer) then {
 
 waitUntil {(!isNil "saveFuncsLoaded") and (!isNil "serverInitDone")};
 
-if(isServer) then {
+[] execVM "VCOMAI\init.sqf";
+
+if (isServer) then {
     _serverHasID = profileNameSpace getVariable ["SS_ServerID",nil];
     if(isNil "_serverHasID") then {
         _serverID = str(round((random(100000)) + random 10000));

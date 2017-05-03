@@ -1,317 +1,157 @@
 if (!isServer and hasInterface) exitWith{};
 
 /*
-parameters
-0: base/airport/carrier to start from (marker)
-1: target location (position)
-2: marker for dismounts to patrol (marker)
-3: patrol duration (time in minutes)
-4: composition: transport/destroy/mixed (string)
-5: size: large/small (string)
-6: source of the QRF request (optional)
+ 	Description:
+		Spawns 1-2 vehicles, with or without troops, and dispatches them to the target area
 
-If origin is an airport/carrier, the QRF will consist of air cavalry. Otherwise it'll be ground forces in MRAPs/trucks.
+	Parameters:
+		0: STRING/ARRAY - Marker name or position of zone to spawn the units at
+		1: ARRAY - Target position
+		2: STRING - Composition to be used: destroy, transport, mixed
+		3: STRING - Size of the force: small, large
+		4: INT - Duration of the mission, units will RTB afterwards
+		5: INT - (optional) - Patrol radius for dismounted troops in the target area
+		6: STRING - (optional) - Variable to be used as a flag for status of the force, will be set to true once all units are dead or have despawned
+
+ 	Returns:
+		Nothing
+
+ 	Example:
+		["airport_1", getMarkerPos "Ioannina", "transport", "small", 15*60, 250] remoteExec ["enemyQRF", HCattack];
 */
-params ["_orig", "_dest", "_mrk", "_duration", "_composition", "_size", ["_source", ""], ["_external", false]];
+
+params [
+	["_startPosition", "spawnCSAT", [""]],
+	["_targetPosition", [], [[]]],
+	["_composition", "transport", [""]],
+	["_size", "small", [""]],
+	["_duration", 15, [1]],
+	["_searchAreaRadius", 100, [1]],
+	["_varName", "", []],
+	["_allGroups", [], [[]], 0],
+	["_allSoldiers", [], [[]], 0],
+	["_allVehicles", [], [[]], 0]
+];
+
+private ["_bases","_airports","_type","_method","_side","_faction","_lead","_transportType","_dismountGroupType","_dismountGroupEscort","_spawnPosition","_endTime","_vehicleData","_dismountFlag","_dismountGroup","_rallyPoint","_transport", "_endTime"];
+
+_endTime = [date select 0, date select 1, date select 2, date select 3, (date select 4) + _duration];
+_endTime = dateToNumber _endTime;
+
+if !(_varName isEqualTo "") then {
+	server setVariable [_varName, false, true];
+};
 
 // FIA bases/airports
 _bases = bases arrayIntersect mrkAAF;
 _airports = aeropuertos arrayIntersect mrkAAF;
 
-_posComp = ["transport", "destroy", "mixed"];
-if !(_composition in _posComp) exitWith {};
+// setup the default configuration
+_type = ["air", "land"] select (_startPosition in _bases);
+_method = ["land", "rope"] select (_startPosition == "spawnCSAT");
+_side = [side_green, side_red] select (_startPosition == "spawnCSAT");
+_faction = ["GREEN", "RED"] select (_startPosition == "spawnCSAT");
+_dismountFlag = format ["QRF_%1", round (random 1000)];
 
-// define type of QRF and vehicles by type of origin, plus method of troop insertion by air (rope or land)
-_type = "air";
-_method = "rope";
-_side = side_red;
-_faction = "RED";
-_lead = opHeliSD;
-_transport = opHeliFR;
-_dismountGroup = [opGroup_Recon_Team, side_red] call AS_fnc_pickGroup;
-if (_size == "large") then {
-	_dismountGroup = [opGroup_Squad, side_red] call AS_fnc_pickGroup;
-};
-_dismountGroupEscort = [infTeam, side_green] call AS_fnc_pickGroup;
-if !(_orig == "spawnCSAT") then {
-	_method = "land";
-	_side = side_green;
-	_faction = "GREEN";
-	_lead = heli_escort;
-	if (_size == "small") then {
-		_transport = heli_default;
-		_dismountGroup = [infTeam, side_green] call AS_fnc_pickGroup;
-		if (_orig in _bases) then {
-			_type = "land";
-			_lead = selectRandom vehLead;
-			_transport = enemyMotorpoolDef;
-			_dismountGroup = [infSquad, side_green] call AS_fnc_pickGroup;
-		};
-	} else {
-		_transport = heli_transport;
-		_dismountGroup = [infSquad, side_green] call AS_fnc_pickGroup;
-		_method = "ROPE";
-		if (_orig in _bases) then {
-			_type = "land";
-			_lead = selectRandom vehAPC;
-			_transport = enemyMotorpoolDef;
-			_dismountGroup = [infSquad, side_green] call AS_fnc_pickGroup;
-		};
+call {
+	// main force, army
+	if (_startPosition in _bases) exitWith {
+		_lead = [selectRandom vehLead, selectRandom vehAPC] select (toLower _size isEqualTo "large");
+		_transportType = enemyMotorpoolDef;
+		_dismountGroupType = [[infTeam, infSquad] select (toLower _size isEqualTo "large"), side_green] call AS_fnc_pickGroup;
+	};
+
+	// main force, air force
+	if (_startPosition in _airports) exitWith {
+		_lead = heli_escort;
+		_transportType = [heli_default, heli_transport] select (toLower _size isEqualTo "large");
+		_dismountGroupType = [[infTeam, infSquad] select (toLower _size isEqualTo "large"), side_green] call AS_fnc_pickGroup;
+	};
+
+	// support, air force
+	if (_startPosition == "spawnCSAT") exitWith {
+		_lead = opHeliSD;
+		_transportType = opHeliFR;
+		_dismountGroupType = [[opGroup_Recon_Team, opGroup_Squad] select (toLower _size isEqualTo "large"), side_red] call AS_fnc_pickGroup;
 	};
 };
 
-private _origMarker = _orig;
-if (typeName _orig == "ARRAY") then {
-	_origMarker = [marcadores, _orig] call BIS_Fnc_nearestPosition;
-};
-
-// get the position of the target marker
-if !(typeName _orig == "ARRAY") then {
-	_orig = getMarkerPos _orig;
-};
-
-// create a patrol marker if none provided
-if (_mrk == "none") then {
-	_mrk = createMarkerLocal [format ["Patrol-%1", random 100],_dest];
-	_mrk setMarkerShapeLocal "RECTANGLE";
-	_mrk setMarkerSizeLocal [150,150];
-	_mrk setMarkerTypeLocal "hd_warning";
-	_mrk setMarkerColorLocal "ColorRed";
-	_mrk setMarkerBrushLocal "DiagGrid";
-    _mrk setMarkerAlpha 0;
-};
+_spawnPosition = getMarkerPos _startPosition;
 
 _endTime = [date select 0, date select 1, date select 2, date select 3, (date select 4) + _duration];
 _endTime = dateToNumber _endTime;
 
-// arrays of all spawned units/groups
-_grupos = [];
-_soldados = [];
-_vehiculos = [];
+fn_addData = {
+	params ["_vehicle", "_soldiers", "_group", ["_infGroup", []]];
+	_allVehicles pushBack _vehicle;
+	_allSoldiers = _allSoldiers + _soldiers;
+	_allGroups pushBack _group;
 
-// initialise groups, two for vehicles, three for dismounts
-_grpVeh1 = createGroup _side;
-_grupos pushBack _grpVeh1;
-
-_grpVeh2 = createGroup _side;
-_grupos pushBack _grpVeh2;
-
-_grpDis1 = createGroup _side;
-_grupos pushBack _grpDis1;
-
-_grpDis2 = createGroup _side;
-_grupos pushBack _grpDis2;
-
-_grpDisEsc = createGroup _side;
-_grupos pushBack _grpDisEsc;
-
-private _dir = [_orig, _dest] call BIS_fnc_dirTo;
-
-// initialisation of vehicles
-_initVehs = {
-	params ["_specs"];
-	_specs = _specs + [_dir, _side, _vehiculos, _grupos, _soldados, true];
-	_specs call AS_fnc_initialiseVehicle;
-};
-
-// air cav
-if (_type == "air") then {
-
-	if ((_composition == "destroy") || (_composition == "mixed")) then {
-		// attack chopper/armed escort
-
-		private _vehData = [[_orig, _lead]] call _initVehs;
-		_vehiculos = _vehData select 0;
-		_grupos = _vehData select 1;
-		_soldados = _vehData select 2;
-
-		_heli1 = (_vehData select 3) select 0;
-		_grpVeh1 = (_vehData select 3) select 1;
-
-		_heli1 lock 3;
-
-		// spawn loiter script for armed escort
-		diag_log format ["Escort dispatched to %1", _dest];
-		[_grpVeh1, _orig, _dest, _duration*60] spawn AS_fnc_QRF_gunship;
-	};
-
-	// small delay to prevent crashes when both helicopters are spawned
-	if (_composition == "mixed") then {
-		sleep 5;
-	};
-
-	if ((_composition == "transport") || (_composition == "mixed")) then {
-		// landing pad, to allow for dismounts
-		_landpos1 = [];
-		if (_source == "campQRF") then {
-			_landpos1 = [_dest, 300, 500, 10, 0, 0.3, 0] call BIS_Fnc_findSafePos;
-		}
-		else {
-			_landpos1 = [_dest, 50, 300, 10, 0, 0.3, 0] call BIS_Fnc_findSafePos;
-		};
-		_landpos1 set [2, 0];
-		_pad1 = createVehicle ["Land_HelipadEmpty_F", _landpos1, [], 0, "NONE"];
-		_vehiculos = _vehiculos + [_pad1];
-
-		// shift the spawn position of second chopper to avoid crash
-		_pos2 = _orig;
-		_zshift2 = (_orig select 2) + 50;
-		_pos2 set [2, _zshift2];
-
-		// troop transport chopper
-		private _vehData = [[_pos2, _transport]] call _initVehs;
-		_vehiculos = _vehData select 0;
-		_grupos = _vehData select 1;
-		_soldados = _vehData select 2;
-
-		_heli2 = (_vehData select 3) select 0;
-		_grpVeh2 = (_vehData select 3) select 1;
-
-		_heli2 lock 3;
-
-		// spawn dismounts
-		_grpDis2 = [_orig, _side, _dismountGroup] call BIS_Fnc_spawnGroup;
-		[_grpDis2, _side, true, "none"] call AS_fnc_initialiseUnits;
-		{
-			_soldados pushBack _x;
-			_x assignAsCargo _heli2;
-			_x moveInCargo _heli2;
-		} forEach units _grpDis2;
-		_grpDis2 selectLeader (units _grpDis2 select 0);
-
-		// spawn dismount script
-		diag_log format ["Transport dispatched to %1", _dest];
-		if ((_size == "large") && !(_faction isEqualTo "RED")) then {
-			_grpDis1 = [_orig, _side, _dismountGroup] call BIS_Fnc_spawnGroup;
-			[_grpDis1, _side, true, "none"] call AS_fnc_initialiseUnits;
-			{
-				_soldados pushBack _x;
-				_x assignAsCargo _heli2;
-				_x moveInCargo _heli2;
-			} forEach units _grpDis1;
-			_grpDis1 selectLeader (units _grpDis1 select 0);
-
-			[_grpVeh2, _pos2, _landpos1, _mrk, [_grpDis1,_grpDis2], _duration*60, _method] call AS_fnc_QRF_airCavalry;
-		}
-		else {
-			[_grpVeh2, _pos2, _landpos1, _mrk, _grpDis2, _duration*60, _method] spawn AS_fnc_QRF_airCavalry;
-		};
-
-		// if the QRF is dispatched to an FIA camp, provide the group
-		if (_source == "campQRF") then {
-			if (_size == "large") then {
-				server setVariable ["campQRF", [_grpDis1,_grpDis2], true];
-				[format ["DefCamp -- QRF -- group 1: %1; group 2: %2", _grpDis1, _grpDis2, server getVariable ["campQRF", "none"]]] remoteExec ["AS_fnc_logOutput", 2];
-			}
-			else {
-				server setVariable ["campQRF", [_grpDis2], true];
-				[format ["DefCamp -- QRF -- group 1: %1", _grpDis2, server getVariable ["campQRF", "none"]]] remoteExec ["AS_fnc_logOutput", 2];
-			};
-		};
-	};
-}
-
-// ground QRF
-else {
-	// find spawn positions on a road
-	_posData = [_orig, _dest] call AS_fnc_findSpawnSpots;
-	_posRoad = _posData select 0;
-	_dir = _posData select 1;
-
-	if ((_composition == "destroy") || (_composition == "mixed")) then {
-		// first MRAP, escort
-		private _vehData = [[_posRoad, _lead]] call _initVehs;
-		_vehiculos = _vehData select 0;
-		_grupos = _vehData select 1;
-		_soldados = _vehData select 2;
-
-		_veh1 = (_vehData select 3) select 0;
-		_grpVeh1 = (_vehData select 3) select 1;
-		_grpDisEsc = [];
-
-		if (_size == "large") then {
-			_grpDisEsc = [_orig, _side, _dismountGroupEscort] call BIS_Fnc_spawnGroup;
-			[_grpDisEsc, _side, true, "none"] call AS_fnc_initialiseUnits;
-			{
-				_soldados pushBack _x;
-				_x assignAsCargo _veh1;
-				_x moveInCargo _veh1;
-			} forEach units _grpDisEsc;
-			_grpDisEsc selectLeader (units _grpDisEsc select 0);
-		};
-
-		// add waypoints
-		[_grpVeh1, _orig, _dest, _mrk, _grpDisEsc, _duration*60] spawn AS_fnc_QRF_leadVehicle;
-		diag_log format ["Escort dispatched to %1", _dest];
-	};
-
-	// small delay to allow for AI pathfinding shenanigans
-	if (_composition == "mixed") then {
-		sleep 15;
-	};
-
-	if ((_composition == "transport") || (_composition == "mixed")) then {
-		// dismount position
-		_dist = 200 min ([_mrk] call sizeMarker);
-		_dist = -1 * ((400 - _dist) / 10);
-		_dist = _dist max (-35);
-		_landpos1 = [_dest, _posRoad, _dist] call findSafeRoadToUnload;
-
-		// second vehicle
-		private _vehData = [[_posRoad, _transport]] call _initVehs;
-		_vehiculos = _vehData select 0;
-		_grupos = _vehData select 1;
-		_soldados = _vehData select 2;
-
-		_veh2 = (_vehData select 3) select 0;
-		_grpVeh2 = (_vehData select 3) select 1;
-
-		// add dismounts
-		_grpDis2 = [_orig, _side, _dismountGroup] call BIS_Fnc_spawnGroup;
-		[_grpDis2, _side, true, "none"] call AS_fnc_initialiseUnits;
-		{
-			_soldados pushBack _x;
-			_x assignAsCargo _veh2;
-			_x moveInCargo _veh2;
-		} forEach units _grpDis2;
-		_grpDis2 selectLeader (units _grpDis2 select 0);
-
-		if (_size == "large") then {
-			_grpDis1 = [_orig, _side, _dismountGroup] call BIS_Fnc_spawnGroup;
-			[_grpDis1, _side, true, "none"] call AS_fnc_initialiseUnits;
-			{
-				_soldados pushBack _x;
-				_x assignAsCargo _veh2;
-				_x moveInCargo _veh2;
-			} forEach units _grpDis1;
-			_grpDis1 selectLeader (units _grpDis1 select 0);
-		};
-
-		// spawn dismount script
-		diag_log format ["Transport dispatched to %1", _dest];
-		[_grpVeh2, _orig, _landpos1, _mrk, [_grpDis1, _grpDis2], _duration*60] spawn AS_fnc_QRF_truck;
+	if (typeName _infGroup == "GROUP") then {
+		_transport = _vehicle;
+		_dismountGroup = _infGroup;
+		_allGroups pushBack _infGroup;
+		_allSoldiers = _allSoldiers + (units _infGroup);
 	};
 };
 
-{_x allowDamage true} forEach _vehiculos;
+_rallyPoint = +_targetPosition;
 
-if !(_external) then {
-	waitUntil {sleep 10; (dateToNumber date > _endTime) or ({alive _x} count _soldados == 0)};
+call {
+	if (_type == "air") exitWith {
+		// spawn gunship
+		if (_composition in ["destroy", "mixed"]) then {
+			([_spawnPosition, _rallyPoint, _lead, _side, "loiter", _duration*60] call AS_fnc_spawnGunship) call fn_addData;
+		};
 
-	// remove the remains
-	{
-		_soldado = _x;
-		waitUntil {sleep 1; {_x distance _soldado < distanciaSPWN} count (allPlayers - hcArray) == 0};
-		deleteVehicle _soldado;
-	} forEach _soldados;
+		// give the lead helicopter a head start
+		if (_composition isEqualTo "mixed") then {
+			sleep 5;
+		};
 
-	{deleteGroup _x} forEach _grupos;
+		// spawn transport
+		if (_composition in ["transport", "mixed"]) then {
+			([_spawnPosition, _rallyPoint, _transportType, _dismountGroupType, _side, "fastrope", [300, 550], 0, [], _dismountFlag] call AS_fnc_insertTroops) call fn_addData;
+		};
+	};
 
-	{
-		_vehiculo = _x;
-		waitUntil {sleep 1; {_x distance _vehiculo < distanciaSPWN/2} count (allPlayers - hcArray) == 0};
-		deleteVehicle _x
-	} forEach _vehiculos;
-} else {
-	[_soldados, _grupos, _vehiculos]
+	if (_type == "land") exitWith {
+		_rallyPoint = [_targetPosition, [_spawnPosition, _targetPosition] call AS_fnc_findDropoffPoint] select (_composition != "destroy");
+		// spawn lead vehicle
+		if (_composition in ["destroy", "mixed"]) then {
+			([_spawnPosition, _rallyPoint, _lead, _side, "secure", _duration*60] call AS_fnc_spawnLeadVehicle) call fn_addData;
+		};
+
+		// give the lead vehicle a head start
+		if (_composition isEqualTo "mixed") then {
+			sleep 5;
+		};
+
+		// spawn transport
+		if (_composition in ["transport", "mixed"]) then {
+			([_spawnPosition, _rallyPoint, _transportType, _dismountGroupType, _side, "none", 300, 0, _dismountFlag] call AS_fnc_transportTroops) call fn_addData;
+		};
+	};
 };
+
+if (_composition in ["transport", "mixed"]) then {
+	if (_searchAreaRadius != 0) then {
+		waitUntil {sleep 2; (missionNamespace getVariable [_dismountFlag, false]) OR {(!alive _transport)}};
+		if (missionNamespace getVariable [_dismountFlag, false]) then {
+			[_dismountGroup, _targetPosition, _searchAreaRadius, round (_searchAreaRadius / 60), "MOVE", "AWARE", "YELLOW", "FULL", "STAG COLUMN", "", [3,6,9]] call CBA_fnc_taskPatrol;
+			//[_dismountGroup, _targetPosition, _searchAreaRadius] call BIS_fnc_taskPatrol;
+		};
+	};
+
+	missionNamespace setVariable [_dismountFlag, nil, true];
+};
+
+diag_log format ["groups: %1; soldiers: %2; vehicles: %3", _allGroups, _allSoldiers, _allVehicles];
+
+waitUntil {sleep 10; (dateToNumber date > _endTime) OR {({alive _x AND !captive _x} count _allSoldiers == 0)}};
+
+if !(_varName isEqualTo "") then {
+	server setVariable [_varName,true,true];
+};
+
+[_allGroups, _allSoldiers, _allVehicles] spawn AS_fnc_despawnUnits;

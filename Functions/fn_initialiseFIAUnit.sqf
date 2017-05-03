@@ -355,3 +355,8 @@ else {
 		[0,-0.25,getPos _muerto] remoteExec ["AS_fnc_changeCitySupport",2];
 	}];
 };
+
+player addEventHandler ["GetInMan", {
+	params ["_unit","_position","_vehicle"];
+	_vehicle setVariable ["BLUFORSpawn",true,true];
+}];

@@ -1,11 +1,14 @@
 if (!isServer and hasInterface) exitWith {};
 
 params ["_marker"];
-private ["_allVehicles","_allGroups","_allSoldiers","_markerPos","_size","_position","_bunker","_vehicle","_normalPos","_group","_unit","_groupType","_tempGroup","_patrolMarker"];
+private ["_allVehicles","_allGroups","_allSoldiers","_markerPos","_size","_position","_bunker","_vehicle","_normalPos","_group","_unit","_groupType","_tempGroup","_patrolMarker","_hidden","_initialGroupSetup","_localIDs","_spawnPos"];
 
 _allVehicles = [];
 _allGroups = [];
 _allSoldiers = [];
+
+_initialGroupSetup = [];
+_localIDs = [];
 
 _markerPos = getMarkerPos (_marker);
 _size = [_marker] call sizeMarker;
@@ -41,26 +44,32 @@ if !(count _position == 0) then {
 
 sleep 1;
 
+while {true} do {
+	_spawnPos = [_markerPos, 50 + (random 100), random 360] call BIS_fnc_relPos;
+	if (!surfaceIsWater _spawnPos) exitWith {};
+};
+_groupType = [infTeamATAA, side_green] call AS_fnc_pickGroup;
+_groupPatrol = [_spawnPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
+if (random 10 < 2.5) then {
+	_dog = _groupPatrol createUnit ["Fin_random_F",_spawnPos,[],0,"FORM"];
+	[_dog] spawn guardDog;
+};
+_initialGroupSetup pushBack [_groupType, "patrol", _spawnPos];
+[_groupPatrol, _markerPos, 100, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [3,6,9]] call CBA_fnc_taskPatrol;
+_localIDs pushBack (_groupPatrol call BIS_fnc_netId);
+grps_VCOM pushBackUnique (_groupPatrol call BIS_fnc_netId);
+_allGroups pushBack _groupPatrol;
+_groupPatrol allowFleeing 0;
+
 if !(worldName == "Tanoa") then {
 	_position = [_markerPos] call mortarPos;
 	_vehicle = statMortar createVehicle _position;
 	_vehicle enableDynamicSimulation true;
-	_unit = ([_markerPos, 0, infGunner, _group] call bis_fnc_spawnvehicle) select 0;
+	_unit = ([_markerPos, 0, infGunner, _groupPatrol] call bis_fnc_spawnvehicle) select 0;
 	_unit moveInGunner _vehicle;
-	[_vehicle] execVM "scripts\UPSMON\MON_artillery_add.sqf";
 	_allVehicles pushBack _vehicle;
-	_allGroups pushBack _group;
-	_group allowFleeing 0;
 	sleep 1;
 };
-
-_patrolMarker = [_marker, [50, 50]] call AS_fnc_createPatrolMarker;
-_position = [_markerPos findEmptyPosition [15,50,enemyMotorpoolDef],_markerPos] select (worldName == "Tanoa");
-_groupType = [infTeamATAA, side_green] call AS_fnc_pickGroup;
-_group = [_position, side_green, _groupType] call BIS_Fnc_spawnGroup;
-[leader _group,_patrolMarker,"garrison"] spawn AS_fnc_addToUPSMON;
-_allGroups pushBack _group;
-_group allowFleeing 0;
 
 {
 	_tempGroup = _x;
@@ -74,17 +83,46 @@ _group allowFleeing 0;
 	[_x] spawn genVEHinit;
 } forEach _allVehicles;
 
-([_marker,_allGroups] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
+publicVariable "grps_VCOM";
+([_marker,count _allSoldiers] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
 
-// Dynamic Simulation
-sleep 10;
 {
-	_x enableDynamicSimulation true;
-} forEach _allGroups;
+	_x hideObjectGlobal true;
+	_x enableSimulationGlobal false;
+} forEach _allSoldiers + _allVehicles;
+_hidden = true;
 
-while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength) AND (spawner getVariable _marker)} do {
-	while {(count ((_markerPos nearEntities ["Man", 1500]) select {side _x == side_blue}) < 1) AND (spawner getVariable _marker)} do {
-		sleep 10;
+while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength) AND {(spawner getVariable _marker)}} do {
+	while {
+		(count ((_markerPos nearEntities ["LandVehicle",2000]) select {_x getVariable ["BLUFORSpawn",false]}) < 1) AND
+		{(count ((_markerPos nearEntities ["AirVehicle",2000]) select {_x getVariable ["BLUFORSpawn",false]}) < 1)} AND
+		{(count ((_markerPos nearEntities [solCat,2000]) select {_x getVariable ["BLUFORSpawn",false]}) < 1)} AND
+		{(spawner getVariable _marker)}
+	} do {
+		if !(_hidden) then {
+			{
+				_x hideObjectGlobal true;
+				_x enableSimulationGlobal false;
+			} forEach _allSoldiers + _allVehicles;
+			_hidden = true;
+
+			{
+				_x enableDynamicSimulation false;
+			} forEach _allGroups;
+		};
+		sleep 1;
+	};
+
+	if (_hidden) then {
+		{
+			_x hideObjectGlobal false;
+			_x enableSimulationGlobal true;
+		} forEach _allSoldiers + _allVehicles;
+		_hidden = false;
+
+		{
+			_x enableDynamicSimulation true;
+		} forEach _allGroups;
 	};
 
 	sleep 5;
@@ -99,9 +137,11 @@ if (spawner getVariable _marker) then {
 	publicVariable "reducedGarrisons";
 };
 
-//_marker remoteExec ["INT_Replenishment", HCattack];
-
-waitUntil {sleep 3; !(spawner getVariable _marker) OR (count (_allSoldiers select {alive _x AND !captive _x}) < 1) OR !(garrison getVariable [format ["%1_reduced", _marker],false])};
+waitUntil {sleep 3;
+	!(spawner getVariable _marker) OR
+	{((count ((_markerPos nearEntities [solCat, (_size max 200)]) select {_x getVariable ["BLUFORSpawn",false]})) > (3*count (_allSoldiers select {alive _x AND !captive _x})))} OR
+	{!(garrison getVariable [format ["%1_reduced", _marker],false])}
+};
 
 call {
 	// Garrison was overwhelmed
@@ -137,6 +177,7 @@ waitUntil {sleep 3; !([distanciaSPWN,1,_markerPos,"BLUFORSpawn"] call distanceUn
 
 deleteMarker _patrolMarker;
 [_allGroups, _allSoldiers, _allVehicles + (_markerPos nearObjects ["Box_IND_Wps_F", (_size max 200)])] spawn AS_fnc_despawnUnits;
+grps_VCOM = grps_VCOM - _localIDs; publicVariable "grps_VCOM";
 
 if (spawner getVariable [format ["%1_respawning", _marker],false]) then {
 	sleep 15;

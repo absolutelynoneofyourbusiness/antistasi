@@ -4,6 +4,9 @@ listMilBld = ["Land_Cargo_Tower_V1_F","Land_Cargo_Tower_V1_No1_F","Land_Cargo_To
 // buildings for outposts/bases
 listbld = ["Land_Cargo_Tower_V1_F","Land_Cargo_Tower_V1_No1_F","Land_Cargo_Tower_V1_No2_F","Land_Cargo_Tower_V1_No3_F","Land_Cargo_Tower_V1_No4_F","Land_Cargo_Tower_V1_No5_F","Land_Cargo_Tower_V1_No6_F","Land_Cargo_Tower_V1_No7_F","Land_Cargo_Tower_V2_F", "Land_Cargo_Tower_V3_F"];
 
+list_garBlds = ["Land_Stone_HouseBig_V1_ruins_F","Land_Stone_Shed_V1_ruins_F","Land_WIP_ruins_F","Land_Unfinished_Building_02_ruins_F","Land_Unfinished_Building_01_ruins_F","Land_BagBunker_Large_F","Land_BagBunker_Small_F"];
+list_garMrks = ["Sign_Arrow_F"];
+
 lamptypes = ["Lamps_Base_F", "PowerLines_base_F","Land_LampDecor_F","Land_LampHalogen_F","Land_LampHarbour_F","Land_LampShabby_F","Land_NavigLight","Land_runway_edgelight","Land_PowerPoleWooden_L_F"];
 
 // names of FIA soldiers

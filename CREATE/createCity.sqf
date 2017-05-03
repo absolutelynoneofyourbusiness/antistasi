@@ -57,7 +57,7 @@ while {(spawner getVariable _marker) AND (_counter < _size)} do {
 };
 
 // Dynamic Simulation
-([_marker,_allGroups] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
+([_marker,count _allSoldiers] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
 
 sleep 10;
 {

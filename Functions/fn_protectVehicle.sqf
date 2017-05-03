@@ -1,4 +1,7 @@
-params ["_vehicles"];
+params [
+	["_vehicles", []],
+	["_duration", 5, [1]]
+];
 
 if !(typeName _vehicles == "ARRAY") then {_vehicles = [_vehicles]};
 
@@ -7,7 +10,7 @@ if !(typeName _vehicles == "ARRAY") then {_vehicles = [_vehicles]};
 	_x setDamage 0;
 } forEach _vehicles;
 
-sleep 5;
+sleep _duration;
 
 {
 	_x allowDamage true;

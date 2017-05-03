@@ -1,4 +1,3 @@
-
 // Remove undercover status if player fires weapons near hostiles, plus a chance to be reported in towns with high enemy support levels
 player addEventHandler ["FIRED", {
 	params ["_player"];
@@ -30,6 +29,42 @@ player addEventHandler ["FIRED", {
 					};
 				};
 			};
+		};
+	};
+
+	_weapon = _this select 1;
+	if (_weapon isEqualTo "Put" || {_weapon isEqualTo "Throw"}) exitwith {};
+
+	_ItemList = weaponsitems _player;
+	_Return = true;
+
+	if (((_ItemList select 0) select 1) isEqualTo "") then {_Return = false;};
+
+	if !(_Return) then  {
+
+		if !(side _player in VCOM_SideBasedMovement) exitWith {};
+
+		_TimeShot = _player getVariable "VCOM_FiredTimeHearing";
+
+		if ((diag_tickTime - _TimeShot) > 20) then {
+			_Array1 = _player call VCOMAI_EnemyArray;
+
+			{
+				if ((_x distance2d _player) < VCOM_HEARINGDISTANCE && {!(_x getVariable "VCOMAI_ShotsFired")}) then {
+					_x setVariable ["VCOMAI_ShotsFired",true,true];
+					_kv = _x knowsAbout _player;
+					_x reveal [_player,(_kv + 0.5)];
+					if (VCOM_AIDEBUG isEqualTo 1) then {
+						[_x,"What was that? +0.5 to knowsAbout",10,20000] remoteExec ["3DText",0];
+					};
+				};
+			} foreach _Array1;
+
+			_player setVariable ["VCOM_FiredTimeHearing",diag_tickTime,false];
+		};
+	} else {
+		if (VCOM_AIDEBUG isEqualTo 1) then {
+			[_player,"I am a sneaky snake...",10,20000] remoteExec ["3DText",0];
 		};
 	};
 }];
@@ -73,10 +108,13 @@ player addEventHandler ["WeaponAssembled",{
 // Despawn bags of disassembled statics
 player addEventHandler ["WeaponDisassembled", {
 	params ["_object","_bagOne","_bagTwo"];
+	cursorTarget setOwner (owner _object);
 	staticsToSave = staticsToSave - [cursorTarget];
 	publicVariable "staticsToSave";
-	[_bagOne] spawn VEHinit;
-	[_bagTwo] spawn VEHinit;
+	{
+		[_x] spawn VEHinit;
+		_x setPos (_object modelToWorld [0,-1,0]);
+	} forEach [_bagOne,_bagTwo];
 }];
 
 // Prevent players from getting into other players' personal vehicles, activate undercover if it's a civilian vehicle, add loading action if it's a truck
@@ -84,6 +122,8 @@ player addEventHandler ["GetInMan", {
 	params ["_unit","_position","_vehicle"];
 	[false] params ["_exit"];
 	private ["_owner"];
+
+	_vehicle setVariable ["BLUFORSpawn",true,true];
 
 	if (isMultiplayer) then {
 		_owner = _vehicle getVariable ["duenyo",getPlayerUID player];
@@ -116,10 +156,12 @@ player addEventHandler ["GetInMan", {
 
 // Remove the loading action
 player addEventHandler ["GetOutMan",{
+	params ["_unit","_position","_vehicle"];
 	if !((player getVariable ["eh_transferID", -1]) == -1) then {
 		player removeaction (player getVariable "eh_transferID");
 		player setVariable ["eh_transferID", nil, true];
 	};
+	_vehicle setVariable ["BLUFORSpawn",false,true];
 }];
 
 // If Jeroen's arsenal isn't active, display unlock requirements

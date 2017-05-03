@@ -129,6 +129,11 @@ class CfgFunctions {
 			class respawnZone {};
 			class setupZones {};
 			class addToUPSMON {};
+			class setupPerimeter {};
+			class forceGarrison {};
+			class clearWaypoints {};
+			class monitorGroup {};
+			class signalDistress {};
 		};
 		class QRF {
 			file = "Functions";
@@ -142,6 +147,16 @@ class CfgFunctions {
 			class QRF_loiter {};
 			class QRF_RTB {};
 			class QRF_truck {};
+		};
+		class missions {
+			file = "Functions\missions";
+			class spawnGunship {};
+			class insertTroops {};
+			class triggerFastRope {};
+			class findDropoffPoint {};
+			class spawnLeadVehicle {};
+			class transportTroops {};
+			class spawnMechInf {};
 		};
 		class JNA {
 			file = "Functions";

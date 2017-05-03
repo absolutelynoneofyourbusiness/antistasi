@@ -1,37 +1,19 @@
 if (!isServer and hasInterface) exitWith {};
 
 params ["_marker"];
-private ["_markerPos","_size","_isFrontline","_allVehicles","_allGroups","_allSoldiers","_workers","_patrolMarker","_currentStrength","_spawnPos","_groupType","_group","_dog","_flag","_truck","_maxStrength","_patrolParams","_observer","_unit"];
+private ["_markerPos","_size","_isFrontline","_allVehicles","_allGroups","_allSoldiers","_workers","_patrolMarker","_currentStrength","_spawnPos","_groupType","_group","_dog","_flag","_truck","_maxStrength","_patrolParams","_observer","_unit","_hidden","_initialGroupSetup","_localIDs"];
 
 _allVehicles = [];
 _allGroups = [];
 _allSoldiers = [];
-
 _workers = [];
+
+_initialGroupSetup = [];
+_localIDs = [];
 
 _markerPos = getMarkerPos (_marker);
 _size = [_marker] call sizeMarker;
 _isFrontline = [_marker] call AS_fnc_isFrontline;
-_patrolMarker = [_marker] call AS_fnc_createPatrolMarker;
-garrison setVariable [format ["%1_reduced", _marker],false,true];
-
-_currentStrength = 0;
-while {(spawner getVariable _marker) AND (_currentStrength < 2)} do {
-	while {true} do {
-		_spawnPos = [_markerPos, 150 + (random 350) ,random 360] call BIS_fnc_relPos;
-		if !(surfaceIsWater _spawnPos) exitWith {};
-	};
-	_groupType = [infPatrol, side_green] call AS_fnc_pickGroup;
-	_group = [_spawnPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
-	sleep 1;
-	if (random 10 < 2.5) then {
-		_dog = _group createUnit ["Fin_random_F",_spawnPos,[],0,"FORM"];
-		[_dog] spawn guardDog;
-	};
-	[leader _group,_patrolMarker,"patrol"] spawn AS_fnc_addToUPSMON;
-	_allGroups pushBack _group;
-	_currentStrength = _currentStrength +1;
-};
 
 _flag = createVehicle [cFlag, _markerPos, [], 0, "CAN_COLLIDE"];
 _flag allowDamage false;
@@ -44,22 +26,47 @@ _truck setDir random 360;
 _allVehicles pushBack _truck;
 sleep 1;
 
-_maxStrength = 1 max (round (_size/50));
-_groupType = "";
-_currentStrength = 0;
-if (_isFrontline) then {_maxStrength = _maxStrength * 2};
-while {(spawner getVariable _marker) AND (_currentStrength < _maxStrength)} do {
-	if ((diag_fps > minimoFPS) OR (_currentStrength == 0)) then {
-		while {true} do {
-			_spawnPos = [_markerPos, 10 + (random 50) ,random 360] call BIS_fnc_relPos;
-			if (!surfaceIsWater _spawnPos) exitWith {};
-		};
-		_groupType = [infSquad, side_green] call AS_fnc_pickGroup;
-		_group = [_spawnPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
-		[leader _group,_marker,"garrison"] spawn AS_fnc_addToUPSMON;
-		_allGroups pushBack _group;
-	};
-	_currentStrength = _currentStrength + 1;
+_groupType = [infTeam, side_green] call AS_fnc_pickGroup;
+_groupGarrison = [_markerPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
+_initialGroupSetup pushBack [_groupType, "garrison", _markerPos];
+_allGroups pushBack _groupGarrison;
+
+while {true} do {
+	_spawnPos = [_markerPos, 50 + (random 100), random 360] call BIS_fnc_relPos;
+	if (!surfaceIsWater _spawnPos) exitWith {};
+};
+_groupType = [infSquad, side_green] call AS_fnc_pickGroup;
+_groupPatrol = [_spawnPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
+if (random 10 < 2.5) then {
+	_dog = _groupPatrol createUnit ["Fin_random_F",_spawnPos,[],0,"FORM"];
+	[_dog] spawn guardDog;
+};
+_initialGroupSetup pushBack [_groupType, "patrol", _spawnPos];
+[_groupPatrol, _markerPos, 150, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [3,6,9]] call CBA_fnc_taskPatrol;
+_localIDs pushBack (_groupPatrol call BIS_fnc_netId);
+grps_VCOM pushBackUnique (_groupPatrol call BIS_fnc_netId);
+_allGroups pushBack _groupPatrol;
+
+/*_groupType = [infTeam, side_green] call AS_fnc_pickGroup;
+_groupPatrol = [_spawnPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
+if (random 10 < 2.5) then {
+	_dog = _groupPatrol createUnit ["Fin_random_F",_spawnPos,[],0,"FORM"];
+	[_dog] spawn guardDog;
+};
+_initialGroupSetup pushBack [_groupType, "patrol", _spawnPos];
+[_groupPatrol, _markerPos, 300, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [3,6,9]] call CBA_fnc_taskPatrol;
+_localIDs pushBack (_groupPatrol call BIS_fnc_netId);
+grps_VCOM pushBackUnique (_groupPatrol call BIS_fnc_netId);
+_allGroups pushBack _groupPatrol;*/
+
+if (_isFrontline) then {
+	_groupType = [infSquad, side_green] call AS_fnc_pickGroup;
+	_groupPatrol = [_spawnPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
+	_initialGroupSetup pushBack [_groupType, "patrol", _spawnPos];
+	[_groupPatrol, _markerPos, 250, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [3,6,9]] call CBA_fnc_taskPatrol;
+	_localIDs pushBack (_groupPatrol call BIS_fnc_netId);
+	grps_VCOM pushBackUnique (_groupPatrol call BIS_fnc_netId);
+	_allGroups pushBack _groupPatrol;
 };
 
 _observer = objNull;
@@ -72,7 +79,7 @@ if ((random 100 < (((server getVariable "prestigeNATO") + (server getVariable "p
 	_observer = _group createUnit [selectRandom CIV_journalists, _spawnPos, [], 0, "NONE"];
 	[_observer] spawn CIVinit;
 	_allGroups pushBack _group;
-	[_observer,_marker,"observe"] spawn AS_fnc_addToUPSMON;
+	[_group, _markerPos, 150, 5, "MOVE", "SAFE", "BLUE", "LIMITED", "STAG COLUMN", "", [2,6,10]] call CBA_fnc_taskPatrol;
 };
 
 sleep 3;
@@ -91,7 +98,10 @@ sleep 3;
 	[_x] spawn genVEHinit
 } forEach _allVehicles;
 
-([_marker,_allGroups] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
+publicVariable "grps_VCOM";
+[_groupGarrison,_size min 50] spawn AS_fnc_forceGarrison;
+
+([_marker,count _allSoldiers] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
 
 if !(_marker in destroyedCities) then {
 	if ((daytime > 8) AND (daytime < 18)) then {
@@ -104,7 +114,6 @@ if !(_marker in destroyedCities) then {
 			sleep 0.5;
 		};
 		[_marker,_workers] spawn destroyCheck;
-		[leader _group, _marker, "SAFE", "SPAWNED","NOFOLLOW", "NOSHARE","DORELAX"] execVM "scripts\UPSMON.sqf";
 	};
 };
 
@@ -114,9 +123,32 @@ sleep 10;
 	_x enableDynamicSimulation true;
 } forEach _allGroups;
 
-while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength) AND (spawner getVariable _marker)} do {
-	while {(count ((_markerPos nearEntities ["Man", 1500]) select {side _x == side_blue}) < 1) AND (spawner getVariable _marker)} do {
-		sleep 10;
+{
+	_x hideObjectGlobal true;
+} forEach _allSoldiers + _allVehicles;
+_hidden = true;
+
+while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength) AND {(spawner getVariable _marker)}} do {
+	while {
+		(count ((_markerPos nearEntities ["LandVehicle",2000]) select {_x getVariable ["BLUFORSpawn",false]}) < 1) AND
+		{(count ((_markerPos nearEntities ["AirVehicle",2000]) select {_x getVariable ["BLUFORSpawn",false]}) < 1)} AND
+		{(count ((_markerPos nearEntities [solCat,2000]) select {_x getVariable ["BLUFORSpawn",false]}) < 1)} AND
+		{(spawner getVariable _marker)}
+	} do {
+		if !(_hidden) then {
+			{
+				_x hideObjectGlobal true;
+			} forEach _allSoldiers + _allVehicles;
+			_hidden = true;
+		};
+		sleep 1;
+	};
+
+	if (_hidden) then {
+		{
+			_x hideObjectGlobal false;
+		} forEach _allSoldiers + _allVehicles;
+		_hidden = false;
 	};
 
 	sleep 5;
@@ -131,9 +163,11 @@ if (spawner getVariable _marker) then {
 	publicVariable "reducedGarrisons";
 };
 
-//_marker remoteExec ["INT_Replenishment", HCattack];
-
-waitUntil {sleep 3; !(spawner getVariable _marker) OR ((count ((_markerPos nearEntities ["Man", (_size max 200)]) select {side _x == side_blue})) > (3*count (_allSoldiers select {alive _x AND !captive _x}))) OR !(garrison getVariable [format ["%1_reduced", _marker],false])};
+waitUntil {sleep 3;
+	!(spawner getVariable _marker) OR
+	{((count ((_markerPos nearEntities [solCat, (_size max 200)]) select {_x getVariable ["BLUFORSpawn",false]})) > (3*count (_allSoldiers select {alive _x AND !captive _x})))} OR
+	{!(garrison getVariable [format ["%1_reduced", _marker],false])}
+};
 
 call {
 	// Garrison was overwhelmed
@@ -160,6 +194,7 @@ waitUntil {sleep 3; !([distanciaSPWN,1,_markerPos,"BLUFORSpawn"] call distanceUn
 deleteMarker _patrolMarker;
 [_allGroups, _allSoldiers + _workers, _allVehicles + (_markerPos nearObjects ["Box_IND_Wps_F", (_size max 200)])] spawn AS_fnc_despawnUnits;
 if (!isNull _observer) then {deleteVehicle _observer};
+grps_VCOM = grps_VCOM - _localIDs; publicVariable "grps_VCOM";
 
 if (spawner getVariable [format ["%1_respawning", _marker],false]) then {
 	sleep 15;

@@ -198,7 +198,11 @@ if (_isJip) then {
 		    if (isMultiplayer) then {
 		    	HC_comandante synchronizeObjectsAdd [player];
 				player synchronizeObjectsAdd [HC_comandante];
-				if (!(serverName in servidoresOficiales) OR (enableRestart)) then {[] execVM "UI\startMenu.sqf"};
+				if (!(serverName in servidoresOficiales) OR (enableRestart)) then {
+					[] execVM "UI\startMenu.sqf";
+				} else {
+					[] remoteExec ["AS_fnc_autoStart",2];
+				};
 				diag_log "Antistasi MP Client. Client finished";
 		    } else {
 		    	miembros = [];
@@ -277,3 +281,5 @@ cajaVeh addAction ["Get Funky!",{[] spawn AS_fnc_switchUniformTexture},nil,0,fal
 [player] call cleanGear;
 [player] spawn rankCheck;
 [player] spawn localSupport;
+
+player setVariable ["VCOM_FiredTimeHearing", diag_tickTime, false];
