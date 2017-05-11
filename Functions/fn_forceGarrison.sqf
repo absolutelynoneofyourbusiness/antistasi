@@ -1,4 +1,4 @@
-params ["_group",["_range",50],["_useMarkers",false]];
+params ["_group",["_range",100],["_useMarkers",false], ["_PassFunction", false]];
 [[],[],false] params ["_buildingPositions","_markerArray","_positionsTaken"];
 private ["_GroupUnits","_BuildingLocation","_CurrentPos","_rnd","_dist","_dir","_positions","_markerPositions","_centerPos"];
 
@@ -11,10 +11,9 @@ if (_useMarkers) then {
 	if (count _markerArray > 0) then {
 		_markerPositions = _markerArray apply {getPosATL _x};
 		_GroupUnits = units _group;
-		{[_x] joinSilent grpNull} forEach _GroupUnits;
+		{[_x] joinSilent grpNull; (group _x) enableDynamicSimulation true} forEach _GroupUnits;
 
-		if (isNil "_PassFunction") then
-		{
+		if !(_PassFunction) then {
 			[_GroupUnits,side (leader _group)] spawn VCOMAI_ReGroup;
 		};
 
@@ -43,14 +42,11 @@ if (count _buildings < 1) exitWith {diag_log format [" No %2 type of building fo
 
 _buildingPositions = _buildingPositions call BIS_fnc_arrayShuffle;
 
-if (count _buildingPositions < 1) exitWith {diag_log format ["No positions found in %1", _buildings]};
-
 if !(_positionsTaken) then {
 	_GroupUnits = units _group;
-	{[_x] joinSilent grpNull} forEach _GroupUnits;
+	{[_x] joinSilent grpNull; (group _x) enableDynamicSimulation true} forEach _GroupUnits;
 
-	if (isNil "_PassFunction") then
-	{
+	if !(_PassFunction) then {
 		[_GroupUnits,side (leader _group)] spawn VCOMAI_ReGroup;
 	};
 };
@@ -78,6 +74,6 @@ if ((count _GroupUnits) > 0) then
 		_positions = [(_CurrentPos select 0) + (sin _dir) * _dist, (_CurrentPos select 1) + (cos _dir) * _dist, 0];
 		_x doMove _positions;
 		sleep 15;
-		[_x,(group _x),false] spawn VCOMAI_Garrison;
+		[(group _x), _range, _useMarkers] spawn AS_fnc_forceGarrison;
 	} foreach _GroupUnits;
 };

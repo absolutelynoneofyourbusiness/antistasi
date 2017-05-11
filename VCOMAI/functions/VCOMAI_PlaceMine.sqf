@@ -1,6 +1,6 @@
-if (VCOM_MineLayChance < (random 100)) exitWith {};
+if (VCOM_MineLayChance > 0) exitWith {}; // no mines for now
 
-private ["_endTime"];
+//if (VCOM_MineLayChance < (random 100)) exitWith {};
 
 _Unit = _this select 0;
 _MineType = _this select 1;
@@ -53,18 +53,15 @@ if (_mine isEqualTo []) exitWith {};
 
 	while {alive _mine AND {_NotSafe} AND {(diag_tickTime < _endTime)}} do
 	{
-		/* _Array1 = [];
-		{
-			if !((side _x) isEqualTo _UnitSide) then {_Array1 pushback _x;};//todo modified
-		} foreach allUnits; */
+		_Array1 = [];
 		if (_UnitSide == side_blue) then {
 			_Array1 = (_Mine nearEntities [enemyCat + ["Car", "Tank"], 100]) + ((_Mine nearEntities [vehCat, 100]) select {(side _x == side_green) OR {(side _x == side_red)}});
 		} else {
-			_Array1 = (_Mine nearEntities [vehCat, 100]) select {_x getVariable ["BLUFORSpawn",false]} + (_Mine nearEntities [solCat, 100]);
+			_Array1 = ((_Mine nearEntities [vehCat, 100]) select {_x getVariable ["BLUFORSpawn",false]}) + (_Mine nearEntities [solCat, 100]);
 		};
 
 		_ClosestEnemy = [_Array1,_Mine] call VCOMAI_ClosestObject;
-		if (_ClosestEnemy distance _Mine < 2.5) then {_NotSafe = false;};
+		if (!(isNil "_ClosestEnemy") AND {(_ClosestEnemy distance _Mine < 2.5)}) then {_NotSafe = false;};
 		sleep 0.5;
 	};
 	diag_log format ["mine detonated at %1", diag_tickTime];

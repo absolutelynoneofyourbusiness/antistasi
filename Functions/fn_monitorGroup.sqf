@@ -1,6 +1,13 @@
-params ["_group", ["_maxSpread", 400, [0]], ["_forceRTB", false, [true]], ["_home", [], [[]]], ["_maxDistance", 1000, [0]]];
+params [
+	"_group",
+	["_homeZone", "", [""]],
+	["_groupType", infTeam],
+	["_maxSpread", 400, [0]],
+	["_forceRTB", false, [true]],
+	["_maxDistance", 1000, [0]]
+];
 
-if (_forceRTB AND {(count _home == 0)}) exitWith {diag_log format ["Error in monitorGroup: %1 was ordered to RTB without specifying a location.", _group]};
+if (_forceRTB AND {(_homeZone isEqualTo "")}) exitWith {diag_log format ["Error in monitorGroup: %1 was ordered to RTB without specifying a location.", _group]};
 
 // order units to converage back onto the group leader if they strayed too far
 _fn_regroup = {
@@ -30,7 +37,7 @@ _fn_rtb = {
 		_wpInf1 = _group addWaypoint [_home, 50];
 		_wpInf1 setWaypointType "MOVE";
 		_wpInf1 setWaypointSpeed "FULL";
-		_wpInf1 setWaypointStatements ["true", "{_x setvariable ['VCOM_NOPATHING_Unit',true]} foreach thisList"];
+		_wpInf1 setWaypointStatements ["true", "{_x setvariable ['VCOM_NOPATHING_Unit',false]} foreach thisList"];
 	};
 };
 
@@ -53,8 +60,12 @@ _fn_relax = {
 while {({alive _x} count (units _group)) > 1} do {
 	[_group, _maxSpread] call _fn_regroup;
 	if (_forceRTB) then {
-		[_group, _home, _maxDistance, _fn_relax] spawn _fn_rtb;
+		[_group, getMarkerPos _homeZone, _maxDistance, _fn_relax] spawn _fn_rtb;
 	};
 
 	sleep 60;
+};
+
+if (({alive _x} count (units _group)) < 1) then {
+	resupplyQueue pushBack [_group, _homeZone, _groupType, _maxSpread, _forceRTB, _maxDistance]; publicVariable "resupplyQueue";
 };

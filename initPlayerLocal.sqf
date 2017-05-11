@@ -104,7 +104,7 @@ if (!activeACE) then {
 
 gameMenu = (findDisplay 46) displayAddEventHandler ["KeyDown",AS_fnc_keyDownMain];
 
-call AS_fnc_initPlayerEH;
+[false] call AS_fnc_initPlayerEH;
 
 if (isMultiplayer) then {
 	["InitializePlayer", [player]] call BIS_fnc_dynamicGroups;//Exec on client
@@ -198,7 +198,7 @@ if (_isJip) then {
 		    if (isMultiplayer) then {
 		    	HC_comandante synchronizeObjectsAdd [player];
 				player synchronizeObjectsAdd [HC_comandante];
-				if (!(serverName in servidoresOficiales) OR (enableRestart)) then {
+				if (!(serverName in servidoresOficiales) OR (server getVariable ["enableRestart", false])) then {
 					[] execVM "UI\startMenu.sqf";
 				} else {
 					[] remoteExec ["AS_fnc_autoStart",2];

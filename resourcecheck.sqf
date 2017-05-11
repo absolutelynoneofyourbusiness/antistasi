@@ -2,7 +2,7 @@
 
 if (isMultiplayer) then {waitUntil {!isNil "switchCom"}};
 
-private ["_incomeFIA","_incomeEnemy","_hrFIA","_popFIA","_popEnemy","_bonusFIA","_bonusEnemy","_city","_cityIncomeFIA","_cityIncomeEnemy","_cityIncomeHR","_data","_civilians","_supportFIA","_supportEnemy","_power","_coef","_mrkD","_base","_factory","_resource","_text","_updated","_resourcesAAF","_vehicle","_script"];
+private ["_incomeFIA","_incomeEnemy","_hrFIA","_popFIA","_popEnemy","_bonusFIA","_bonusEnemy","_city","_cityIncomeFIA","_cityIncomeEnemy","_cityIncomeHR","_data","_civilians","_supportFIA","_supportEnemy","_power","_coef","_mrkD","_base","_factory","_resource","_text","_updated","_resourcesAAF","_vehicle","_script", "_coefHR"];
 scriptName "resourcecheck";
 
 while {true} do {
@@ -15,6 +15,11 @@ while {true} do {
 	_popEnemy = 0;
 	_bonusEnemy = 1;
 	_bonusFIA = 1;
+
+	_coefHR = 20000;
+	if !(isNil "defaultPopulation") then {
+		_coefHR = defaultPopulation * 3;
+	};
 
 	{
 		_city = _x;
@@ -37,7 +42,7 @@ while {true} do {
 		} else {
 			_cityIncomeEnemy = ((_civilians * _coef*(_supportEnemy / 100)) /3);
 			_cityIncomeFIA = ((_civilians * _coef*(_supportFIA / 100))/3);
-			_cityIncomeHR = (_civilians * (_supportFIA / 20000));
+			_cityIncomeHR = (_civilians * (_supportFIA / _coefHR));
 
 			if (_city in mrkFIA) then {
 				_cityIncomeEnemy = (_cityIncomeEnemy/2);
@@ -75,6 +80,7 @@ while {true} do {
 			mrkFIA = mrkFIA + [_city];
 			// Respawn city with new garrison
 			[_city] spawn {
+				params ["_city"];
 				spawner setVariable [_city,false,true];
 				sleep 30;
 				waitUntil {sleep 3; !([distanciaSPWN,1,getMarkerPos _city,"BLUFORSpawn"] call distanceUnits) AND !([distanciaSPWN,1,getMarkerPos _city,"OPFORSpawn"] call distanceUnits)};
@@ -102,6 +108,14 @@ while {true} do {
 			[["TaskFailed", ["", format ["%1 joined AAF",[_city, false] call AS_fnc_location]]],"BIS_fnc_showNotification"] call BIS_fnc_MP;
 			mrkAAF = mrkAAF + [_city];
 			mrkFIA = mrkFIA - [_city];
+			// Respawn city with new garrison
+			[_city] spawn {
+				params ["_city"];
+				spawner setVariable [_city,false,true];
+				sleep 30;
+				waitUntil {sleep 3; !([distanciaSPWN,1,getMarkerPos _city,"BLUFORSpawn"] call distanceUnits) AND !([distanciaSPWN,1,getMarkerPos _city,"OPFORSpawn"] call distanceUnits)};
+				[_city] call AS_fnc_respawnZone;
+			};
 			publicVariable "mrkAAF";
 			publicVariable "mrkFIA";
 			[0,-5] remoteExec ["prestige",2];

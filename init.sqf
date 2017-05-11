@@ -65,6 +65,7 @@ if (isServer) then {
     if (serverName in servidoresOficiales) then {
         enableRestart = [true, false] select (("AS_enableCampaignReset" call BIS_fnc_getParamValue) == 0);
         publicVariable "enableRestart";
+        server setVariable ["enableRestart", enableRestart, true];
         [] execVM "orgPlayers\mList.sqf";
         ["miembros"] call fn_loadData;
         {

@@ -133,10 +133,11 @@ SHK_Fastrope_fnc_AIs = {
     } forEach _units;
 
     waituntil {sleep 0.5; { (getPosATL _x select 2) < 1 } count _units == count _units };
-    sleep 3;
+    sleep 2;
     if (count (_heli getVariable ["SHK_Fastrope_Ropes",[]]) > 0) then {
       _heli call SHK_Fastrope_fnc_cutRopes;
     };
+    sleep 1;
     (driver _heli) doFollow (leader group (driver _heli));
     (driver _heli) setBehaviour "CARELESS";
     (driver _heli) setCombatMode "White";

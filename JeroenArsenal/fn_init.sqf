@@ -124,22 +124,6 @@ if(hasInterface)then{
                 }
             } forEach [uniformContainer player,vestContainer player,backpackContainer player];
             missionNamespace setVariable ["jna_containerCargo_init", _attachmentsContainers];
-
-
-            jna_fnc_arsenal = compile preprocessFileLineNumbers "JeroenArsenal\fn_arsenal.sqf";
-            jna_fnc_loadinventory = compile preprocessFileLineNumbers "JeroenArsenal\fn_loadinventory.sqf";
-            jna_fnc_cargoToArray = compile preprocessFileLineNumbers "JeroenArsenal\Functions\fn_cargoToArray.sqf";
-            jna_fnc_addItem_Arsanal = compile preprocessFileLineNumbers "JeroenArsenal\Functions\fn_addItem_Arsanal.sqf";
-            jna_fnc_addItems_Arsanal = compile preprocessFileLineNumbers "JeroenArsenal\Functions\fn_addItems_Arsanal.sqf";
-            jna_fnc_addToArray = compile preprocessFileLineNumbers "JeroenArsenal\Functions\fn_addToArray.sqf";
-            jna_fnc_inList = compile preprocessFileLineNumbers "JeroenArsenal\Functions\fn_inList.sqf";
-            jna_fnc_removeFromArray = compile preprocessFileLineNumbers "JeroenArsenal\Functions\fn_removeFromArray.sqf";
-            jna_fnc_removeItem_Arsanal = compile preprocessFileLineNumbers "JeroenArsenal\Functions\fn_removeItem_Arsanal.sqf";
-            jna_fnc_removeItems_Arsanal = compile preprocessFileLineNumbers "JeroenArsenal\Functions\fn_removeItems_Arsanal.sqf";
-            jna_fnc_itemCount = compile preprocessFileLineNumbers "JeroenArsenal\Functions\fn_itemCount.sqf";
-            jna_fnc_itemType = compile preprocessFileLineNumbers "JeroenArsenal\Functions\fn_itemType.sqf";
-
-
             [clientOwner] remoteExecCall ["jna_fnc_requestOpen",2];
         },
         [],

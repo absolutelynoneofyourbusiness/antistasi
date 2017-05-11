@@ -89,9 +89,9 @@ publicVariable "hcArray";
 if !(activeJNA) then {
     caja addEventHandler ["ContainerOpened", {
         params ["_container","_unit"];
-        if (not([_unit] call isMember)) then {
+        if !([_unit] call isMember) then {
             _unit setPos position petros;
-            [localize "STR_HINTS_INIT_NOTMEMBER_INV"] remoteExecCall ["hint", _jugador];
+            [localize "STR_HINTS_INIT_NOTMEMBER_INV"] remoteExecCall ["hint", _unit];
         };
     }];
 };

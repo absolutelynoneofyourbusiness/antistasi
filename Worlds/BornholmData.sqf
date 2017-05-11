@@ -18,6 +18,8 @@ posAntenas = [[19706.8,22039.3,0],[14666.1,11039.6,0],[16337.1,8484.57,-7.62939e
 
 posbancos = [];
 
+defaultPopulation = 6297;
+
 safeDistance_undercover = 350;
 safeDistance_garage = 500;
 safeDistance_recruit = 500;

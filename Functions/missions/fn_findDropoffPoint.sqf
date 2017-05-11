@@ -18,7 +18,7 @@ while {true} do {
 	if (_radius > _maxDistance) exitWith {};
 };
 
-if (count _roads == 0) exitWith {diag_log format ["No road found between %3m and %4m from %2 for troops coming from %1", _origen, _target, _minDistance, _maxDistance]};
+if (count _roads == 0) exitWith {diag_log format ["No road found between %3m and %4m from %2 for troops coming from %1", _origin, _target, _minDistance, _maxDistance]};
 
 _road = _roads select 0;
 _max = -log 0;

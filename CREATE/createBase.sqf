@@ -19,6 +19,7 @@ _busy = if (dateToNumber date > server getVariable _marker) then {false} else {t
 _buildings = nearestObjects [_markerPos, listMilBld, _size*1.5];
 _groupGunners = createGroup side_green;
 
+// statics in buildings
 for "_i" from 0 to (count _buildings) - 1 do {
 	_building = _buildings select _i;
 	_buildingType = typeOf _building;
@@ -73,14 +74,15 @@ for "_i" from 0 to (count _buildings) - 1 do {
 	};
 };
 
+// flag and crate
 _flag = createVehicle [cFlag, _markerPos, [],0, "CAN_COLLIDE"];
 _flag allowDamage false;
 [_flag,"take"] remoteExec ["AS_fnc_addActionMP",[0,-2] select isDedicated,_flag];
 _allVehicles pushBack _flag;
-
 _crate = "I_supplyCrate_F" createVehicle _markerPos;
 _allVehicles pushBack _crate;
 
+// mortars
 _vehicleCount = 4 min (round (_size / 30));
 if ( _vehicleCount > 0 ) then {
 	_spawnPos = [_markerPos, random (_size / 2),random 360] call BIS_fnc_relPos;
@@ -97,6 +99,7 @@ if ( _vehicleCount > 0 ) then {
 	};
 };
 
+// bunker on access road
 if ((spawner getVariable _marker) AND (_isFrontline)) then {
 	_roads = _markerPos nearRoads _size;
 	if (count _roads != 0) then {
@@ -112,6 +115,7 @@ if ((spawner getVariable _marker) AND (_isFrontline)) then {
 
 _allGroups pushBack _groupGunners;
 
+// vehicles
 if (!_busy) then {
 	_spawnpool = vehAPC + vehPatrol + enemyMotorpool - [heli_default];
 	_vehicleCount = 1 max (round (_size/50));
@@ -135,12 +139,13 @@ if (!_busy) then {
 	[_x] spawn genVEHinit;
 } forEach _allVehicles;
 
-for "_i" from 1 to 3 do {
+// patrols
+for "_i" from 1 to 2 do {
 	while {true} do {
 		_spawnPos = [_markerPos, 50 + (random 100), random 360] call BIS_fnc_relPos;
 		if (!surfaceIsWater _spawnPos) exitWith {};
 	};
-	_groupType = [infPatrol, side_green] call AS_fnc_pickGroup;
+	_groupType = [infTeam, side_green] call AS_fnc_pickGroup;
 	_groupPatrol = [_spawnPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
 	if (random 10 < 2.5) then {
 		_dog = _groupPatrol createUnit ["Fin_random_F",_spawnPos,[],0,"FORM"];
@@ -148,16 +153,22 @@ for "_i" from 1 to 3 do {
 	};
 	_initialGroupSetup pushBack [_groupType, "patrol", _spawnPos];
 	[_groupPatrol, _markerPos, 300, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [3,6,9]] call CBA_fnc_taskPatrol;
+	[_groupPatrol, _marker, (units _groupPatrol), 400, true] spawn AS_fnc_monitorGroup;
 	_localIDs pushBack (_groupPatrol call BIS_fnc_netId);
 	grps_VCOM pushBackUnique (_groupPatrol call BIS_fnc_netId);
 	_allGroups pushBack _groupPatrol;
 };
 
-// spawn garrison team
+// spawn garrison squads
 _groupType = [infSquad, side_green] call AS_fnc_pickGroup;
-_groupGarrison = [_markerPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
+_groupGarrisonOne = [_markerPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
 _initialGroupSetup pushBack [_groupType, "garrison", _markerPos];
-_allGroups pushBack _groupGarrison;
+_allGroups pushBack _groupGarrisonOne;
+
+_groupType = [infSquad, side_green] call AS_fnc_pickGroup;
+_groupGarrisonTwo = [_markerPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
+_initialGroupSetup pushBack [_groupType, "garrison", _markerPos];
+_allGroups pushBack _groupGarrisonTwo;
 
 {
 	_group = _x;
@@ -170,8 +181,9 @@ _allGroups pushBack _groupGarrison;
 } forEach _allGroups;
 
 publicVariable "grps_VCOM";
-[_groupGarrison,_size min 100] spawn AS_fnc_forceGarrison;
 ([_marker,count _allSoldiers] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
+[_groupGarrisonOne, _size min 100] spawn AS_fnc_forceGarrison;
+[_groupGarrisonTwo, _size min 100] spawn AS_fnc_forceGarrison;
 
 _observer = objNull;
 if ((random 100 < (((server getVariable "prestigeNATO") + (server getVariable "prestigeCSAT"))/10)) AND (spawner getVariable _marker)) then {

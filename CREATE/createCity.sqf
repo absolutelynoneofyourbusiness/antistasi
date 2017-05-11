@@ -1,6 +1,6 @@
 if (!isServer and hasInterface) exitWith{};
 
-params ["_marker"];
+params ["_marker", ["_localIDs", []]];
 private ["_allGroups","_allSoldiers","_markerPos","_size","_data","_prestigeOPFOR","_prestigeBLUFOR","_isHostile","_isFrontline","_groupType","_groupParams","_group","_counter","_dog"];
 
 _allGroups = [];
@@ -25,8 +25,11 @@ if (_marker in mrkAAF) then {
 	if (random 10 < 5) then {
 		_groupType = [opGroup_Sniper, side_red] call AS_fnc_pickGroup;
 		_group = [_markerPos, side_red, _groupType] call BIS_Fnc_spawnGroup;
-		[leader _group,_marker,"garrison"] spawn AS_fnc_addToUPSMON;
-		{[_x] spawn CSATinit; _allSoldiers pushBack _x} forEach units _group;
+		{[_x, true] spawn CSATinit; _allSoldiers pushBack _x} forEach units _group;
+		[_group, _markerPos, 150, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [3,6,9]] call CBA_fnc_taskPatrol;
+		[_group, _marker, (units _group), 400, false] spawn AS_fnc_monitorGroup;
+		_localIDs pushBack (_group call BIS_fnc_netId);
+		grps_VCOM pushBackUnique (_group call BIS_fnc_netId);
 		_allGroups pushBack _group;
 	};
 } else {
@@ -51,12 +54,16 @@ while {(spawner getVariable _marker) AND (_counter < _size)} do {
 	} else {
 		{[_x] spawn AS_fnc_initialiseFIAGarrisonUnit; _allSoldiers pushBack _x} forEach units _group;
 	};
-	[leader _group,_marker,"garrison"] spawn AS_fnc_addToUPSMON;
+	[_group, _markerPos, 150, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [3,6,9]] call CBA_fnc_taskPatrol;
+	[_group, _marker, (units _group), 400, true] spawn AS_fnc_monitorGroup;
+	_localIDs pushBack (_group call BIS_fnc_netId);
+	grps_VCOM pushBackUnique (_group call BIS_fnc_netId);
 	_allGroups pushBack _group;
 	_counter = _counter + 1;
 };
 
 // Dynamic Simulation
+publicVariable "grps_VCOM";
 ([_marker,count _allSoldiers] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
 
 sleep 10;
@@ -103,6 +110,7 @@ call {
 };
 
 [_allGroups, _allSoldiers, _markerPos nearObjects ["Box_IND_Wps_F", (_size max 200)]] spawn AS_fnc_despawnUnits;
+grps_VCOM = grps_VCOM - _localIDs; publicVariable "grps_VCOM";
 
 // If garrison was overwhelmed, respawn the zone after 30 minutes.
 if (spawner getVariable _marker) then {

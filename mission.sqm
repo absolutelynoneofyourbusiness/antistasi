@@ -20,10 +20,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={3618.4834,31.907839,10269.25};
-		dir[]={-0.373476,-0.66904283,0.64257944};
-		up[]={-0.33620054,0.74321526,0.57844412};
-		aside[]={0.86457849,4.3073669e-008,0.5025053};
+		pos[]={3625.7913,40.746719,10253.029};
+		dir[]={-0.1237406,-0.67180461,0.73032773};
+		up[]={-0.11222741,0.74072063,0.66237253};
+		aside[]={0.98595405,1.3562385e-007,0.16705172};
 	};
 };
 binarizationWanted=0;
@@ -152,7 +152,7 @@ class Mission
 {
 	class Intel
 	{
-		briefingName="[SP/CO50] A3 - Antistasi Altis (Blue)";
+		briefingName="DynaSim with VCOM - Altis (Blue)";
 		overviewText="Build an FIA Army from scratch and defeat the AAF and CSAT forces in a whole map Dynamic Mission.";
 		resistanceWest=0;
 		resistanceEast=1;

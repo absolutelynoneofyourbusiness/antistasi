@@ -5,12 +5,12 @@ class CfgFunctions {
 			class UI_clearMenu {};
 			class UI_createMenu {};
 			class UI_setTText {};
-			class UI_itemSelected {};
-			class UI_PressPlus {};
-			class UI_PressMinus {};
-			class UI_showCombo {};
-			class UI_sellGear {};
-			class UI_changeCategory {};
+			//class UI_itemSelected {};
+			//class UI_PressPlus {};
+			//class UI_PressMinus {};
+			//class UI_showCombo {};
+			//class UI_sellGear {};
+			//class UI_changeCategory {};
 		};
 		class client {
 			file = "Functions";
@@ -98,11 +98,11 @@ class CfgFunctions {
 			class fiaRadio {};
 			class location {};
 			class autoStart {};
-			class sellGear {};
-			class createItemDB {};
-			class removeGear {};
-			class insertVehicle {};
-			class createLootCrates {};
+			//class sellGear {};
+			//class createItemDB {};
+			//class removeGear {};
+			//class insertVehicle {};
+			//class createLootCrates {};
 			class addTimeForIdle {};
 			class adjustLamps {};
 			class spawnAttack {};
@@ -157,6 +157,8 @@ class CfgFunctions {
 			class spawnLeadVehicle {};
 			class transportTroops {};
 			class spawnMechInf {};
+			class findBase {};
+			class replacePatrol {};
 		};
 		class JNA {
 			file = "Functions";

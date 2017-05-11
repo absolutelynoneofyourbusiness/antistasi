@@ -33,7 +33,7 @@ params [
 	["_allVehicles", [], [[]], 0]
 ];
 
-private ["_bases","_airports","_type","_method","_side","_faction","_lead","_transportType","_dismountGroupType","_dismountGroupEscort","_spawnPosition","_endTime","_vehicleData","_dismountFlag","_dismountGroup","_rallyPoint","_transport", "_endTime"];
+private ["_bases","_airports","_type","_method","_side","_faction","_lead","_transportType","_dismountGroupType","_dismountGroupEscort","_spawnPosition","_endTime","_vehicleData","_dismountFlag","_dismountGroup","_rallyPoint","_transport", "_endTime", "_localID"];
 
 _endTime = [date select 0, date select 1, date select 2, date select 3, (date select 4) + _duration];
 _endTime = dateToNumber _endTime;
@@ -81,7 +81,7 @@ _spawnPosition = getMarkerPos _startPosition;
 _endTime = [date select 0, date select 1, date select 2, date select 3, (date select 4) + _duration];
 _endTime = dateToNumber _endTime;
 
-fn_addData = {
+_fn_addData = {
 	params ["_vehicle", "_soldiers", "_group", ["_infGroup", []]];
 	_allVehicles pushBack _vehicle;
 	_allSoldiers = _allSoldiers + _soldiers;
@@ -101,7 +101,7 @@ call {
 	if (_type == "air") exitWith {
 		// spawn gunship
 		if (_composition in ["destroy", "mixed"]) then {
-			([_spawnPosition, _rallyPoint, _lead, _side, "loiter", _duration*60] call AS_fnc_spawnGunship) call fn_addData;
+			([_spawnPosition, _rallyPoint, _lead, _side, "loiter", _duration*60] call AS_fnc_spawnGunship) call _fn_addData;
 		};
 
 		// give the lead helicopter a head start
@@ -111,7 +111,7 @@ call {
 
 		// spawn transport
 		if (_composition in ["transport", "mixed"]) then {
-			([_spawnPosition, _rallyPoint, _transportType, _dismountGroupType, _side, "fastrope", [300, 550], 0, [], _dismountFlag] call AS_fnc_insertTroops) call fn_addData;
+			([_spawnPosition, _rallyPoint, _transportType, _dismountGroupType, _side, "fastrope", [300, 550], 0, [], _dismountFlag] call AS_fnc_insertTroops) call _fn_addData;
 		};
 	};
 
@@ -119,7 +119,7 @@ call {
 		_rallyPoint = [_targetPosition, [_spawnPosition, _targetPosition] call AS_fnc_findDropoffPoint] select (_composition != "destroy");
 		// spawn lead vehicle
 		if (_composition in ["destroy", "mixed"]) then {
-			([_spawnPosition, _rallyPoint, _lead, _side, "secure", _duration*60] call AS_fnc_spawnLeadVehicle) call fn_addData;
+			([_spawnPosition, _rallyPoint, _lead, _side, "secure", _duration*60] call AS_fnc_spawnLeadVehicle) call _fn_addData;
 		};
 
 		// give the lead vehicle a head start
@@ -129,16 +129,19 @@ call {
 
 		// spawn transport
 		if (_composition in ["transport", "mixed"]) then {
-			([_spawnPosition, _rallyPoint, _transportType, _dismountGroupType, _side, "none", 300, 0, _dismountFlag] call AS_fnc_transportTroops) call fn_addData;
+			([_spawnPosition, _rallyPoint, _transportType, _dismountGroupType, _side, "none", 300, 0, _dismountFlag] call AS_fnc_transportTroops) call _fn_addData;
 		};
 	};
 };
 
+_localID = "";
 if (_composition in ["transport", "mixed"]) then {
 	if (_searchAreaRadius != 0) then {
 		waitUntil {sleep 2; (missionNamespace getVariable [_dismountFlag, false]) OR {(!alive _transport)}};
 		if (missionNamespace getVariable [_dismountFlag, false]) then {
 			[_dismountGroup, _targetPosition, _searchAreaRadius, round (_searchAreaRadius / 60), "MOVE", "AWARE", "YELLOW", "FULL", "STAG COLUMN", "", [3,6,9]] call CBA_fnc_taskPatrol;
+			_localID = _dismountGroup call BIS_fnc_netId;
+			grps_VCOM pushBackUnique _localID; publicVariable "grps_VCOM";
 			//[_dismountGroup, _targetPosition, _searchAreaRadius] call BIS_fnc_taskPatrol;
 		};
 	};
@@ -146,12 +149,11 @@ if (_composition in ["transport", "mixed"]) then {
 	missionNamespace setVariable [_dismountFlag, nil, true];
 };
 
-diag_log format ["groups: %1; soldiers: %2; vehicles: %3", _allGroups, _allSoldiers, _allVehicles];
-
 waitUntil {sleep 10; (dateToNumber date > _endTime) OR {({alive _x AND !captive _x} count _allSoldiers == 0)}};
 
 if !(_varName isEqualTo "") then {
 	server setVariable [_varName,true,true];
 };
 
+if !(_localID isEqualTo "") then {grps_VCOM = grps_VCOM - [_localID]; publicVariable "grps_VCOM"};
 [_allGroups, _allSoldiers, _allVehicles] spawn AS_fnc_despawnUnits;

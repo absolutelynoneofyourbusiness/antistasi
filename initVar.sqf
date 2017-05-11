@@ -53,7 +53,7 @@ if (isClass (configFile >> "CfgPatches" >> "javelinTest")) then {
  	- RHS AFRF replaces AAF/CSAT
 */
 [] call AS_fnc_detectMods;
-waitUntil {status_templatesLoaded};
+waitUntil {sleep 0.5; status_templatesLoaded};
 
 /*
  	ACE detection/initialisation
@@ -67,6 +67,11 @@ call compile preprocessFileLineNumbers "Lists\basicLists.sqf";
 #include "Compositions\spawnPositions.sqf"
 #include "Scripts\SHK_Fastrope.sqf"
 
+solCat = [["I_G_Soldier_base_F","SoldierWB"],["I_G_Soldier_base_F","SoldierEB"]] select replaceFIA;
+vehCat = ["LandVehicle","AirVehicle"];
+allCat = solCat + vehCat;
+enemyCat = [["I_Soldier_base_F","SoldierEB"],["I_Soldier_base_F","SoldierWB"]] select replaceFIA;
+
 if (!isServer and hasInterface) exitWith {};
 
 AAFpatrols = 0;//0
@@ -74,10 +79,6 @@ skillAAF = 0;
 smallCAmrk = [];
 smallCApos = [];
 reducedGarrisons = [];
-solCat = [["I_G_Soldier_base_F","SoldierWB"],["I_G_Soldier_base_F","SoldierEB"]] select replaceFIA;
-vehCat = ["LandVehicle","AirVehicle"];
-allCat = solCat + vehCat;
-enemyCat = [["I_Soldier_base_F","SoldierEB"],["I_Soldier_base_F","SoldierWB"]] select replaceFIA;
 
 // camps
 campsFIA = [];

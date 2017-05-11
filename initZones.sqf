@@ -1,4 +1,4 @@
-private ["_allMarkers","_sizeX","_sizeY","_size","_name","_pos","_roads","_numCiv","_roadsProv","_roadcon","_numVeh","_nroads","_nearRoadsFinalSorted","_mrk","_dmrk","_info","_antennaArray","_antenna","_bankArray","_bank","_blackList"];
+private ["_allMarkers","_sizeX","_sizeY","_size","_name","_pos","_roads","_numCiv","_roadsProv","_roadcon","_numVeh","_nroads","_nearRoadsFinalSorted","_mrk","_dmrk","_info","_antennaArray","_antenna","_bankArray","_bank","_blackList","_city"];
 
 AS_destroyedZones = [];
 forcedSpawn = [];
@@ -92,14 +92,15 @@ marcadores = power + bases + aeropuertos + recursos + fabricas + puestos + puert
 
 // Detect cities, set their population to the number of houses within their city limits, create a database of roads, set number of civilian vehicles to spawn with regards to number of roads. Pre-defined for Altis.
 {
-    _name = [text _x, true] call AS_fnc_location;
+    _city = _x;
+    _name = [text _city, true] call AS_fnc_location;
     if ((_name != "") and !(_name in _blackList)) then {
-        _sizeX = getNumber (configFile >> "CfgWorlds" >> worldName >> "Names" >> (text _x) >> "radiusA");
-        _sizeY = getNumber (configFile >> "CfgWorlds" >> worldName >> "Names" >> (text _x) >> "radiusB");
+        _sizeX = getNumber (configFile >> "CfgWorlds" >> worldName >> "Names" >> _name >> "radiusA");
+        _sizeY = getNumber (configFile >> "CfgWorlds" >> worldName >> "Names" >> _name >> "radiusB");
         _size = [_sizeX, _sizeY] select (_sizeX < _sizeY);
         if (_size < 200) then {_size = 200};
 
-        _pos = getPos _x;
+        _pos = getPos _city;
         _roads = [];
         _numCiv = 0;
         if (worldName != "Altis") then {

@@ -1,6 +1,7 @@
 call compile preprocessFileLineNumbers "Compositions\FIA_RB.sqf";
 call compile preprocessFileLineNumbers "scripts\Init_UPSMON.sqf";
 call compile preprocessFileLineNumbers "Lists\gearList.sqf";
+call compile preprocessFileLineNumbers "Scripts\fpsMonitor.sqf";
 
 minefieldAAF = compile preProcessFileLineNumbers "CREATE\minefieldAAF.sqf";
 tempMoveMrk = compile preProcessFileLineNumbers "tempMoveMrk.sqf";

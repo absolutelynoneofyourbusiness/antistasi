@@ -239,7 +239,6 @@ for "_i" from 0 to (count _items) - 1 do {
 if (count _weapons != count _weaponCargo) then {
 	clearWeaponCargoGlobal caja;
 	{caja addWeaponCargoGlobal [_x,1]} forEach _weaponCargo;
-	unlockedRifles = unlockedweapons -  gear_sidearms -  gear_missileLaunchers - gear_rocketLaunchers - gear_sniperRifles - gear_machineGuns; publicVariable "unlockedRifles";
 };
 
 if (count _backpacks != count _backpackCargo) then {
@@ -257,9 +256,15 @@ if (count _items != count _itemCargo) then {
 	{caja addItemCargoGlobal [_x,1]} forEach _itemCargo;
 };
 
-unlockedRifles = unlockedweapons - gear_sidearms - gear_missileLaunchers - gear_rocketLaunchers - gear_sniperRifles - gear_machineGuns; publicVariable "unlockedRifles";
-publicVariable "unlockedWeapons";
+unlockedRifles = unlockedweapons - gear_sidearms - gear_missileLaunchers - gear_rocketLaunchers - gear_sniperRifles - gear_machineGuns;
+{
+	if ((getText (configFile >> "CfgWeapons" >> _x >> "useAsBinocular")) isEqualTo 1) then {
+		unlockedRifles = unlockedRifles - [_x];
+	};
+} forEach unlockedRifles;
+
 publicVariable "unlockedRifles";
+publicVariable "unlockedWeapons";
 publicVariable "unlockedItems";
 publicVariable "unlockedOptics";
 publicVariable "unlockedBackpacks";

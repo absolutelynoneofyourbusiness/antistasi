@@ -70,17 +70,17 @@ call {
 			};
 
 			if (active3CB) exitWith {
-				// Hostiles: Heer supported by KSK
-				call compile preprocessFileLineNumbers "Templates\IND_BW.sqf";
-				call compile preprocessFileLineNumbers "Templates\RED_KSK.sqf";
-				_hostilesMain = "Heer"; _hostilesSupport = "KSK";
+				// Hostiles: British Army supported by SBS
+				call compile preprocessFileLineNumbers "Templates\IND_BritArm.sqf";
+				call compile preprocessFileLineNumbers "Templates\RED_SBS.sqf";
+				_hostilesMain = "BAF"; _hostilesSupport = "SBS";
 
 				// Friendly support: VMF
-				call compile preprocessFileLineNumbers "Templates\BLUE_VMF.sqf";
-				_friendlySupport = "VMF";
+				call compile preprocessFileLineNumbers "Templates\BLUE_NATO.sqf";
+				_friendlySupport = "NATO";
 			};
 
-			if (activeUSAF) exitWith {
+			if (activeUSAF) then {
 				// Hostiles: USMC supported by SOCOM
 				call compile preprocessFileLineNumbers "Templates\IND_USMC.sqf";
 				call compile preprocessFileLineNumbers "Templates\RED_SOC.sqf";
@@ -92,7 +92,7 @@ call {
 				_hostilesMain = "NATO"; _hostilesSupport = "NATO SF";
 			};
 
-			if (activeAFRF) exitWith {
+			if (activeAFRF) then {
 				// Friendly support: VMF
 				call compile preprocessFileLineNumbers "Templates\BLUE_VMF.sqf";
 				_friendlySupport = "VMF";
@@ -119,14 +119,15 @@ call {
 	};
 
 	if (active3CB) exitWith {
-		// Hostiles: Heer supported by KSK
-		call compile preprocessFileLineNumbers "Templates\IND_BW.sqf";
-		call compile preprocessFileLineNumbers "Templates\RED_KSK.sqf";
-		_hostilesMain = "Heer"; _hostilesSupport = "KSK";
+		// Hostiles: British Army supported by SBS
+		call compile preprocessFileLineNumbers "Templates\IND_BritArm.sqf";
+		//call compile preprocessFileLineNumbers "Templates\IND_AAF.sqf";
+		call compile preprocessFileLineNumbers "Templates\RED_SBS.sqf";
+		_hostilesMain = "BAF"; _hostilesSupport = "SBS";
 
 		// Friendly support: VMF
-		call compile preprocessFileLineNumbers "Templates\BLUE_VMF.sqf";
-		_friendlySupport = "VMF";
+		call compile preprocessFileLineNumbers "Templates\BLUE_NATO.sqf";
+		_friendlySupport = "NATO";
 	};
 
 	if (activeAFRF) then {

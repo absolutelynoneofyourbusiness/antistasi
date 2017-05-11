@@ -55,7 +55,7 @@ if (!("ItemGPS" in unlockedItems) AND ("ItemGPS" in (assignedItems _newUnit))) t
 if ((!activeTFAR) AND ("ItemRadio" in (assignedItems player)) AND !("ItemRadio" in unlockedItems)) then {player unlinkItem "ItemRadio"};
 if (!isPlayer (leader group player)) then {(group player) selectLeader player};
 
-call AS_fnc_initPlayerEH;
+[true] call AS_fnc_initPlayerEH;
 
 if (!(isMultiplayer) AND (activeACEMedical)) then {
 	player setVariable ["inconsciente",false,true];

@@ -15,7 +15,7 @@ while {true} do {
 		// ### HQ was not moved ###
 
 	// Player within spawn distance of buffer zones
-	if ({(_x distance poshq > (bufferDistance-spawnDistancePlayer))} count (allPlayers - entities "HeadlessClient_F") > 0) then {
+	if ({(_x distance poshq > (spawnDistanceTwo-spawnDistancePlayer))} count (allPlayers - entities "HeadlessClient_F") > 0) then {
 		// Check buffer zones for player presence
 		{
 			_marker = _x;
@@ -33,7 +33,7 @@ while {true} do {
 	};
 
 	// Player within spawn distance of frontier zones
-	if ({(_x distance poshq > (frontierDistance-spawnDistancePlayer))} count (allPlayers - entities "HeadlessClient_F") > 0) then {
+	if ({(_x distance poshq > (bufferDistance-spawnDistancePlayer))} count (allPlayers - entities "HeadlessClient_F") > 0) then {
 		// Check frontier zones for player proximity, spawn if neccessary
 		{
 			_marker = _x;

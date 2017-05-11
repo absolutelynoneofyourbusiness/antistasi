@@ -458,47 +458,25 @@ _arrayRemove = [_arrayTaken, _arrayPlaced] call _subtractArrays;
 _arrayAdd call jna_fnc_addItems_Arsanal;
 _arrayRemove call jna_fnc_removeItems_Arsanal;
 
-_reportString = "";
+//create text for missing and replaced items
+//we could use ingame names here but some items might not be ingame(disabled mod), but if you feel like it you can still add it.
+
+_reportReplaced = "";
 {
-	_index = _foreachindex;
-	_item = _x select 0;
+	_nameNew = _x select 0;
+	_nameOld = _x select 1;
+	_reportReplaced = _reportReplaced + _nameOld + " replaced with " + _nameNew + "\n";
+} forEach _arrayReplaced;
+
+_reportMissing = "";
+{
+	_name = _x select 0;
 	_amount = _x select 1;
-	_xCfg = switch _index do {
-		case IDC_RSCDISPLAYARSENAL_TAB_BACKPACK:	{configfile >> "cfgvehicles" 	>> _item};
-		case IDC_RSCDISPLAYARSENAL_TAB_GOGGLES:		{configfile >> "cfgglasses" 	>> _item};
-		case IDC_RSCDISPLAYARSENAL_TAB_CARGOMAG;
-		case IDC_RSCDISPLAYARSENAL_TAB_CARGOMAGALL;
-		case IDC_RSCDISPLAYARSENAL_TAB_CARGOTHROW;
-		case IDC_RSCDISPLAYARSENAL_TAB_CARGOPUT: 	{configfile >> "cfgmagazines" 	>> _item};
-		case IDC_RSCDISPLAYARSENAL_TAB_CARGOMISC:	{configfile >> "cfgweapons" 	>> _item};
-		default										{configfile >> "cfgweapons" 	>> _item};
-	};
-	_displayName = gettext (_xCfg >> "displayName");
-	if(_displayName isEqualTo "")then{_displayName = _item};
-	_reportString = _reportString + _displayName + " ("+(str _amount)+")\n";
-} forEach _arrayMissing;
+	_reportMissing = _reportMissing + _name + " (" + (str _amount) + "x)\n";
+}forEach _arrayMissing;
 
-if(_reportString != "")then{
-	titleText[("I couldn't find the following items:\n" + _reportString), "PLAIN"];
+_reportTotal = _reportReplaced + _reportMissing;
+if(_reportTotal != "")then{
+	_reportTotal = ("I couldn't find the following items:\n" + _reportTotal);
+	titleText[_reportTotal, "PLAIN"];
 };
-
-
-/*
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-[
-	"13",
-	[
-		["U_BG_Guerilla2_3",["30Rnd_65x39_caseless_green","30Rnd_65x39_caseless_green","30Rnd_65x39_caseless_green"]],
-		["",[]],
-		["B_Carryall_oli",["30Rnd_65x39_caseless_green","30Rnd_65x39_caseless_green","30Rnd_65x39_caseless_green","30Rnd_65x39_caseless_green","30Rnd_65x39_caseless_green","30Rnd_65x39_caseless_green","30Rnd_65x39_caseless_green","30Rnd_65x39_caseless_green","30Rnd_65x39_caseless_green","30Rnd_65x39_caseless_green","30Rnd_65x39_caseless_green","30Rnd_65x39_caseless_green","30Rnd_65x39_caseless_green","30Rnd_65x39_caseless_green"]],
-		"H_Beret_blk",
-		"G_Bandanna_blk",
-		"Binocular",
-		["arifle_TRG21_F",["","","",""],""],
-		["launch_I_Titan_F",["","","",""],"Titan_AA"],
-		["",["","","",""],""],
-		["ItemMap","ItemCompass","ItemWatch","ItemRadio","ItemGPS","NVGoggles"],
-		["GreekHead_A3_01","Male01GRE",""]
-	]
-]
-*/

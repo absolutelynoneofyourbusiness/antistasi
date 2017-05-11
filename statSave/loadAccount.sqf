@@ -90,7 +90,14 @@ petros allowdamage false;
 ["unlockedMagazines"] call fn_loadData; publicVariable "unlockedMagazines";
 ["unlockedWeapons"] call fn_loadData; publicVariable "unlockedWeapons";
 ["unlockedBackpacks"] call fn_loadData; publicVariable "unlockedBackpacks";
-unlockedRifles = unlockedweapons - gear_sidearms - gear_missileLaunchers - gear_rocketLaunchers - gear_sniperRifles - gear_machineGuns; publicVariable "unlockedRifles";
+
+unlockedRifles = unlockedweapons - gear_sidearms - gear_missileLaunchers - gear_rocketLaunchers - gear_sniperRifles - gear_machineGuns;
+{
+	if ((getText (configFile >> "CfgWeapons" >> _x >> "useAsBinocular")) isEqualTo 1) then {
+		unlockedRifles = unlockedRifles - [_x];
+	};
+} forEach unlockedRifles;
+publicVariable "unlockedRifles";
 
 //===========================================================================
 

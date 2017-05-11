@@ -43,31 +43,10 @@ if (random 10 < 2.5) then {
 };
 _initialGroupSetup pushBack [_groupType, "patrol", _spawnPos];
 [_groupPatrol, _markerPos, 150, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [3,6,9]] call CBA_fnc_taskPatrol;
+[_groupPatrol, _marker, (units _groupPatrol), 400, true] spawn AS_fnc_monitorGroup;
 _localIDs pushBack (_groupPatrol call BIS_fnc_netId);
 grps_VCOM pushBackUnique (_groupPatrol call BIS_fnc_netId);
 _allGroups pushBack _groupPatrol;
-
-/*_groupType = [infTeam, side_green] call AS_fnc_pickGroup;
-_groupPatrol = [_spawnPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
-if (random 10 < 2.5) then {
-	_dog = _groupPatrol createUnit ["Fin_random_F",_spawnPos,[],0,"FORM"];
-	[_dog] spawn guardDog;
-};
-_initialGroupSetup pushBack [_groupType, "patrol", _spawnPos];
-[_groupPatrol, _markerPos, 300, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [3,6,9]] call CBA_fnc_taskPatrol;
-_localIDs pushBack (_groupPatrol call BIS_fnc_netId);
-grps_VCOM pushBackUnique (_groupPatrol call BIS_fnc_netId);
-_allGroups pushBack _groupPatrol;*/
-
-if (_isFrontline) then {
-	_groupType = [infSquad, side_green] call AS_fnc_pickGroup;
-	_groupPatrol = [_spawnPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
-	_initialGroupSetup pushBack [_groupType, "patrol", _spawnPos];
-	[_groupPatrol, _markerPos, 250, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [3,6,9]] call CBA_fnc_taskPatrol;
-	_localIDs pushBack (_groupPatrol call BIS_fnc_netId);
-	grps_VCOM pushBackUnique (_groupPatrol call BIS_fnc_netId);
-	_allGroups pushBack _groupPatrol;
-};
 
 _observer = objNull;
 if ((random 100 < (((server getVariable "prestigeNATO") + (server getVariable "prestigeCSAT"))/10)) AND (spawner getVariable _marker)) then {
@@ -98,10 +77,9 @@ sleep 3;
 	[_x] spawn genVEHinit
 } forEach _allVehicles;
 
+([_marker,count _allSoldiers] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
 publicVariable "grps_VCOM";
 [_groupGarrison,_size min 50] spawn AS_fnc_forceGarrison;
-
-([_marker,count _allSoldiers] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
 
 if !(_marker in destroyedCities) then {
 	if ((daytime > 8) AND (daytime < 18)) then {

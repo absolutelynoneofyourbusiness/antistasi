@@ -151,6 +151,7 @@ call {
 	params ["_group", "_homePosition", "_varName"];
 	private _heli = vehicle (leader _group);
 	waitUntil {sleep 2; (count (assignedCargo _heli) < 1) OR {(!alive _heli)} OR {!canMove _heli}};
+	sleep 2;
 	[_group, _homePosition] spawn AS_fnc_QRF_RTB;
 	missionNamespace setVariable [_varName, true, true];
 };

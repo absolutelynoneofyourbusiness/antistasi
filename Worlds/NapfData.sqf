@@ -21,6 +21,8 @@ posAntenas = [[16070.8,18728.7,0.954071],[16105.7,18770.7,1.18446],[15110.4,1616
 
 posbancos = [];
 
+defaultPopulation = 3244;
+
 _terrainObjects = nearestTerrainObjects [[11178.6,8680.91,0], [], 10];
 {hideObjectGlobal _x} foreach _terrainObjects;
 

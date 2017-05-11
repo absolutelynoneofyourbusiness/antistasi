@@ -87,6 +87,7 @@ _wpVeh1 = _vehicleGroup addWaypoint [_targetPosition, 10];
 _wpVeh1 setWaypointSpeed "FULL";
 _wpVeh1 setWaypointBehaviour "CARELESS";
 _wpVeh1 setWaypointType "TR UNLOAD";
+_vehicle limitSpeed 60;
 
 _wpInf1 = _group addWaypoint [_targetPosition, 10];
 _wpInf1 setWaypointType "GETOUT";

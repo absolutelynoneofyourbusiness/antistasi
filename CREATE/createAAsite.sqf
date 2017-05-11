@@ -79,6 +79,7 @@ _groupType = [opGroup_Squad, side_red] call AS_fnc_pickGroup;
 _groupPatrol = [_spawnPos, side_red, _groupType] call BIS_Fnc_spawnGroup;
 _initialGroupSetup pushBack [_groupType,"patrol", _spawnPos];
 [_groupPatrol, _markerPos, 300, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [3,6,9]] call CBA_fnc_taskPatrol;
+[_groupPatrol, _marker, (units _groupPatrol), 400, true] spawn AS_fnc_monitorGroup;
 _localIDs pushBack (_groupPatrol call BIS_fnc_netId);
 grps_VCOM pushBackUnique (_groupPatrol call BIS_fnc_netId);
 _allGroups pushBack _groupPatrol;

@@ -1,7 +1,7 @@
 if (!isServer and hasInterface) exitWith {};
 
 params ["_marker"];
-private ["_allVehicles","_allGroups","_allSoldiers","_markerPos","_size","_position","_bunker","_vehicle","_normalPos","_group","_unit","_groupType","_tempGroup","_patrolMarker","_hidden","_initialGroupSetup","_localIDs","_spawnPos"];
+private ["_allVehicles","_allGroups","_allSoldiers","_markerPos","_size","_position","_bunker","_vehicle","_normalPos","_group","_unit","_groupType","_tempGroup","_hidden","_initialGroupSetup","_localIDs","_spawnPos"];
 
 _allVehicles = [];
 _allGroups = [];
@@ -56,6 +56,7 @@ if (random 10 < 2.5) then {
 };
 _initialGroupSetup pushBack [_groupType, "patrol", _spawnPos];
 [_groupPatrol, _markerPos, 100, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [3,6,9]] call CBA_fnc_taskPatrol;
+[_groupPatrol, _marker, (units _groupPatrol), 400, true] spawn AS_fnc_monitorGroup;
 _localIDs pushBack (_groupPatrol call BIS_fnc_netId);
 grps_VCOM pushBackUnique (_groupPatrol call BIS_fnc_netId);
 _allGroups pushBack _groupPatrol;
@@ -175,7 +176,6 @@ call {
 spawner setVariable [_marker,false,true];
 waitUntil {sleep 3; !([distanciaSPWN,1,_markerPos,"BLUFORSpawn"] call distanceUnits)};
 
-deleteMarker _patrolMarker;
 [_allGroups, _allSoldiers, _allVehicles + (_markerPos nearObjects ["Box_IND_Wps_F", (_size max 200)])] spawn AS_fnc_despawnUnits;
 grps_VCOM = grps_VCOM - _localIDs; publicVariable "grps_VCOM";
 

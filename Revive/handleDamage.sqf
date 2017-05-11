@@ -69,7 +69,7 @@ if (_part == "") then
 				[_unit] spawn respawn;
 				if (isPlayer _injurer) then
 					{
-					if (_injurer != _unit) then {[_injurer,60] remoteExec ["AS_fnc_punishPlayer", _injurer]};
+					if (_injurer != _unit) then {[_injurer,20] remoteExec ["AS_fnc_punishPlayer", _injurer]};
 					};
 				}
 			else

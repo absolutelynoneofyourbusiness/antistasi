@@ -81,7 +81,7 @@ _initialGroupSetup pushBack [_groupType, "patrol", _spawnPos];
 _localIDs pushBack (_groupPatrol call BIS_fnc_netId);
 grps_VCOM pushBackUnique (_groupPatrol call BIS_fnc_netId);
 _groupPatrol allowFleeing 0;
-[_groupPatrol, 400, true, _markerPos] spawn AS_fnc_monitorGroup;
+[_groupPatrol, _marker, (units _groupPatrol), 400, true] spawn AS_fnc_monitorGroup;
 deleteGroup _tempGroup;
 _allGroups pushBack _groupPatrol;
 

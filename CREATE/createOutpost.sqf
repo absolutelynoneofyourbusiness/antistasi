@@ -15,7 +15,6 @@ _size = [_marker] call sizeMarker;
 _isFrontline = [_marker] call AS_fnc_isFrontline;
 
 _buildings = nearestObjects [_markerPos, listMilBld, _size*1.5];
-
 _tempGroup = createGroup side_green;
 
 for "_i" from 0 to (count _buildings) - 1 do {
@@ -154,8 +153,8 @@ if !(count _position == 0) then {
 	sleep 1;
 };
 
-// spawn garrison team
-_groupType = [infTeam, side_green] call AS_fnc_pickGroup;
+// spawn garrison squad
+_groupType = [infSquad, side_green] call AS_fnc_pickGroup;
 _groupGarrison = [_markerPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
 _initialGroupSetup pushBack [_groupType, "garrison", _markerPos];
 _allGroups pushBack _groupGarrison;
@@ -170,7 +169,8 @@ if (_marker in puestosAA) then {
 	_group = [_spawnPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
 	_initialGroupSetup pushBack [_groupType, "patrol", _spawnPos];
 	[_group, _markerPos, 75, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [3,6,9]] call CBA_fnc_taskPatrol;
-	_localIDs pushBack (_groupPatrol call BIS_fnc_netId);
+	[_group, _marker, (units _group), 400, true] spawn AS_fnc_monitorGroup;
+	_localIDs pushBack (_group call BIS_fnc_netId);
 	grps_VCOM pushBackUnique (_group call BIS_fnc_netId);
 	_allGroups pushBack _group;
 	sleep 1;
@@ -184,24 +184,10 @@ _groupType = [infSquad, side_green] call AS_fnc_pickGroup;
 _groupPatrol = [_spawnPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
 _initialGroupSetup pushBack [_groupType, "patrol", _spawnPos];
 [_groupPatrol, _markerPos, 300, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [3,6,9]] call CBA_fnc_taskPatrol;
+[_groupPatrol, _marker, (units _groupPatrol), 400, true] spawn AS_fnc_monitorGroup;
 _localIDs pushBack (_groupPatrol call BIS_fnc_netId);
 grps_VCOM pushBackUnique (_groupPatrol call BIS_fnc_netId);
 _allGroups pushBack _groupPatrol;
-
-if (_isFrontline) then {
-	_groupType = [infTeam, side_green] call AS_fnc_pickGroup;
-	_groupPatrol = [_spawnPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
-	_initialGroupSetup pushBack [_groupType, "patrol", _spawnPos];
-	[_groupPatrol, _markerPos, 300, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [3,6,9]] call CBA_fnc_taskPatrol;
-	_localIDs pushBack (_groupPatrol call BIS_fnc_netId);
-	grps_VCOM pushBackUnique (_groupPatrol call BIS_fnc_netId);
-	_allGroups pushBack _groupPatrol;
-
-	_groupType = [infTeam, side_green] call AS_fnc_pickGroup;
-	_tempGroup = [_markerPos, side_green, _groupType] call BIS_Fnc_spawnGroup;
-	_initialGroupSetup pushBack [_groupType, "garrison", _markerPos];
-	(units _tempGroup) joinSilent _groupGarrison;
-};
 
 {
 	_tempGroup = _x;
@@ -219,8 +205,8 @@ if (_marker in puertos) then {
 sleep 3;
 
 publicVariable "grps_VCOM";
-[_groupGarrison,_size min 50] spawn AS_fnc_forceGarrison;
 ([_marker,count _allSoldiers] call AS_fnc_setGarrisonSize) params ["_fullStrength","_reinfStrength"];
+[_groupGarrison,_size min 50] spawn AS_fnc_forceGarrison;
 
 _observer = objNull;
 if ((random 100 < (((server getVariable "prestigeNATO") + (server getVariable "prestigeCSAT"))/10)) AND (spawner getVariable _marker)) then {

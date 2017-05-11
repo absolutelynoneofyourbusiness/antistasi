@@ -1,35 +1,30 @@
 params ["_isCom"];
-private ["_veh", "_owner", "_exit"];
+private ["_vehicle", "_owner"];
 
-_veh = cursortarget;
+_vehicle = cursortarget;
 
-if (isNull _veh) exitWith {hint "You are not looking at any vehicle"};
-if ({isPlayer _x} count crew _veh > 0) exitWith {hint "In order to unlock this vehicle, it must be empty."};
+if (isNull _vehicle) exitWith {hint "You are not looking at any vehicle"};
+if ({isPlayer _x} count crew _vehicle > 0) exitWith {hint "You cannot (un-)lock a vehicle with people inside."};
 
 if !(isMultiplayer) exitWith {
-	if (locked _veh > 0) then {
-		_veh lock 0;
+	if (locked _vehicle > 1) then {
+		_vehicle lock 0;
 		hint "Vehicle unlocked";
 	} else {
-		_veh lock 2;
+		_vehicle lock 2;
 		hint "Vehicle locked";
 	};
 };
 
-_owner = _veh getVariable "duenyo";
-_exit = false;
+_owner = _vehicle getVariable ["duenyo", ""];
 
-if (!_isCom) then {
-	_owner = _veh getVariable "duenyo";
-	if (!isNil "_owner") then {
-		if (_owner isEqualType "") then {
-			if (getPlayerUID player != _owner) then {_exit = true};
-		};
-	};
+if (!(_isCom) AND {!(getPlayerUID player == _owner)}) exitWith {hint "You are not owner of this vehicle and you cannot unlock it"};
+
+if (locked _vehicle > 1) then {
+	[_vehicle, false] remoteExec ["AS_fnc_lockVehicle", [0,-2] select isDedicated, true];
+	if (_isCom) then {_vehicle setVariable ["duenyo",nil,true]};
+	hint "Vehicle unlocked";
+} else {
+	[_vehicle, true] remoteExec ["AS_fnc_lockVehicle", [0,-2] select isDedicated, true];
+	hint "Vehicle locked";
 };
-
-if (_exit) exitWith {hint "You are not owner of this vehicle and you cannot unlock it"};
-if ((_isCom) and (isNil "_owner")) exitWith {_veh setVariable ["duenyo",getPlayerUID player,true]; hint "Vehicle locked";};
-
-_veh setVariable ["duenyo",nil,true];
-hint "Vehicle unlocked.";

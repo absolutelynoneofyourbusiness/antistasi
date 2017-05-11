@@ -3,6 +3,7 @@ params ["_vehGroup", "_dest"];
 if !(typeName _vehGroup == "GROUP") exitWith {"Error in QRF_RTB: not a group"};
 
 [_vehGroup] spawn AS_fnc_clearWaypoints;
+_vehGroup allowFleeing 0;
 
 {_x disableAI "AUTOCOMBAT"} forEach units _vehGroup;
 
@@ -16,6 +17,9 @@ while { !({alive _x} count units _vehGroup == 0) && !({_x distance2D _dest > 200
 	_wp700 setWaypointCombatMode "GREEN";
 
 	_vehGroup setCurrentWaypoint _wp700;
+	sleep 5;
+	(driver (vehicle leader _vehGroup)) doMove _dest;
+
 	sleep 5;
 };
 

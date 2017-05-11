@@ -1,8 +1,7 @@
 params [["_isPersonalGarage",false,[false]]];
-[false,false] params ["_enemiesNearby","_noSpace"];
+[false,false,[]] params ["_enemiesNearby","_noSpace","_eph_chems"];
 private ["_isPersonalGarage","_enemiesNearby","_type"];
 
-if (_isPersonalGarage AND !([player] call isMember)) exitWith {hint "You cannot access the garage as you are a guest on this server"};
 if (player != player getVariable "owner") exitWith {hint "You cannot access the garage while you are controlling AI"};
 
 {
@@ -34,12 +33,11 @@ garageVeh setDir (server getVariable ["AS_vehicleOrientation", 0]);
 garageVeh allowDamage false;
 garageVeh enableSimulationGlobal false;
 
-eph_chems = [];
 if ((count (server getVariable ["obj_vehiclePad",[]]) > 0) AND (sunOrMoon < 1)) then {
 	private ["_spawnPos"];
 	for "_i" from 0 to 330 step 30 do {
 		_spawnPos = [garagePos, 5, _i] call BIS_Fnc_relPos;
-		eph_chems pushBack ("Chemlight_blue" createVehicle _spawnPos);
+		_eph_chems pushBack ("Chemlight_blue" createVehicle _spawnPos);
 	};
 };
 
@@ -102,10 +100,13 @@ garageKeys = (findDisplay 46) displayAddEventHandler ["KeyDown", {
 		camDestroy Cam;
 		(findDisplay 46) displayRemoveEventHandler ["KeyDown", garageKeys];
 
-		[] spawn {
-			sleep 15;
-			{deleteVehicle _x} forEach eph_chems;
-			eph_chems = nil;
+		if (count _eph_chems > 0) then {
+			[_eph_chems] spawn {
+				params ["_chems"];
+				sleep 15;
+				{deleteVehicle _x} forEach _chems;
+				_chems = nil;
+			};
 		};
 
 		if (!_exit) then {
