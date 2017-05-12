@@ -1,5 +1,7 @@
 params [
 	"_unit",
+	"_name",
+	"_uid",
 	["_refundCash", 0, [0]],
 	["_refundHR", 0, [0]]
 ];
@@ -38,7 +40,7 @@ if (_unit == Slowhand) then {
 						};
 					};
 
-					if (!(_vehicle in staticsToSave)) then {deleteVehicle _vehicle};
+					if !(_vehicle in staticsToSave) then {deleteVehicle _vehicle};
 				};
 
 				deleteVehicle _x;
@@ -55,11 +57,7 @@ if (_unit == Slowhand) then {
 
 if ((_refundHR > 0) OR {(_refundCash > 0)}) then {[_refundHR,_refundCash] remoteExec ["resourcesFIA", 2]};
 
-{
-	if (owner _x == _unit) then {
-		_x setOwner 2;
-	};
-} forEach vehicles;
+diag_log format ["Log: %1 (%2) disconnected", _name, _uid];
 
 _weapons = weapons _unit;
 _magazines = magazines _unit + [currentMagazine _unit];

@@ -516,3 +516,5 @@ if (worldname == "Tanoa") then {
     "U_I_C_Soldier_Bandit_5_F"
     ];
 };
+
+enemyCat pushBackUnique "I_Soldier_base_F";

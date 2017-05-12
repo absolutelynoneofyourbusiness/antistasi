@@ -541,3 +541,5 @@ IND_marker_colour = "ColorGUER";
 
 // Type of this faction's markers
 IND_marker_type = "rhs_flag_vdv";
+
+enemyCat pushBackUnique "rhs_infantry_msv_base";

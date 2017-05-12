@@ -13,7 +13,7 @@ servidoresOficiales = ["Antistasi Official: Main","Antistasi Official: Hardcore"
 debug = false;//debug variable, not useful for everything..
 
 cleantime = 1200;//time to delete dead bodies, vehicles etc..
-distanciaSPWN = 800;//initial spawn distance. Less than 1Km makes parked vehicles spawn in your nose while you approach.
+distanciaSPWN = 1200;//initial spawn distance. Less than 1Km makes parked vehicles spawn in your nose while you approach.
 musicON = true;
 civPerc = 0.05;//initial % civ spawn rate
 minimoFPS = 15;//initial FPS minimum.
@@ -46,6 +46,7 @@ if (isClass (configFile >> "CfgPatches" >> "javelinTest")) then {
 */
 [] call AS_fnc_setupGearDB;
 
+enemyCat = [];
 /*
  	Mod detection/initialisation
  	- SQM defines whether FIA is BLUFOR or GUER
@@ -70,7 +71,7 @@ call compile preprocessFileLineNumbers "Lists\basicLists.sqf";
 solCat = [["I_G_Soldier_base_F","SoldierWB"],["I_G_Soldier_base_F","SoldierEB"]] select replaceFIA;
 vehCat = ["LandVehicle","AirVehicle"];
 allCat = solCat + vehCat;
-enemyCat = [["I_Soldier_base_F","SoldierEB"],["I_Soldier_base_F","SoldierWB"]] select replaceFIA;
+enemyCat pushBackUnique (["SoldierEB", "SoldierWB"] select replaceFIA);
 
 if (!isServer and hasInterface) exitWith {};
 

@@ -36,7 +36,7 @@ if !(activeJNA) then {
 diag_log "Antistasi MP Server. Arsenal config finished";
 [[petros,"hint","Server Init Completed"],"commsMP"] call BIS_fnc_MP;
 
-addMissionEventHandler ["HandleDisconnect",{[_this select 0] call onPlayerDisconnect;false}];
+addMissionEventHandler ["HandleDisconnect",{[_this select 0, _this select 3, _this select 2] call onPlayerDisconnect;false}];
 
 Slowhand = objNull;
 maxPlayers = playableSlotsNumber west;

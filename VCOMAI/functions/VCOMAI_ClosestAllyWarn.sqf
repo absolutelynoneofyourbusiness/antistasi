@@ -62,12 +62,13 @@ if (_aliveCount > 0) then {
 
 							if (count _WaypointCheck < 1) then {
 
-								if ((_x distance _Unit) <= (_x getVariable ["VCOM_Unit_AIWarnDistance",VCOM_Unit_AIWarnDistance]) ) then {
+								if ((_x distance _Unit) <= (_x getVariable ["VCOM_Unit_AIWarnDistance", VCOM_Unit_AIWarnDistance]) ) then {
 										_x setbehaviour "AWARE";
 										_x setVariable ["VCOM_MOVINGTOSUPPORT",true,false];
 
 										if (leader _x isEqualTo _x) then {
-											_waypoint2 = (group _x) addwaypoint[_DeathPosition,15];
+											[_group] call AS_fnc_clearWaypoints;
+											_waypoint2 = _group addwaypoint [_DeathPosition,15];
 											_waypoint2 setwaypointtype "MOVE";
 											_waypoint2 setWaypointSpeed "NORMAL";
 											_waypoint2 setWaypointBehaviour "AWARE";

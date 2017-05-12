@@ -515,5 +515,4 @@ if (worldname == "Tanoa") then {
 	// infPatrol = infPatrol + [(configfile >> "CfgGroups" >> "West" >> "Gendarmerie" >> "Infantry" >> "GENDARME_Inf_Patrol")]
 
 	// vehPatrol = vehPatrol + ["B_GEN_Offroad_01_gen_F"]
-
 };
