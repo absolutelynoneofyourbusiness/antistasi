@@ -152,7 +152,5 @@ fnc_RB_placeDouble = {
 	_dataR = [_position, "right"] call fnc_RB_placeSingle;
 	_dataL = [_position, "left"] call fnc_RB_placeSingle;
 
-	diag_log format ["R: %1; L: %2", (_dataR select 2), (_dataL select 2)];
-
 	[(_dataR select 0) + (_dataL select 0), (_dataR select 1) + (_dataL select 1), selectRandom [(_dataR select 2), (_dataL select 2)]];
 };

@@ -1,6 +1,6 @@
 if !(isServer) exitWith {};
 
-private ["_blueUnits", "_opforUnits", "_marker", "_markerPos","_lastPosHQ"];
+private ["_marker", "_markerPos","_lastPosHQ"];
 
 "Group" setDynamicSimulationDistance distanciaSPWN;
 "Vehicle" setDynamicSimulationDistance distanciaSPWN;

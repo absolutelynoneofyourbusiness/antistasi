@@ -14,7 +14,7 @@ _isFrontline = [_marker] call AS_fnc_isFrontline;
 _buildings = nearestObjects [_markerPos, listMilBld, _size*1.5];
 _statics = staticsToSave select {_x distance _markerPos < (_size max 50)};
 
-_groupGunners = createGroup side_green;
+_groupGunners = createGroup side_blue;
 _allGroups pushBack _groupGunners;
 for "_i" from 0 to (count _buildings) - 1 do {
 	_building = _buildings select _i;
@@ -172,7 +172,7 @@ sleep 10;
 } forEach _allGroups;
 
 while {(count (_allSoldiers select {alive _x AND !captive _x}) > 0) AND (spawner getVariable _marker)} do {
-	while {(count ((_markerPos nearEntities ["Man", 1000]) select {_x getVariable ["OPFORSpawn",true]}) < 1) AND (spawner getVariable _marker)} do {
+	while {(count ((_markerPos nearEntities ["Man", 1000]) select {_x getVariable ["OPFORSpawn",false]}) < 1) AND (spawner getVariable _marker)} do {
 		sleep 10;
 	};
 
@@ -181,11 +181,11 @@ while {(count (_allSoldiers select {alive _x AND !captive _x}) > 0) AND (spawner
 
 sleep 5;
 
-waitUntil {sleep 3; !(spawner getVariable _marker) OR ((count ((_markerPos nearEntities ["Man", (_size max 200)]) select {_x getVariable ["OPFORSpawn",true]})) > (3*count (_allSoldiers select {alive _x AND !captive _x})))};
+waitUntil {sleep 3; !(spawner getVariable _marker) OR ((count ((_markerPos nearEntities ["Man", (_size max 200)]) select {_x getVariable ["OPFORSpawn",false]})) > (3*count (_allSoldiers select {alive _x AND !captive _x})))};
 
 call {
 	// Garrison was overwhelmed
-	if ((count ((_markerPos nearEntities ["Man", (_size max 200)]) select {_x getVariable ["OPFORSpawn",true]})) > (3*count (_allSoldiers select {alive _x AND !captive _x}))) exitWith {
+	if ((count ((_markerPos nearEntities ["Man", (_size max 200)]) select {_x getVariable ["OPFORSpawn",false]})) > (3*count (_allSoldiers select {alive _x AND !captive _x}))) exitWith {
 		[_marker] remoteExec ["mrkLOOSE",2];
 	};
 

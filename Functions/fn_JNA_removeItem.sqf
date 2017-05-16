@@ -16,8 +16,14 @@
 
 if !(isServer) exitWith {};
 
-params ["_item",["_itemCategory","",jna_categories],["_itemCount",1,[0]]];
-private ["_index","_data"];
+params [
+	"_item",
+	["_itemCategory", "", [""]],
+	["_itemCount", 1, [0]],
+
+	["_index", -1, [0]],
+	["data", [], [[]]]
+];
 
 _itemCount = _itemCount max 1;
 

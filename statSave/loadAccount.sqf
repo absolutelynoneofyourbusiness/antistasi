@@ -13,7 +13,6 @@ if (!isDedicated) then {
 
 	if (isMultiplayer) then {
 		_UID = getPlayerUID player;
-		diag_log (server getVariable ["campaign_playerList",[]]);
 		if (_UID in (server getVariable ["campaign_playerList",[]])) then {
 			["gear_goggles",_UID] call fn_loadPlayerData;
 			["gear_vest",_UID] call fn_loadPlayerData;

@@ -211,7 +211,7 @@ while {true} do {
 			_target = [];
 			while {count _targets > 0} do {
 				_var = selectRandom _targets;
-				if (count (((_var select 1) nearEntities [solCat, 1500]) select {_x getVariable ["BLUFORSpawn", false]}) < 1) exitWith {_target = +_var};
+				if (count (((getMarkerPos (_var select 1)) nearEntities [solCat, 1500]) select {_x getVariable ["BLUFORSpawn", false]}) < 1) exitWith {_target = +_var};
 				_targets = _targets - _var;
 			};
 

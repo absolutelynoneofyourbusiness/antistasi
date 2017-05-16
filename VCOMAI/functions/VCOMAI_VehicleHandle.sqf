@@ -3,8 +3,6 @@ private ["_Unit", "_myNearestEnemy", "_SideCheck", "_UnitGroup", "_Vehicle", "_C
 //Created on ???
 // Modified on : 8/19/14 - 8/3/15 - 9/1/15
 
-diag_log format ["VehicleHandle called: %1", _this];
-
 _Unit = _this select 0;
 
 _myNearestEnemy = _this select 1;

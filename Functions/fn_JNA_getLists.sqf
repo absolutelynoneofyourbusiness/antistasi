@@ -62,7 +62,7 @@ if (count _inputArray > 0) then {
 	if (_restricted) then {
 		{
 			_index = missionNamespace getVariable [format ["jna_index_%1",_x], 15];
-			_count = missionNamespace getVariable [format ["jna_count_%1",_x], 10];
+			_count = jna_minItemMember select _index;
 			if (count (jna_dataList select _index) > 0) then {
 				{
 					if (((_x select 1) > _count) OR ((_x select 1) == -1)) then {_returnArray pushBackUnique (_x select 0)};

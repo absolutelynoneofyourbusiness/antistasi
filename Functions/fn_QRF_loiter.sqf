@@ -6,7 +6,7 @@ _wp101 setWaypointLoiterType "CIRCLE";
 _wp101 setWaypointLoiterRadius _radius;
 _wp101 setWaypointSpeed "LIMITED";
 
-if ((vehicle _vehGroup) isKindOf "UAV") then {(vehicle _vehGroup) flyInHeight 300};
+if ((vehicle (leader _vehGroup)) isKindOf "UAV") then {(vehicle (leader _vehGroup)) flyInHeight 300};
 
 sleep _duration;
 [_vehGroup, _origin] spawn AS_fnc_QRF_RTB;

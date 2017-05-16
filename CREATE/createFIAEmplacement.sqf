@@ -73,7 +73,7 @@ sleep 10;
 } forEach _allGroups;
 
 while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength) AND (spawner getVariable _marker) AND (_marker in puestosFIA)} do {
-	while {(count ((_markerPos nearEntities ["Man", 1000]) select {_x getVariable ["OPFORSpawn",true]}) < 1) AND (spawner getVariable _marker) AND (_marker in puestosFIA)} do {
+	while {(count ((_markerPos nearEntities ["Man", 1000]) select {_x getVariable ["OPFORSpawn",false]}) < 1) AND (spawner getVariable _marker) AND (_marker in puestosFIA)} do {
 		sleep 10;
 	};
 

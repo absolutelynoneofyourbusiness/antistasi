@@ -116,6 +116,7 @@ _wpAir1 setWaypointSpeed "FULL";
 _wpAir1 setWaypointBehaviour "CARELESS";
 _wpAir1 setWaypointCombatMode "BLUE";
 _wpAir1 setWaypointStatements ["true", "(vehicle this) limitSpeed 80"];
+_vehicle flyInHeight 75;
 
 call {
 	if (_order isEqualTo "dismount") exitWith {

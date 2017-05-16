@@ -255,7 +255,7 @@ if ((random 100 < (((server getVariable "prestigeNATO") + (server getVariable "p
 };
 
 while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength) AND (spawner getVariable _marker)} do {
-	while {(count ((_markerPos nearEntities ["Man", 1000]) select {_x getVariable ["OPFORSpawn",true]}) < 1) AND (spawner getVariable _marker)} do {
+	while {(count ((_markerPos nearEntities ["Man", 1000]) select {_x getVariable ["OPFORSpawn",false]}) < 1) AND (spawner getVariable _marker)} do {
 		sleep 10;
 	};
 
@@ -273,11 +273,11 @@ if (spawner getVariable _marker) then {
 
 _soldiers =+ (_allSoldiers + _guerSoldiers);
 
-waitUntil {sleep 3; !(spawner getVariable _marker) OR ((count ((_markerPos nearEntities ["Man", (_size max 200)]) select {_x getVariable ["OPFORSpawn",true]})) > (3*count (_soldiers select {alive _x AND !captive _x}))) OR !(garrison getVariable [format ["%1_reduced", _marker],false])};
+waitUntil {sleep 3; !(spawner getVariable _marker) OR ((count ((_markerPos nearEntities ["Man", (_size max 200)]) select {_x getVariable ["OPFORSpawn",false]})) > (3*count (_soldiers select {alive _x AND !captive _x}))) OR !(garrison getVariable [format ["%1_reduced", _marker],false])};
 
 call {
 	// Garrison was overwhelmed
-	if ((count ((_markerPos nearEntities ["Man", (_size max 200)]) select {_x getVariable ["OPFORSpawn",true]})) > (3*count (_soldiers select {alive _x AND !captive _x}))) exitWith {
+	if ((count ((_markerPos nearEntities ["Man", (_size max 200)]) select {_x getVariable ["OPFORSpawn",false]})) > (3*count (_soldiers select {alive _x AND !captive _x}))) exitWith {
 		[_marker] remoteExec ["mrkLOOSE",2];
 	};
 

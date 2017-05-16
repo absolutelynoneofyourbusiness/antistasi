@@ -77,7 +77,7 @@ while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength)
 			sleep 10;
 		};
 	} else {
-		while {(count ((_markerPos nearEntities ["Man", 400]) select {_x getVariable ["OPFORSpawn",true]}) < 1) AND (spawner getVariable _marker)} do {
+		while {(count ((_markerPos nearEntities ["Man", 400]) select {_x getVariable ["OPFORSpawn",false]}) < 1) AND (spawner getVariable _marker)} do {
 			sleep 10;
 		};
 	};

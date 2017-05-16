@@ -115,34 +115,33 @@ if !(_base == "") then {
 	_dir = _posData select 1;
 
 	_vehicleType = enemyMotorpoolDef;
-	if (count (enemyMotorpool - vehPatrol) > 1) then {
-		_vehicleArray =+ (enemyMotorpool - vehPatrol);
-		call {
-			if ((_threatEvaluation > 5) AND (count (enemyMotorpool arrayIntersect (vehTank + vehIFV)) > 0)) exitWith {
-				_vehicleArray = _vehicleArray - vehPatrol - vehTrucks;
-			};
-			if ((_threatEvaluation > 3) AND (count (enemyMotorpool arrayIntersect (vehIFV + vehAPC)) > 0)) then {
-				_vehicleArray = _vehicleArray - vehTrucks;
-			};
-		};
+	_vehicleArray =+ (enemyMotorpool - vehPatrol);
 
-		_vehicleType = selectRandom _vehicleArray;
+	if ((_threatEvaluation > 3) AND (count (enemyMotorpool arrayIntersect (vehIFV + vehAPC)) > 0)) then {
+		_vehicleArray = _vehicleArray - vehTrucks;
 	};
+
+	_vehicleType = selectRandom _vehicleArray;
 
 	if !(_vehicleType in vehTank) then {
 		call {
-			if (_vehicleType in vehIFV) then {
+			if (_vehicleType in vehIFV) exitWith {
 				_groupType = [infTeam, side_green] call AS_fnc_pickGroup;
 				_groupCounter = 1;
 			};
-			if (_vehicleType in vehAPC) then {
+
+			if (_vehicleType in vehAPC) exitWith {
 				_groupType = [infSquad, side_green] call AS_fnc_pickGroup;
 				_groupCounter = 1;
 			};
-			if (_vehicleType in vehTrucks) then {
+
+			if (_vehicleType in vehTrucks) exitWith {
 				_groupType = [infSquad, side_green] call AS_fnc_pickGroup;
 				_groupCounter = 2;
 			};
+
+			_groupType = [infTeam, side_green] call AS_fnc_pickGroup;
+			_groupCounter = 1;
 		};
 		_initData = [_vehicleType,_groupType,_groupCounter,_originPosition,_marker] call AS_fnc_groundTransport;
 		_allVehicles = _allVehicles + (_initData select 0);

@@ -88,9 +88,14 @@ if (_isInfantry) then {
 		};
 
 		_spawnPos = _roadPos findEmptyPosition [1,50,guer_veh_truck];
-		_vehicleData = [_spawnPos,_direction,guer_veh_truck,side_blue] call bis_fnc_spawnvehicle;
-		_vehicle = _vehicleData select 0;
-		_group = _vehicleData select 2;
+		_vehicle = guer_veh_truck createVehicle _spawnPos;
+		_vehicle setDir _direction;
+
+		_group = createGroup side_blue;
+		_driver = ([_spawnPos, 0, guer_sol_R_L, _group] call bis_fnc_spawnvehicle) select 0;
+		_driver assignAsDriver _vehicle;
+		_driver moveInDriver _vehicle;
+
 		_spawnPos = _roadPos findEmptyPosition [1,30,guer_stat_mortar];
 		_attachPos = [0,-1.5,0.2];
 		if ((activeAFRF) AND (_groupCategory isEqualTo guer_stat_AT)) then {

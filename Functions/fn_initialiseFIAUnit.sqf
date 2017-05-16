@@ -1,4 +1,7 @@
-params ["_unit"];
+params [
+	"_unit",
+	["_forcedType", "", []]
+];
 private ["_skill","_skillFIA","_aiming","_spotD","_spotT","_cour","_comm","_aimingSh","_aimingSp","_reload","_unitType","_skillSet"];
 
 [_unit] call initRevive;
@@ -81,8 +84,16 @@ call {
 	};
 
 	if (_unitType == guer_sol_R_L) exitWith {
-		[_unit,true,true,true,true] call randomRifle;
-		_skillSet = 1;
+		if (_forcedType == "AA") then {
+			[_unit,true,true,true,true] call randomRifle;
+			removeBackpackGlobal _unit;
+			_unit addBackpackGlobal guer_gear_BP;
+			[_unit, genAALaunchers select 0, 2, AAmissile] call BIS_fnc_addWeapon;
+			_unit addMagazines [AAmissile, 1];
+		} else {
+			[_unit,true,true,true,true] call randomRifle;
+			_skillSet = 1;
+		};
 	};
 
 	if (_unitType == guer_sol_UN) exitWith {
@@ -307,42 +318,19 @@ if (player == leader _unit) then {
 		if (captive player) then {[_unit] spawn undercoverAI};
 	};
 	_unit setVariable ["rearming",false];
-	if !("ItemRadio" in unlockedItems) then {
-		while {alive _unit} do {
-			sleep 10;
-			if (("ItemRadio" in assignedItems _unit) and ([player] call AS_fnc_radioCheck)) exitWith {_unit groupChat format ["This is %1, radiocheck OK",name _unit]};
-			if (unitReady _unit) then {
-				if ((alive _unit) and (_unit distance (getMarkerPos guer_respawn) > 50) and (_unit distance leader group _unit > 500) and ((vehicle _unit == _unit) or ((typeOf (vehicle _unit)) in CIV_vehicles))) then {
-					hint format ["%1 lost communication, he will come back with you if possible", name _unit];
-					[_unit] join rezagados;
-					if ((vehicle _unit isKindOf "StaticWeapon") or (isNull (driver (vehicle _unit)))) then {unassignVehicle _unit; [_unit] orderGetIn false};
-					_unit doMove position player;
-					_tiempo = time + 900;
-					waitUntil {sleep 1;(!alive _unit) or (_unit distance player < 500) or (time > _tiempo)};
-					if ((_unit distance player >= 500) and (alive _unit)) then {_unit setPos (getMarkerPos guer_respawn)};
-					[_unit] join group player;
+
+	_unit addEventHandler ["GetInMan", {
+		params ["_soldier","_veh"];
+
+		if (((typeOf _veh) in CIV_vehicles) OR ((typeOf _veh) == civHeli)) then {
+			if !(_veh in reportedVehs) then {
+					[_soldier] spawn undercoverAI;
 				};
-			};
 		};
-	};
-
-	_unit addEventHandler ["GetInMan",
-	{
-	private ["_soldier","_veh"];
-	_soldier = _this select 0;
-	_veh = _this select 2;
-
-	if (((typeOf _veh) in CIV_vehicles) || ((typeOf _veh) == civHeli)) then {
-		if !(_veh in reportedVehs) then {
-				[_soldier] spawn undercoverAI;
-			};
-	};
 	}];
-}
-else {
+} else {
 	_EHkilledIdx = _unit addEventHandler ["killed", {
-		_muerto = _this select 0;
-		_killer = _this select 1;
+		params ["_muerto", "_killer"];
 		[_muerto] remoteExec ["postmortem",2];
 		if (isPlayer _killer) then {
 			if (!isMultiPlayer) then {
@@ -356,7 +344,7 @@ else {
 	}];
 };
 
-player addEventHandler ["GetInMan", {
+_unit addEventHandler ["GetInMan", {
 	params ["_unit","_position","_vehicle"];
 	_vehicle setVariable ["BLUFORSpawn",true,true];
 }];
