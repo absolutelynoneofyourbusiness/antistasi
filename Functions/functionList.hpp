@@ -120,7 +120,6 @@ class CfgFunctions {
 			class detectTFAR {};
 			class spawnBunker {};
 			class respawnRoadblock {};
-			class createPatrolMarker {};
 			class groundTransport {};
 			class transferGear {};
 			class resetHQ {};

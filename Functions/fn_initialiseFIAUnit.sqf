@@ -320,12 +320,12 @@ if (player == leader _unit) then {
 	_unit setVariable ["rearming",false];
 
 	_unit addEventHandler ["GetInMan", {
-		params ["_soldier","_veh"];
+		params ["_soldier", "_position", "_vehicle"];
 
-		if (((typeOf _veh) in CIV_vehicles) OR ((typeOf _veh) == civHeli)) then {
-			if !(_veh in reportedVehs) then {
-					[_soldier] spawn undercoverAI;
-				};
+		if (((typeOf _vehicle) in CIV_vehicles) OR ((typeOf _vehicle) == civHeli)) then {
+			if !(_vehicle in reportedVehs) then {
+				[_soldier] spawn undercoverAI;
+			};
 		};
 	}];
 } else {

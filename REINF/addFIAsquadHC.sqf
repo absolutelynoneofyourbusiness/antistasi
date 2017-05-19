@@ -80,9 +80,18 @@ if (_isInfantry) then {
 
 		if ((activeGREF) AND (_groupCategory isEqualTo guer_stat_AT)) exitWith {
 			_spawnPos = _roadPos findEmptyPosition [1,50,guer_veh_technical_AT];
-			_vehicleData = [_spawnPos,_direction,guer_veh_technical_AT,side_blue] call bis_fnc_spawnvehicle;
-			_vehicle = _vehicleData select 0;
-			_group = _vehicleData select 2;
+			_vehicle = guer_veh_technical_AT createVehicle _spawnPos;
+
+			_group = createGroup side_blue;
+
+			_driver = ([_spawnPos, 0, guer_sol_R_L, _group] call bis_fnc_spawnvehicle) select 0;
+			_driver assignAsDriver _vehicle;
+			_driver moveInDriver _vehicle;
+
+			_gunner = ([_spawnPos, 0, guer_sol_R_L, _group] call bis_fnc_spawnvehicle) select 0;
+			_gunner assignAsGunner _vehicle;
+			_gunner moveInGunner _vehicle;
+
 			_group setVariable ["staticAutoT",false,true];
 			_group setGroupId [format ["M.AT-%1",{side (leader _x) == side_blue} count allGroups]];
 		};
@@ -129,7 +138,7 @@ _group setVariable ["isHCgroup", true, true];
 petros directSay "SentGenReinforcementsArrived";
 hint format ["Group %1 at your command.\n\nGroups are managed from the High Command bar (Default: CTRL+SPACE)\n\nIf the group gets stuck, use the AI Control feature to make them start moving. Mounted Static teams tend to get stuck (solving this is WiP)\n\nTo assign a vehicle for this group, look at some vehicle, and use Vehicle Squad Mngmt option in Y menu", groupID _group];
 
-if (!_isInfantry) exitWith {};
+if (!_isInfantry) exitWith {_group allowFleeing 0};
 
 if (_groupCategory isEqualTo guer_grp_squad) then {
 	_vehicleType = guer_veh_truck;

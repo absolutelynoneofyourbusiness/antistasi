@@ -134,10 +134,10 @@ if !(activeGREF) then {
 		"rhs_uaz_open_MSV_01",
 		"rhs_gaz66o_msv",
 		"I_G_Offroad_01_armed_F",
-		"rhs_DSHKM_ins",
-		"rhs_2b14_82mm_msv",
-		"rhs_Metis_9k115_2_vdv",
-		"RHS_ZU23_VDV",
+		"rhsgref_ins_g_DSHKM",
+		"rhsgref_ins_g_2b14",
+		"rhsgref_ins_g_SPG9M",
+		"rhsgref_ins_g_ZU23",
 		"rhs_bmd1_chdkz",
 		"rhs_gaz66_r142_vdv"
 	];

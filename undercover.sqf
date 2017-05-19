@@ -61,7 +61,7 @@ call {
 
 	// Player is still on the enemy's watch list
 	if (dateToNumber date < _compromised) exitWith {
-		hint localize "STR_HINTS_UND_REPORTED";
+		_reason = localize "STR_HINTS_UND_REPORTED";
 	};
 
 	// Close to an enemy facility

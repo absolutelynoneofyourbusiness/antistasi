@@ -1,4 +1,9 @@
-params ["_points","_player",["_isSilent",false]];
+params [
+	["_points", 0, [0]],
+	"_player",
+	["_isSilent", false, [true]]
+];
+
 private ["_currentPoints","_currentMoney","_text"];
 
 if (!isPlayer _player) exitWith {};
@@ -20,5 +25,6 @@ if (isMultiplayer) exitWith {
 };
 
 if (_points > 0) then {
-	[0,(_points * 5)] remoteExec ["resourcesFIA",2];
+	_currentMoney = server getVariable ["resourcesFIA", 0];
+	server setVariable ["resourcesFIA", _currentMoney + (_points * 5), true];
 };

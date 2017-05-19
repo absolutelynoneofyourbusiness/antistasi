@@ -39,8 +39,6 @@ if (!isDedicated) then {
 	};
 };
 
-
-
 if (!isServer) exitWith {};
 statsLoaded = 0; publicVariable "statsLoaded";
 //ADD STATS THAT NEED TO BE LOADED HERE.
@@ -84,6 +82,7 @@ petros allowdamage false;
 ["idleBases"] call fn_loadData;
 ["AS_destroyedZones"] call fn_loadData; publicVariable "AS_destroyedZones";
 ["jna_dataList"] call fn_loadData; publicVariable "jna_dataList";
+["respawningRBs"] call fn_loadData;
 
 ["unlockedItems"] call fn_loadData; publicVariable "unlockedOptics";
 ["unlockedMagazines"] call fn_loadData; publicVariable "unlockedMagazines";
@@ -100,9 +99,21 @@ publicVariable "unlockedRifles";
 
 //===========================================================================
 
-
-
 _markers = mrkFIA + mrkAAF + campsFIA;
+
+_roadblocks = [];
+if (count respawningRBs > 0) then {
+	{
+		_marker = _x select 0;
+		_respawnTime = _x select 1;
+		if ((dateToNumber date < _respawnTime) AND {([_markers, getMarkerPos _marker] call BIS_fnc_nearestPosition) in mrkAAF}) then {
+			diag_log format ["RB loaded, %1 will respawn at %2", _marker, _respawnTime];
+			mrkFIA pushBackUnique _marker;
+			_roadblocks pushBackUnique _marker;
+			[_marker, _respawnTime] spawn AS_fnc_respawnRoadblock;
+		};
+	} forEach respawningRBs;
+};
 
 {
 	_position = getMarkerPos _x;
@@ -113,7 +124,7 @@ _markers = mrkFIA + mrkAAF + campsFIA;
 	} else {
 		mrkAAF = mrkAAF + [_x];
 	};
-} forEach controles;
+} forEach (controles - _roadblocks);
 
 {
 	if (!(_x in mrkAAF) AND !(_x in mrkFIA) AND (_x != "FIA_HQ")) then {mrkAAF pushBackUnique _x};

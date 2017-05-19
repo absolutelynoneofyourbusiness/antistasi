@@ -75,9 +75,9 @@ switch (_class) do {
 	case guer_sol_RFL:  {[RIF_AIM, RIF_REC] call _fnc_adjust};
 	case guer_sol_LAT: {[LAT_AIM, LAT_REC] call _fnc_adjust};
 	case guer_sol_AR: {[AR_AIM, AR_REC] call _fnc_adjust};
-	case guer_sol_ENG:  {[ENG_AIM, ENG_REC] call _fnc_adjust};
-	case guer_sol_MED:  {[MED_AIM, MED_REC] call _fnc_adjust};
-	case guer_sol_AM:  {[AMM_AIM, AMM_REC] call _fnc_adjust};
-	case guer_sol_MRK:  {[MRK_AIM, MRK_REC] call _fnc_adjust};
+	case guer_sol_ENG: {[ENG_AIM, ENG_REC] call _fnc_adjust};
+	case guer_sol_MED: {[MED_AIM, MED_REC] call _fnc_adjust};
+	case guer_sol_AM: {[AMM_AIM, AMM_REC] call _fnc_adjust};
+	case guer_sol_MRK: {[MRK_AIM, MRK_REC] call _fnc_adjust};
 	case guer_sol_TL: {[TL_AIM, TL_REC] call _fnc_adjust};
 };

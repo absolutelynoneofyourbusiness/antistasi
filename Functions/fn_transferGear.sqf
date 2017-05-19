@@ -1,7 +1,22 @@
 if (!isServer) exitWith {};
 
-params ["_originContainer","_targetContainer"];
-[[],[],[],[],[],[],[],[],[],[]] params ["_backpacks","_weapons","_finalWeapons","_finalWeaponCount","_finalMagazines","_finalMagazineCount","_finalItems","_finalItemCount","_finalBackpacks","_finalBackpackCount"];
+params [
+	"_originContainer",
+	["_targetContainer", caja],
+	["_deleteContainer", false, [true]],
+
+	["_backpacks", []],
+	["_weapons", []],
+	["_finalWeapons", []],
+	["_finalWeaponCount", []],
+	["_finalMagazines", []],
+	["_finalMagazineCount", []],
+	["_finalItems", []],
+	["_finalItemCount", []],
+	["_finalBackpacks", []],
+	["_finalBackpackCount", []]
+];
+
 private ["_magazineCargo","_weaponsItemsCargo","_itemCargo","_backpackCargo","_containers","_item","_updated"];
 
 _weaponsItemsCargo = weaponsItemsCargo _originContainer;
@@ -128,7 +143,6 @@ clearWeaponCargoGlobal _originContainer;
 clearItemCargoGlobal _originContainer;
 clearBackpackCargoGlobal _originContainer;
 
-
 if (_targetContainer == caja) then {
 	if (isMultiplayer) then {
 		{
@@ -149,4 +163,8 @@ if (_targetContainer == caja) then {
 	};
 } else {
 	[petros,"hint","Truck Loaded"] remoteExec ["commsMP",driver _targetContainer];
+};
+
+if (_deleteContainer) then {
+	deleteVehicle _originContainer;
 };

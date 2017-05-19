@@ -264,6 +264,7 @@ publicVariable "safeDistance_garage";
 publicVariable "safeDistance_recruit";
 publicVariable "safeDistance_garrison";
 publicVariable "safeDistance_fasttravel";
+publicVariable "static_defPosHQ";
 
 "spawnCSAT" setMarkerType OPFOR_marker_type;
 "spawnCSAT" setMarkerText format ["%1 Carrier", A3_Str_RED];

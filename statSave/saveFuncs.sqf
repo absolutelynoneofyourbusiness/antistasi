@@ -61,7 +61,7 @@ specialVarLoads =
 
 /*
 	Variables that are loaded, but do not require special procedures
-	["smallCAmrk","mrkAAF","mrkFIA","destroyedCities","distanciaSPWN","civPerc","minimoFPS","AS_destroyedZones","jna_dataList","vehInGarage"]
+	["smallCAmrk","mrkAAF","mrkFIA","destroyedCities","distanciaSPWN","civPerc","minimoFPS","AS_destroyedZones","jna_dataList","vehInGarage","respawningRBs"]
 */
 
 //THIS FUNCTIONS HANDLES HOW STATS ARE LOADED

@@ -38,7 +38,6 @@ while {(spawner getVariable _marker) AND (_counter < _strength)} do {
 			_vehicle = guer_stat_mortar createVehicle _spawnPos;
 			_vehicle enableDynamicSimulation true;
 			_allVehicles pushBack _vehicle;
-			[_vehicle] execVM "scripts\UPSMON\MON_artillery_add.sqf";
 			_unit assignAsGunner _vehicle;
 			_unit moveInGunner _vehicle;
 		};
@@ -49,7 +48,6 @@ while {(spawner getVariable _marker) AND (_counter < _strength)} do {
 				_unit = _gunnerGroup createUnit [_unitType, _markerPos, [], 0, "NONE"];
 				_unit triggerDynamicSimulation false;
 				_unit moveInGunner _static;
-				[_static] execVM "scripts\UPSMON\MON_artillery_add.sqf";
 			} else {
 				_unit = _gunnerGroup createUnit [_unitType, _markerPos, [], 0, "NONE"];
 				_unit triggerDynamicSimulation false;
@@ -74,7 +72,6 @@ while {(spawner getVariable _marker) AND (_counter < _strength)} do {
 
 {
 	_x enableDynamicSimulation true;
-	[leader _x,_marker,"garrison"] spawn AS_fnc_addToUPSMON;
 } forEach _allGroups;
 
 {

@@ -1,7 +1,5 @@
 params ["_unit", "_corpse"];
 
-diag_log format ["corpse: %1; type: %2", _corpse, typeOf _corpse];
-
 if (_corpse isKindOf "Man") then {
 	if !(vest _corpse == "") then {
 		_unit action ["rearm",_corpse];

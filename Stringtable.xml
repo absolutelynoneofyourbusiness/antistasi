@@ -1437,9 +1437,6 @@
 			<Key ID="STR_HINTS_UND_CMP_EXP">
 				<Original>Explosives have been spotted on your vehicle.</Original>
 			</Key>
-			<Key ID="STR_HINTS_UND_CMP_EXP">
-				<Original>Explosives have been spotted on your vehicle.</Original>
-			</Key>
 			<Key ID="STR_HINTS_UND_CMP_WANTED">
 				<Original>You left your vehicle and you are still in the wanted list.</Original>
 			</Key>

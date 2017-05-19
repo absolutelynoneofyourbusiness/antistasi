@@ -83,10 +83,11 @@ flag_savingServer = true;
 ["enableOldFT",server getVariable ["enableFTold",false]] call fn_saveData;
 ["enableMemAcc",server getVariable ["enableMemAcc",true]] call fn_saveData;
 ["campaign_playerList",server getVariable ["campaign_playerList",[]]] call fn_saveData;
+["respawningRBs", respawningRBs] call fn_saveData;
 
 private ["_hr","_funds","_vehicle","_weapons","_magazines","_items","_backpacks","_containers","_backpack","_vehiclesToSave","_vehicleType","_supportOPFOR","_supportBLUFOR","_data","_garrison","_mines","_emplacements","_camps","_missionTypes","_objectsHQ","_addObjectsHQ"];
 
-_hr = (server getVariable ["hr",0]) + ({(alive _x) AND (!isPlayer _x) AND (_x getVariable ["BLUFORSpawn",false]) AND (_x getVariable ["generated",false])} count allUnits);
+_hr = (server getVariable ["hr",0]) + ({(alive _x) AND {!isPlayer _x} AND {_x getVariable ["BLUFORSpawn",false]} AND {_x getVariable ["generated",false]}} count allUnits);
 _funds = server getVariable ["resourcesFIA",0];
 
 ["hr",_hr] call fn_saveData;

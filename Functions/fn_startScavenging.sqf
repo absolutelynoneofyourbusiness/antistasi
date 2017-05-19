@@ -4,32 +4,50 @@
         - They will loot corpses/surrender-boxes within a set distance and deposit all gear within the specified vehicle/container.
 
     Parameters:
-        0: Container to use for storage (default: vehicle of first selected unit)
+        0: OBJECT - Container to use for storage (default: vehicle of first selected unit)
 
     Returns:
         Nothing
 
     Example:
-        [vehicle player] call AS_fnc_startScavenging
+        [vehicle player] spawn AS_fnc_startScavenging;
+        [cursorTarget] spawn AS_fnc_startScavenging;
 */
 
-params [["_specificContainer", objNull]];
-private ["_units", "_break", "_unit", "_vehicle", "_container", "_looting", "_driver", "_commander", "_gunner"];
+params [
+	["_specificContainer", objNull],
 
-_units = groupSelectedUnits player;
+	["_units", groupSelectedUnits player],
+	["_break", false],
+	["_container", objNull],
+	["_vehicle", objNull],
+	["_looting", true],
+	["_driver", ""],
+	["_commander", ""],
+	["_gunner", ""]
+];
+
+private ["_unit", "_fnc_message", "_rtv"];
+
+#define CAPACITY 100 // minimum spare capacity of a vehicle
 
 if !(count _units > 0) exitWith {hintSilent "Please select the units who should start scavenging."};
 
-_break = false;
+_fnc_message = {
+	params ["_unit", "_text"];
+	_unit groupChat _text;
+};
+
 {
 	if (_x getVariable ["AS_lootingCorpses", false]) exitWith {
 		_break = true;
-		_x groupChat "I am already looking for gear.";
+		[_x, "I am already looking for gear."] call _fnc_message;
 	};
-};
+} forEach _units;
 
 if (_break) exitWith {hintSilent "Some of your selected units are occupied."};
 
+// return to your vehicles
 _rtv = {
 	params ["_crew", "_vehicle", "_role"];
 	_crew doMove (getPosATL _vehicle);
@@ -55,18 +73,18 @@ _rtv = {
 		};
 
 		default {
+			_crew assignAsCargo _vehicle;
+			diag_log format ["cargo: %1; vehicle: %2", _crew, _vehicle];
+			_crew action ["getInCargo", _vehicle];
 		};
 	};
 };
 
-_container = objNull;
-_vehicle = objNull;
-_driver = "";
-_gunner = "";
+// if units are mounted, note the roles
 _unit = _units select 0;
 if !(vehicle _unit == _unit) then {
 	_vehicle = vehicle _unit;
-	if ((_vehicle isKindOf "Car") || (_vehicle isKindOf "Tank")) then {
+	if ((_vehicle isKindOf "Car") OR {_vehicle isKindOf "Tank"}) then {
 		_driver = ["", driver _vehicle] select !(isNull (driver _vehicle));
 		_container = _vehicle;
 		_commander = ["", commander _vehicle] select !(isNull (commander _vehicle));
@@ -74,6 +92,7 @@ if !(vehicle _unit == _unit) then {
 	};
 };
 
+// only vehicles classify as containers
 if !(isNull (_specificContainer)) then {
 	if (_specificContainer isKindOf "LandVehicle") then {
 		_container = _specificContainer;
@@ -81,8 +100,9 @@ if !(isNull (_specificContainer)) then {
 };
 
 if (isNull (_container)) exitWith {hintSilent "Please specify a container."};
-if (([_container] call AS_fnc_getSpareCapacity) < 100) exitWith {_unit groupChat "If we add more load to it, it'll break..."};
+if (([_container] call AS_fnc_getSpareCapacity) < 100) exitWith {[_x, "If we add more load to it, it'll break..."] call _fnc_message};
 
+// make a note of the vehicles a unit belongs to, save the current inventory, start looting
 {
 	if !(vehicle _x == _x) then {
 		_x setVariable ["vehicle", vehicle _x, true];
@@ -100,7 +120,6 @@ if (([_container] call AS_fnc_getSpareCapacity) < 100) exitWith {_unit groupChat
 
 sleep 5;
 
-_looting = true;
 while {_looting} do {
 	_looting = false;
 	{
@@ -109,27 +128,29 @@ while {_looting} do {
 	sleep 3;
 };
 
+// return to your leader/vehicles
 {
-	_x doFollow player;
+	_x doFollow (leader (group _x));
 	if !(isNull (_x getVariable ["vehicle", objNull])) then {
 		_x doMove (getPosATL (_x getVariable "vehicle"));
 	};
 } forEach _units;
 
+// take your assigned positions
 if !(isNull _vehicle) then {
 	if (alive _vehicle) then {
 		if !(typeName _driver == "STRING") then {
-			if ((isNull (driver _vehicle)) && (alive _driver)) then {
+			if ((isNull (driver _vehicle)) AND {alive _driver}) then {
 				[_driver, _vehicle, "driver"] spawn _rtv;
 			};
 		};
 		if !(typeName _commander == "STRING") then {
-			if ((isNull (commander _vehicle)) && (alive _commander)) then {
+			if ((isNull (commander _vehicle)) AND {alive _commander}) then {
 				[_commander, _vehicle, "commander"] spawn _rtv;
 			};
 		};
 		if !(typeName _gunner == "STRING") then {
-			if ((isNull (gunner _vehicle)) && (alive _gunner)) then {
+			if ((isNull (gunner _vehicle)) AND {alive _gunner}) then {
 				[_gunner, _vehicle, "gunner"] spawn _rtv;
 			};
 		};
@@ -137,7 +158,7 @@ if !(isNull _vehicle) then {
 } else {
 	{
 		if !(isNull (_x getVariable ["vehicle", objNull])) then {
-			if ((alive (_x getVariable "vehicle")) && (alive _x) && (vehicle _x == _x)) then {
+			if ((alive (_x getVariable "vehicle")) AND {alive _x} AND {vehicle _x == _x}) then {
 				_vehicle = _x getVariable "vehicle";
 				_x action ["getInCargo", _vehicle];
 			};
@@ -147,4 +168,4 @@ if !(isNull _vehicle) then {
 
 [_units, true] call AS_fnc_resetAIStatus;
 
-_unit groupChat "We are done here. Ready to move out.";
+[_unit, "We are done here. Ready to move out."] call _fnc_message;

@@ -111,6 +111,10 @@ if !(activeAFRF) then {
 	guer_gear_BP_Medic = "";
 	guer_gear_BP_Engineer = "";
 } else {
+	guer_veh_truck = "rhs_gaz66o_msv";
+	guer_veh_offroad = "rhs_uaz_open_MSV_01";
+	guer_veh_technical_AT = "rhsgref_ins_g_uaz_spg9";
+
 	guer_stat_mortar = "rhsgref_ins_g_2b14";
 	guer_stat_MGH = "rhsgref_ins_g_DSHKM";
 	guer_stat_AT = "rhsgref_ins_g_SPG9M";
@@ -126,10 +130,10 @@ if !(activeAFRF) then {
 		"rhs_uaz_open_MSV_01",
 		"rhs_gaz66o_msv",
 		"B_G_Offroad_01_armed_F",
-		"rhs_DSHKM_ins",
-		"rhs_2b14_82mm_msv",
-		"rhs_Metis_9k115_2_vdv",
-		"RHS_ZU23_VDV",
+		"rhsgref_ins_g_DSHKM",
+		"rhsgref_ins_g_2b14",
+		"rhsgref_ins_g_SPG9M",
+		"rhsgref_ins_g_ZU23",
 		"rhs_bmd1_chdkz",
 		"rhs_gaz66_r142_vdv"
 	];

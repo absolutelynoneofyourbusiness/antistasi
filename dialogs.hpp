@@ -361,7 +361,22 @@ BTN_BACK("closeDialog 0; vehQuery = nil; [] execVM ""Dialogs\squad_recruit.sqf""
 
 BTN_L1(104, "YES", "", "closeDialog 0; vehQuery = true");
 BTN_R1(105, "NO", "", "closeDialog 0; vehQuery = nil");
+	};
+};
+class statics_query
+{
+	idd=100;
+	movingenable=false;
 
+	class controls
+	{
+
+AS_BOX_D(BOX_H_2);
+AS_FRAME_D(FRAME_H_2, "Shall we disassemble all statics at HQ?");
+BTN_BACK("closeDialog 0; staticsQuery = false");
+
+BTN_L1(104, "YES", "", "closeDialog 0; staticsQuery = true");
+BTN_R1(105, "NO", "", "closeDialog 0; staticsQuery = false");
 	};
 };
 class player_money
