@@ -79,3 +79,5 @@ OPFOR_marker_type = "flag_CSAT";
 
 // Name of the faction
 A3_Str_RED = localize "STR_GENIDENT_CSAT";
+
+baseClasses_RED pushBackUnique "O_Soldier_base_F";

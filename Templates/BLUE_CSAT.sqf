@@ -182,3 +182,5 @@ BLUFOR_marker_type = "flag_CSAT";
 
 // Name of the faction
 A3_Str_BLUE = localize "STR_GENIDENT_CSAT";
+
+baseClasses_BLUE pushBackUnique "O_Soldier_base_F";

@@ -284,7 +284,7 @@ _tmpCAmrk = + smallCAmrk;
 smallCAmrk = [];
 
 {
-	_base = [_x] call AS_fnc_findBaseForCA;
+	_base = [_x, "attack"] call AS_fnc_findBase;
 	_radio = [_x] call AS_fnc_radioCheck;
 	if ((_base != "") AND (_radio) AND (_x in mrkFIA) AND !(_x in smallCAmrk)) then {
 		[_x] remoteExec ["patrolCA",HCattack];

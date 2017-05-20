@@ -79,3 +79,5 @@ OPFOR_marker_type = "rhs_flag_vmf";
 
 // Name of the faction
 A3_Str_RED = localize "STR_GENIDENT_VMF";
+
+baseClasses_RED pushBackUnique "rhs_infantry_vdv_base";

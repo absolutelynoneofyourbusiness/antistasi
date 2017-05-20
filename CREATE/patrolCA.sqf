@@ -53,8 +53,8 @@ _radioContact = [([_marker] call AS_fnc_radioCheck), true] select (_forcedAttack
 if !(_radioContact) exitWith {diag_log format ["Info: Small attack on %1 called off, no radio contact.", _marker]};
 
 if !(_forcedAttack) then {
-	_base = [_marker] call AS_fnc_findBaseForCA;
-	if (_base == "") then {_airport = [_marker] call AS_fnc_findAirportForCA};
+	_base = [_marker, "attack"] call AS_fnc_findBase;
+	if (_base == "") then {_airport = [_marker, "attack"] call AS_fnc_findAirport;};
 };
 
 _involveCSAT = false;

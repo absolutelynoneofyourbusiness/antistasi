@@ -96,6 +96,7 @@ if ((random 100 < (((server getVariable "prestigeNATO") + (server getVariable "p
 waitUntil {sleep 3; !(spawner getVariable _marker) OR (spawner getVariable [format ["%1_respawning", _marker],false])};
 
 diag_log "Respawning HQ";
+spawner setVariable [_marker,false,true];
 
 if (spawner getVariable [format ["%1_respawning", _marker],false]) exitWith {
 	sleep 1;
@@ -113,5 +114,5 @@ if (spawner getVariable [format ["%1_respawning", _marker],false]) exitWith {
 
 waitUntil {sleep 1; !(spawner getVariable _marker)};
 
-[_allGroups, _allSoldiers, _allVehicles] spawn AS_fnc_despawnUnits;
+[_allGroups, _allSoldiers, _allVehicles, true] spawn AS_fnc_despawnUnits;
 if !(isNull _observer) then {deleteVehicle _observer};

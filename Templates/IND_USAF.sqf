@@ -77,7 +77,7 @@ vehFuel = 			["rhsusf_M978A4_BKIT_usarmy_d","rhsusf_M978A4_usarmy_d"]; // fuel t
 vehLead = 			["rhsusf_M1117_D"]; // lead vehicle for convoys, preferably armed MRAP/car
 standardMRAP = 		["rhsusf_rg33_d","rhsusf_m1025_d"]; // default transport MRAP/car
 vehTruckBox = 		["rhsusf_M977A4_REPAIR_usarmy_d"]; // repair truck or at least a prop
-vehPatrolBoat = 	["I_Boat_Armed_01_minigun_F"];
+vehPatrolBoat = 	["B_Boat_Armed_01_minigun_F"];
 
 vehTruckAA = 		"rhs_gaz66_zu23_msv";
 guer_vehicleArray pushBackUnique vehTruckAA;
@@ -441,21 +441,18 @@ A3_Str_INDEP = localize "STR_GENIDENT_USAF";
 
 if (worldname == "Tanoa") then {
     unlockedItems = unlockedItems + [
-    "U_I_C_Soldier_Para_5_F",
-    "U_I_C_Soldier_Para_4_F",
-    "U_I_C_Soldier_Para_3_F",
-    "U_I_C_Soldier_Para_2_F",
-    "U_I_C_Soldier_Para_1_F",
-    "U_I_C_Soldier_Para_1_F",
-    "U_I_C_Soldier_Bandit_1_F",
-    "U_I_C_Soldier_Bandit_2_F",
-    "U_I_C_Soldier_Bandit_3_F",
-    "U_I_C_Soldier_Bandit_4_F",
-    "U_I_C_Soldier_Bandit_5_F"
+	    "U_I_C_Soldier_Para_5_F",
+	    "U_I_C_Soldier_Para_4_F",
+	    "U_I_C_Soldier_Para_3_F",
+	    "U_I_C_Soldier_Para_2_F",
+	    "U_I_C_Soldier_Para_1_F",
+	    "U_I_C_Soldier_Para_1_F",
+	    "U_I_C_Soldier_Bandit_1_F",
+	    "U_I_C_Soldier_Bandit_2_F",
+	    "U_I_C_Soldier_Bandit_3_F",
+	    "U_I_C_Soldier_Bandit_4_F",
+	    "U_I_C_Soldier_Bandit_5_F"
     ];
-
-	// infPatrol = infPatrol + [(configfile >> "CfgGroups" >> "West" >> "Gendarmerie" >> "Infantry" >> "GENDARME_Inf_Patrol")]
-
-	// vehPatrol = vehPatrol + ["B_GEN_Offroad_01_gen_F"]
-
 };
+
+baseClasses_IND pushBackUnique "rhsusf_infantry_army_base";

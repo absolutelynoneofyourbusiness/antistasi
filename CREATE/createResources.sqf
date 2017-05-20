@@ -106,13 +106,8 @@ sleep 10;
 } forEach _allSoldiers + _allVehicles;
 _hidden = true;
 
-while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength) AND {(spawner getVariable _marker)}} do {
-	while {
-		(count ((_markerPos nearEntities ["LandVehicle",2000]) select {_x getVariable ["BLUFORSpawn",false]}) < 1) AND
-		{(count ((_markerPos nearEntities ["AirVehicle",2000]) select {_x getVariable ["BLUFORSpawn",false]}) < 1)} AND
-		{(count ((_markerPos nearEntities [solCat,2000]) select {_x getVariable ["BLUFORSpawn",false]}) < 1)} AND
-		{(spawner getVariable _marker)}
-	} do {
+while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength) AND {spawner getVariable _marker}} do {
+	while {([_markerPos, side_blue] call AS_fnc_proximityCheck) AND {spawner getVariable _marker}} do {
 		if !(_hidden) then {
 			{
 				_x hideObjectGlobal true;
@@ -143,7 +138,7 @@ if (spawner getVariable _marker) then {
 
 waitUntil {sleep 3;
 	!(spawner getVariable _marker) OR
-	{((count ((_markerPos nearEntities [solCat, (_size max 200)]) select {_x getVariable ["BLUFORSpawn",false]})) > (3*count (_allSoldiers select {alive _x AND !captive _x})))} OR
+	{((count ((_markerPos nearEntities [baseClasses_PLAYER, (_size max 200)]) select {_x getVariable ["BLUFORSpawn",false]})) > (3*count (_allSoldiers select {alive _x AND !captive _x})))} OR
 	{!(garrison getVariable [format ["%1_reduced", _marker],false])}
 };
 
@@ -160,7 +155,7 @@ call {
 
 	// Garrison was replenished
 	if !(garrison getVariable [format ["%1_reduced", _marker],false]) exitWith {
-		spawer setVariable [format ["%1_respawning", _marker],true,true];
+		spawner setVariable [format ["%1_respawning", _marker],true,true];
 		reducedGarrisons = reducedGarrisons - [_marker];
 		publicVariable "reducedGarrisons";
 	};

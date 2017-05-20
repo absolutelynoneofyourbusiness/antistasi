@@ -55,9 +55,9 @@ if (_mine isEqualTo []) exitWith {};
 	{
 		_Array1 = [];
 		if (_UnitSide == side_blue) then {
-			_Array1 = (_Mine nearEntities [enemyCat + ["Car", "Tank"], 100]) + ((_Mine nearEntities [vehCat, 100]) select {(side _x == side_green) OR {(side _x == side_red)}});
+			_Array1 = (_Mine nearEntities [baseClasses_ENEMY + ["Car", "Tank"], 100]) + ((_Mine nearEntities [baseClasses_VEHICLE, 100]) select {(side _x == side_green) OR {(side _x == side_red)}});
 		} else {
-			_Array1 = ((_Mine nearEntities [vehCat, 100]) select {_x getVariable ["BLUFORSpawn",false]}) + (_Mine nearEntities [solCat, 100]);
+			_Array1 = ((_Mine nearEntities [baseClasses_VEHICLE, 100]) select {_x getVariable ["BLUFORSpawn",false]}) + (_Mine nearEntities [baseClasses_PLAYER, 100]);
 		};
 
 		_ClosestEnemy = [_Array1,_Mine] call VCOMAI_ClosestObject;

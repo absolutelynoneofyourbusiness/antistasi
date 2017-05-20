@@ -63,7 +63,7 @@ _Unit doMove _PreviousPosition;
 // {
 	// if (alive _x && (side _x) isEqualTo _UnitSide) then {_Array1 pushback _x;};//todo modified
 // } foreach allUnits;
-_Array1 = ((getPosATL _Unit) nearEntities [[enemyCat, solCat] select (side _unit == side_blue), 100]);
+_Array1 = ((getPosATL _Unit) nearEntities [[baseClasses_ENEMY, baseClasses_PLAYER] select (side _unit == side_blue), 100]);
 while {_NotSafe} do
 {
 	_ClosestFriendly = [_Array1,_PlantPosition] call VCOMAI_ClosestObject;

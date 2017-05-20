@@ -189,3 +189,5 @@ BLUFOR_marker_type = "flag_USA";
 
 // Name of the faction
 A3_Str_BLUE = localize "STR_GENIDENT_USMC";
+
+baseClasses_BLUE pushBackUnique "rhsusf_infantry_army_base";

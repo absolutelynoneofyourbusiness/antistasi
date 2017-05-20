@@ -182,3 +182,5 @@ BLUFOR_marker_type = "flag_NATO";
 
 // Name of the faction
 A3_Str_BLUE = localize "STR_GENIDENT_NATO";
+
+baseClasses_BLUE pushBackUnique "B_Soldier_base_F";

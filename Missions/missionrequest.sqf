@@ -2,8 +2,15 @@ if (!isServer) exitWith {};
 
 #define GEAR_THRESHOLD [125,175]
 
-params [["_type","LOG"],["_muted",false],["_manual",false]];
-[getMarkerPos guer_respawn,[],[],false] params ["_positionHQ","_options","_zones"];
+params [
+	["_type", "LOG", [""]],
+	["_muted", false, [true]],
+	["_manual", false, [true]],
+
+	["_positionHQ", getMarkerPos guer_respawn, [[]]],
+	["_options", [], [[]]],
+	["_zones", [], [[]]]
+];
 
 private ["_currentZone","_markerPos","_nearestZone","_gearCount","_threshold","_base","_data","_prestigeOPFOR","_prestigeBLUFOR"];
 
@@ -11,6 +18,14 @@ if (_type in misiones) exitWith {
 	if (!_muted) then {
 		[petros,"globalChat",localize "STR_HINTS_MIS_TYPE_ACTIVE"] remoteExec ["commsMP",[0,-2] select isDedicated];
 	};
+};
+
+_fnc_proximityCheck = {
+	params ["_markerPos"];
+
+	((count ((_markerPos nearEntities ["LandVehicle", distanciaSPWN]) select {_x getVariable ["BLUFORSpawn", false]}) < 1) AND
+		{(count ((_markerPos nearEntities ["AirVehicle", distanciaSPWN]) select {_x getVariable ["BLUFORSpawn", false]}) < 1)} AND
+		{(count ((_markerPos nearEntities [baseClasses_PLAYER, distanciaSPWN]) select {_x getVariable ["BLUFORSpawn", false]}) < 1)})
 };
 
 call {
@@ -27,7 +42,7 @@ call {
 
 				if (_markerPos distance _positionHQ < 4000) then {
 					if (_currentZone in marcadores) then {
-						if !(spawner getVariable _currentZone) then {_options pushBackUnique _currentZone};
+						if ([_markerPos] call _fnc_proximityCheck) then {_options pushBackUnique _currentZone};
 					} else {
 						_nearestZone = [marcadores, getPos _currentZone] call BIS_fnc_nearestPosition;
 						if (_nearestZone in mrkAAF) then {_options pushBackUnique _currentZone};
@@ -118,7 +133,7 @@ call {
 						_options pushBackUnique _currentZone;
 					};
 				} else {
-					if ((_markerPos distance _positionHQ < 4000) AND !(spawner getVariable _currentZone)) then {
+					if ((_markerPos distance _positionHQ < 4000) AND ([_markerPos] call _fnc_proximityCheck)) then {
 						_options pushBackUnique _currentZone;
 					};
 				};
@@ -229,7 +244,7 @@ call {
 			for "_i" from 0 to ((count _zones) - 1) do {
 				_currentZone = _zones select _i;
 				_markerPos = getMarkerPos _currentZone;
-				_base = [_currentZone] call AS_fnc_findBaseForConvoy;
+				_base = [_currentZone, "convoy"] call AS_fnc_findBase;
 				if ((_markerPos distance _positionHQ < 4000) AND (_base !="")) then {
 					_options pushBackUnique _currentZone;
 				};
@@ -243,7 +258,7 @@ call {
 			};
 		} else {
 			_currentZone = selectRandom _options;
-			_base = [_currentZone] call AS_fnc_findBaseForConvoy;
+			_base = [_currentZone, "convoy"] call AS_fnc_findBase;
 			[_currentZone,_base,"auto"] remoteExec ["CONVOY",HCgarrisons];
 		};
 	};
@@ -254,7 +269,7 @@ call {
 			for "_i" from 0 to ((count _zones) - 1) do {
 				_currentZone = _zones select _i;
 				_markerPos = getMarkerPos _currentZone;
-				if ((_markerPos distance _positionHQ < 4000) AND !(spawner getVariable _currentZone)) then {
+				if ((_markerPos distance _positionHQ < 4000) AND ([_markerPos] call _fnc_proximityCheck)) then {
 					_options pushBackUnique _currentZone;
 				};
 			};

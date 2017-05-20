@@ -490,3 +490,5 @@ if (worldname == "Tanoa") then {
 
 	// vehPatrol = vehPatrol + ["B_GEN_Offroad_01_gen_F"]
 };
+
+baseClasses_IND pushBackUnique "I_Soldier_base_F";

@@ -87,11 +87,11 @@ _fn_dispatch = {
 	params ["_targetPosition", "_type", "_size"];
 	private ["_base"];
 
-	_base = [_targetPosition, false, true] call AS_fnc_findAirportForCA;
+	_base = [_targetPosition, "reinforcement"] call AS_fnc_findAirport;
 	if (_base != "") then {
 		[_base, _targetPosition, _type, _size, 25*60, 250] remoteExec ["enemyQRF", HCattack];
 	} else {
-		_base = [_targetPosition, false, true] call AS_fnc_findBaseForCA;
+		_base = [_targetPosition, "reinforcement"] call AS_fnc_findBase;
 		if (_base != "") then {
 			[_base, _targetPosition, _type, _size, 25*60, 250] remoteExec ["enemyQRF", HCattack];
 		} else {
@@ -211,7 +211,7 @@ while {true} do {
 			_target = [];
 			while {count _targets > 0} do {
 				_var = selectRandom _targets;
-				if (count (((getMarkerPos (_var select 1)) nearEntities [solCat, 1500]) select {_x getVariable ["BLUFORSpawn", false]}) < 1) exitWith {_target = +_var};
+				if (count (((getMarkerPos (_var select 1)) nearEntities [baseClasses_PLAYER, 1500]) select {_x getVariable ["BLUFORSpawn", false]}) < 1) exitWith {_target = +_var};
 				_targets = _targets - _var;
 			};
 

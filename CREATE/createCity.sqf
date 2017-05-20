@@ -71,13 +71,13 @@ sleep 10;
 	_x enableDynamicSimulation true;
 } forEach _allGroups;
 
-while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength) AND (spawner getVariable _marker)} do {
+while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength) AND {spawner getVariable _marker}} do {
 	if (_isHostile) then {
-		while {(count ((_markerPos nearEntities ["Man", 1500]) select {side _x == side_blue}) < 1) AND (spawner getVariable _marker)} do {
+		while {([_markerPos, side_blue] call AS_fnc_proximityCheck) AND {spawner getVariable _marker}} do {
 			sleep 10;
 		};
 	} else {
-		while {(count ((_markerPos nearEntities ["Man", 400]) select {_x getVariable ["OPFORSpawn",false]}) < 1) AND (spawner getVariable _marker)} do {
+		while {([_markerPos, side_green] call AS_fnc_proximityCheck) AND {spawner getVariable _marker}} do {
 			sleep 10;
 		};
 	};
@@ -109,7 +109,7 @@ call {
 	};
 };
 
-[_allGroups, _allSoldiers, _markerPos nearObjects ["Box_IND_Wps_F", (_size max 200)]] spawn AS_fnc_despawnUnits;
+[_allGroups, _allSoldiers, _markerPos nearObjects ["Box_IND_Wps_F", (_size max 200)], !_isHostile] spawn AS_fnc_despawnUnits;
 grps_VCOM = grps_VCOM - _localIDs; publicVariable "grps_VCOM";
 
 // If garrison was overwhelmed, respawn the zone after 30 minutes.

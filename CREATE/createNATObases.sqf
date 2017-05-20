@@ -254,8 +254,8 @@ if ((random 100 < (((server getVariable "prestigeNATO") + (server getVariable "p
 	[_observer,_marker,"observe"] spawn AS_fnc_addToUPSMON;
 };
 
-while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength) AND (spawner getVariable _marker)} do {
-	while {(count ((_markerPos nearEntities ["Man", 1000]) select {_x getVariable ["OPFORSpawn",false]}) < 1) AND (spawner getVariable _marker)} do {
+while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength) AND {spawner getVariable _marker}} do {
+	while {([_markerPos, side_green] call AS_fnc_proximityCheck) AND {spawner getVariable _marker}} do {
 		sleep 10;
 	};
 
@@ -273,11 +273,11 @@ if (spawner getVariable _marker) then {
 
 _soldiers =+ (_allSoldiers + _guerSoldiers);
 
-waitUntil {sleep 3; !(spawner getVariable _marker) OR ((count ((_markerPos nearEntities ["Man", (_size max 200)]) select {_x getVariable ["OPFORSpawn",false]})) > (3*count (_soldiers select {alive _x AND !captive _x}))) OR !(garrison getVariable [format ["%1_reduced", _marker],false])};
+waitUntil {sleep 3; !(spawner getVariable _marker) OR {((count ((_markerPos nearEntities [baseClasses_ENEMY, (_size max 200)]) select {_x getVariable ["OPFORSpawn",false]})) > (3*count (_soldiers select {alive _x AND !captive _x})))} OR {!(garrison getVariable [format ["%1_reduced", _marker],false])}};
 
 call {
 	// Garrison was overwhelmed
-	if ((count ((_markerPos nearEntities ["Man", (_size max 200)]) select {_x getVariable ["OPFORSpawn",false]})) > (3*count (_soldiers select {alive _x AND !captive _x}))) exitWith {
+	if ((count ((_markerPos nearEntities [baseClasses_ENEMY, (_size max 200)]) select {_x getVariable ["OPFORSpawn",false]})) > (3*count (_soldiers select {alive _x AND !captive _x}))) exitWith {
 		[_marker] remoteExec ["mrkLOOSE",2];
 	};
 
@@ -288,7 +288,7 @@ call {
 
 	// Garrison was replenished
 	if !(garrison getVariable [format ["%1_reduced", _marker],false]) exitWith {
-		spawer setVariable [format ["%1_respawning", _marker],true,true];
+		spawner setVariable [format ["%1_respawning", _marker],true,true];
 		reducedGarrisons = reducedGarrisons - [_marker];
 		publicVariable "reducedGarrisons";
 	};
@@ -315,6 +315,6 @@ if (spawner getVariable [format ["%1_respawning", _marker],false]) exitWith {
 
 waitUntil {sleep 3; !([distanciaSPWN,1,_markerPos,"BLUFORSpawn"] call distanceUnits)};
 
-[_allGroups + _guerGroups, _soldiers, _allVehicles + _guerVehicles + (_markerPos nearObjects ["Box_IND_Wps_F", (_size max 200)])] spawn AS_fnc_despawnUnits;
+[_allGroups + _guerGroups, _soldiers, _allVehicles + _guerVehicles + (_markerPos nearObjects ["Box_IND_Wps_F", (_size max 200)]), true] spawn AS_fnc_despawnUnits;
 if (!isNull _observer) then {deleteVehicle _observer};
 grps_VCOM = grps_VCOM - _localIDs; publicVariable "grps_VCOM";

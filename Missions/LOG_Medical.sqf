@@ -24,7 +24,7 @@ _endTime = dateToNumber _endTime;
 _fMarkers = mrkFIA + campsFIA;
 _hMarkers = bases + aeropuertos + puestos - mrkFIA;
 
-_base = [_markerPos] call AS_fnc_findBaseForConvoy;
+_base = [_markerPos, "convoy"] call AS_fnc_findBase;
 if (_base isEqualTo "") exitWith {diag_log format ["Supply Recovery at %1 cancelled, no base available.",_marker]};
 _basePos = getMarkerPos _base;
 _baseName = [_base] call AS_fnc_localizar;

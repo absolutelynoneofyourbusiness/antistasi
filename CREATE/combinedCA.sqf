@@ -17,8 +17,8 @@ _prestigeCSAT = server getVariable ["prestigeCSAT",0];
 
 diag_log format ["Info: Attack triggered. Timer prior to attack: %1.", cuentaCA];
 
-_base = [_marker] call AS_fnc_findBaseForCA;
-_airport = [_marker] call AS_fnc_findAirportForCA;
+_base = [_marker, "attack"] call AS_fnc_findBase;
+_airport = [_marker, "attack"] call AS_fnc_findAirport;
 
 if ((_base == "") AND (_airport == "")) exitWith {diag_log format ["Info: Attack cancelled, no base available. Target location: %1.", _marker]};
 

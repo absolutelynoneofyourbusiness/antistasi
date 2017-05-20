@@ -176,3 +176,5 @@ BLUFOR_marker_type = "rhs_flag_vmf";
 
 // Name of the faction
 A3_Str_BLUE = localize "STR_GENIDENT_VMF";
+
+baseClasses_BLUE pushBackUnique "rhs_infantry_vdv_base";

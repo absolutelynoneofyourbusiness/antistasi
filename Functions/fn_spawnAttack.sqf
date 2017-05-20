@@ -32,8 +32,8 @@ _scoreNeededAirBase = [0, 5] select (count (unlockedWeapons arrayIntersect genAA
 		_prestigeOPFOR = _data select 2;
 		if ((_prestigeOPFOR == 0) and (_prestigeBLUFOR > 0)) then {_objectives pushBack _objective};
 	} else {
-		_base = [_objective, true] call AS_fnc_findBaseForCA;
-		_airport = [_objective, true] call AS_fnc_findAirportForCA;
+		_base = [_objective, "attack"] call AS_fnc_findBase;
+		_airport = [_objective, "attack"] call AS_fnc_findAirport;
 
 		if (!(_base == "") or !(_airport == "")) then {
 			_position = getMarkerPos _objective;
@@ -132,7 +132,7 @@ if ((count _objectives > 0) and (_difficulty < 3)) then {
 if !("CONVOY" in misiones) then {
 	if (count _objectives == 0) then {
 		{
-			_base = [_x] call AS_fnc_findBaseForConvoy;
+			_base = [_x, "convoy"] call AS_fnc_findBase;
 			if !(_base == "") then {
 				_data = server getVariable _x;
 				_prestigeOPFOR = _data select 2;

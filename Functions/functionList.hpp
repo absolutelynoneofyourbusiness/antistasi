@@ -92,9 +92,6 @@ class CfgFunctions {
 			class isFrontline {};
 			class getGarrisonInfo {};
 			class fpsChange {};
-			class findBaseForConvoy {};
-			class findBaseForCA {};
-			class findAirportForCA {};
 			class fiaRadio {};
 			class location {};
 			class autoStart {};
@@ -132,6 +129,7 @@ class CfgFunctions {
 			class clearWaypoints {};
 			class monitorGroup {};
 			class signalDistress {};
+			class proximityCheck {};
 		};
 		class QRF {
 			file = "Functions";
@@ -157,6 +155,7 @@ class CfgFunctions {
 			class spawnMechInf {};
 			class findBase {};
 			class replacePatrol {};
+			class findAirport {};
 		};
 		class JNA {
 			file = "Functions";

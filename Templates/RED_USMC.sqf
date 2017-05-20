@@ -79,3 +79,5 @@ OPFOR_marker_type = "flag_USA";
 
 // Name of the faction
 A3_Str_RED = localize "STR_GENIDENT_USMC";
+
+baseClasses_RED pushBackUnique "rhsusf_infantry_army_base";

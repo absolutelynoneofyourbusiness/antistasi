@@ -11,7 +11,7 @@ private ["_posTarget", "_posBase", "_allSoldiers", "_allGroups", "_allVehicles",
 if ({toLower _x find "int_" > 0} count misiones > 3) exitWith {diag_log "Info: replenishment task killed, maximum number of parallel tasks reached."};
 if ((format ["INT_%1",_target]) in misiones) exitWith {diag_log format ["Info: replenishment task killed, %1 already receiving replenishments.", _target]};
 
-_base = [_target,false,true] call AS_fnc_findBaseForCA;
+_base = [_target, "reinforcement"] call AS_fnc_findBase;
 if (_base == "") exitWith {diag_log format ["Info: replenishment task killed, no base available.", _target]};
 
 diag_log format ["REP triggered: %1", _target];

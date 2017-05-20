@@ -1,8 +1,19 @@
 if (!isServer and hasInterface) exitWith {};
 
-params ["_marker"];
-[3,[],[],[],[],[]] params ["_countBuildings","_targetBuildings","_allGroups","_allSoldiers","_allVehicles","_leafletCrates"];
-private ["_targetPosition","_targetName","_duration","_endTime","_task","_spawnPosition","_missionVehicle","_crate","_range","_allBuildings","_usableBuildings","_index","_perimeterBuildings","_currentBuilding","_lastBuilding","_bPositions","_groupType","_params","_group","_dog","_leaflets","_drop"];
+params [
+	"_marker",
+
+	["_countBuildings", 3, [0]],
+	["_targetBuildings", [], [[]]],
+	["_allGroups", [], [[]]],
+	["_allSoldiers", [], [[]]],
+	["_allVehicles", [], [[]]],
+	["_leafletCrates", [], [[]]]
+];
+
+#define DURATION 60
+
+private ["_targetPosition","_targetName","_endTime","_task","_spawnPosition","_missionVehicle","_crate","_range","_allBuildings","_usableBuildings","_index","_perimeterBuildings","_currentBuilding","_lastBuilding","_bPositions","_groupType","_params","_group","_dog","_leaflets","_drop"];
 
 _tskTitle = localize "STR_TSK_PRPAMPHLET";
 _tskDesc = localize "STR_TSKDESC_PRPAMPHLET";
@@ -24,19 +35,21 @@ if (count _allBuildings < 3) then {
 
 if (count _allBuildings < 3) exitWith {};
 
-_duration = 60;
-_endTime = [date select 0, date select 1, date select 2, date select 3, (date select 4) + _duration];
+DURATION = 60;
+_endTime = [date select 0, date select 1, date select 2, date select 3, (date select 4) + DURATION];
 _endTime = dateToNumber _endTime;
 
-_task = ["PR",[side_blue,civilian],[format [_tskDesc,_targetName,numberToDate [2035,_endTime] select 3,numberToDate [2035,_endTime] select 4],_tskTitle,_marker],_targetPosition,"CREATED",5,true,true,"Heal"] call BIS_fnc_setTask;
-misiones pushBack _task; publicVariable "misiones";
-
 _spawnPosition = (getMarkerPos guer_respawn) findEmptyPosition [5,50,"C_Van_01_transport_F"];
-if !(count (server getVariable ["obj_vehiclePad",[]]) > 0) then {
-	if (count (_spawnPosition nearObjects ["AllVehicles",7]) > 0) then {
+if (count (server getVariable ["obj_vehiclePad",[]]) > 0) then {
+	if !(count (_spawnPosition nearObjects ["AllVehicles",7]) > 0) then {
 		_spawnPosition = (server getVariable ["obj_vehiclePad",[]]);
 	};
 };
+
+if !(count _spawnPosition > 0) exitWith {"No space to spawn a vehicle near HQ, pamphlet mission canceled." remoteExec ["hint", [0,-2] select isDedicated, true]};
+
+_task = ["PR",[side_blue,civilian],[format [_tskDesc,_targetName,numberToDate [2035,_endTime] select 3,numberToDate [2035,_endTime] select 4],_tskTitle,_marker],_targetPosition,"CREATED",5,true,true,"Heal"] call BIS_fnc_setTask;
+misiones pushBack _task; publicVariable "misiones";
 
 _missionVehicle = "C_Van_01_transport_F" createVehicle _spawnPosition;
 

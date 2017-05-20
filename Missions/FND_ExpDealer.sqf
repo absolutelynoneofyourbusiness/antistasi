@@ -85,7 +85,7 @@ _devin setunitpos "up";
 
 if (random 1 < 0.15) then {
 	_patrolDispatched = true;
-	_base = [_posCmp, false, true] call AS_fnc_findBaseForCA;
+	_base = [_posCmp, "reinforcement"] call AS_fnc_findBase;
 	_insertionPoint = [getMarkerPos _base, _posCmp, 150, 400] call AS_fnc_findDropoffPoint;
 	([_base, _insertionPoint, enemyMotorpoolDef, infSquad, side_green, "none", 0, DURATION*60, "devin_patrol"] call AS_fnc_transportTroops) params ["_vehicle", "_vehicleCrew", "_vehicleGroup", "_group"];
 	[_group, _posCmp] spawn {

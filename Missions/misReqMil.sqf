@@ -110,7 +110,7 @@ if (_tipo == "CONVOY") then {
 		for "_i" from 0 to ((count _sitios) - 1) do {
 			_sitio = _sitios select _i;
 			_pos = getMarkerPos _sitio;
-			_base = [_sitio] call AS_fnc_findBaseForConvoy;
+			_base = [_sitio, "convoy"] call AS_fnc_findBase;
 			if ((_pos distance _posbase < 4000) and (_base !="")) then {
 				_posibles = _posibles + [_sitio];
 			};
@@ -123,7 +123,7 @@ if (_tipo == "CONVOY") then {
 	}
 	else {
 		_sitio = _posibles call BIS_fnc_selectRandom;
-		_base = [_sitio] call AS_fnc_findBaseForConvoy;
+		_base = [_sitio, "convoy"] call AS_fnc_findBase;
 		[_sitio,_base,"mil"] remoteExec ["CONVOY",HCgarrisons];
 	};
 };

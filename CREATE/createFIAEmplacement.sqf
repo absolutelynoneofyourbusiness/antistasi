@@ -72,15 +72,7 @@ sleep 10;
 	_x enableDynamicSimulation true;
 } forEach _allGroups;
 
-while {(count (_allSoldiers select {alive _x AND !captive _x}) > _reinfStrength) AND (spawner getVariable _marker) AND (_marker in puestosFIA)} do {
-	while {(count ((_markerPos nearEntities ["Man", 1000]) select {_x getVariable ["OPFORSpawn",false]}) < 1) AND (spawner getVariable _marker) AND (_marker in puestosFIA)} do {
-		sleep 10;
-	};
-
-	sleep 5;
-};
-
-waitUntil {sleep 3; !(spawner getVariable _marker) OR ({alive _x} count units _group == 0) OR !(_marker in puestosFIA)};
+waitUntil {sleep 3; !(spawner getVariable _marker) OR {{alive _x} count units _group == 0} OR {!(_marker in puestosFIA)}};
 
 call {
 	// Garrison was overwhelmed
@@ -104,8 +96,12 @@ call {
 	if !(spawner getVariable _marker) exitWith {
 
 	};
+
+	// Zone was deleted
+	if !(_marker in puestosFIA) exitWith {
+
+	};
 };
 
-waitUntil {sleep 3; !([distanciaSPWN,1,_markerPos,"BLUFORSpawn"] call distanceUnits)};
-[_allGroups, _allSoldiers, _allVehicles] spawn AS_fnc_despawnUnits;
+[_allGroups, _allSoldiers, _allVehicles, true] spawn AS_fnc_despawnUnits;
 spawner setVariable [_marker,false,true];

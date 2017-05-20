@@ -15,7 +15,7 @@ if (_homeZone isEqualTo "") exitWith {format ["Error in replacePatrol, group %1 
 
 _markerPos = getMarkerPos _homeZone;
 _endTime = diag_tickTime + 3600;
-waitUntil {sleep 10; (count ((_markerPos nearEntities [solCat, 2000]) select {_x getVariable ["BLUFORSpawn", false]}) < 1) OR {diag_tickTime > _endTime}};
+waitUntil {sleep 10; (count ((_markerPos nearEntities [baseClasses_PLAYER, 2000]) select {_x getVariable ["BLUFORSpawn", false]}) < 1) OR {diag_tickTime > _endTime}};
 
 if (diag_tickTime > _endTime) then {
 	_base = [_homeZone, "replacement"] call AS_fnc_findBase;

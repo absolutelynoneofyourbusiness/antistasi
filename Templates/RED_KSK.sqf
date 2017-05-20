@@ -79,3 +79,5 @@ OPFOR_marker_type = "flag_Germany";
 
 // Name of the faction
 A3_Str_RED = localize "STR_GENIDENT_KSK";
+
+baseClasses_RED pushBackUnique "B_Soldier_base_F";

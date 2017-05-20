@@ -46,7 +46,10 @@ if (isClass (configFile >> "CfgPatches" >> "javelinTest")) then {
 */
 [] call AS_fnc_setupGearDB;
 
-enemyCat = [];
+baseClasses_FIA = [];
+baseClasses_IND = [];
+baseClasses_RED = [];
+baseClasses_BLUE = [];
 /*
  	Mod detection/initialisation
  	- SQM defines whether FIA is BLUFOR or GUER
@@ -68,10 +71,9 @@ call compile preprocessFileLineNumbers "Lists\basicLists.sqf";
 #include "Compositions\spawnPositions.sqf"
 #include "Scripts\SHK_Fastrope.sqf"
 
-solCat = [["I_G_Soldier_base_F","SoldierWB"],["I_G_Soldier_base_F","SoldierEB"]] select replaceFIA;
-vehCat = ["LandVehicle","AirVehicle"];
-allCat = solCat + vehCat;
-enemyCat pushBackUnique (["SoldierEB", "SoldierWB"] select replaceFIA);
+baseClasses_PLAYER = baseClasses_FIA + baseClasses_BLUE;
+baseClasses_ENEMY = baseClasses_IND + baseClasses_RED;
+baseClasses_VEHICLE = ["LandVehicle", "AirVehicle"];
 
 if (!isServer and hasInterface) exitWith {};
 

@@ -517,4 +517,4 @@ if (worldname == "Tanoa") then {
     ];
 };
 
-enemyCat pushBackUnique "I_Soldier_base_F";
+baseClasses_IND pushBackUnique "I_Soldier_base_F";

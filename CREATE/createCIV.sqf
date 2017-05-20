@@ -82,9 +82,10 @@ if ((random 100 < ((server getVariable ["prestigeNATO",0]) + (server getVariable
 	_allCivilians pushBack _unit;
 };
 
-_group enableDynamicSimulation true;
-
 [leader _group, _marker, "SAFE", "SPAWNED","NOFOLLOW", "NOVEH2","NOSHARE","DoRelax"] execVM "scripts\UPSMON.sqf";
+
+sleep 5;
+_group enableDynamicSimulation true;
 
 waitUntil {sleep 3; !(spawner getVariable _marker)};
 [_allGroups, _allCivilians, _allVehicles] spawn AS_fnc_despawnUnits;

@@ -97,7 +97,7 @@ while {true} do {
 			sleep 5;
 			{[_city,_x] spawn AS_fnc_deleteRoadblock} forEach controles;
 			if !("CONVOY" in misiones) then {
-				_base = [_city] call AS_fnc_findBaseForConvoy;
+				_base = [_city, "convoy"] call AS_fnc_findBase;
 				if ((_base != "") AND (random 3 < 1)) then {
 					[_city,_base,"city"] remoteExec ["CONVOY",HCattack];
 				};

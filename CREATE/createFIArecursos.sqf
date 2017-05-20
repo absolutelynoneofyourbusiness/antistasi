@@ -124,21 +124,11 @@ sleep 10;
 	_x enableDynamicSimulation true;
 } forEach (_allGroups + _workers);
 
-while {(count (_allSoldiers select {alive _x AND !captive _x}) > 0) AND (spawner getVariable _marker)} do {
-	while {(count ((_markerPos nearEntities ["Man", 1000]) select {_x getVariable ["OPFORSpawn",false]}) < 1) AND (spawner getVariable _marker)} do {
-		sleep 10;
-	};
-
-	sleep 5;
-};
-
-sleep 5;
-
-waitUntil {sleep 3; !(spawner getVariable _marker) OR ((count ((_markerPos nearEntities ["Man", (_size max 200)]) select {_x getVariable ["OPFORSpawn",false]})) > (3*count (_allSoldiers select {alive _x AND !captive _x})))};
+waitUntil {sleep 3; !(spawner getVariable _marker) OR {(count ((_markerPos nearEntities [baseClasses_ENEMY, (_size max 200)]) select {_x getVariable ["OPFORSpawn",false]})) > (3*count (_allSoldiers select {alive _x AND !captive _x}))}};
 
 call {
 	// Garrison was overwhelmed
-	if ((count ((_markerPos nearEntities ["Man", (_size max 200)]) select {_x getVariable ["OPFORSpawn",false]})) > (3*count (_allSoldiers select {alive _x AND !captive _x}))) exitWith {
+	if ((count ((_markerPos nearEntities [baseClasses_ENEMY, (_size max 200)]) select {_x getVariable ["OPFORSpawn",false]})) > (3*count (_allSoldiers select {alive _x AND !captive _x}))) exitWith {
 		[_marker] remoteExec ["mrkLOOSE",2];
 	};
 
@@ -167,5 +157,5 @@ if (spawner getVariable [format ["%1_respawning", _marker],false]) exitWith {
 
 waitUntil {sleep 3; !([distanciaSPWN,1,_markerPos,"BLUFORSpawn"] call distanceUnits)};
 
-[_allGroups, _allSoldiers + _workers, _allVehicles + (_markerPos nearObjects ["Box_IND_Wps_F", (_size max 200)])] spawn AS_fnc_despawnUnits;
+[_allGroups, _allSoldiers + _workers, _allVehicles + (_markerPos nearObjects ["Box_IND_Wps_F", (_size max 200)]), true] spawn AS_fnc_despawnUnits;
 if (!isNull _observer) then {deleteVehicle _observer};
